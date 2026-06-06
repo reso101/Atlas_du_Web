@@ -2,14 +2,14 @@
   --bg: #03060a;
   --sf: rgba(4, 10, 18, .97);
   --sf2: rgba(8, 18, 32, .92);
-  --b0: rgba(14, 40, 64, .8);
-  --b1: rgba(26, 74, 106, .9);
+  --b0: rgba(80, 140, 190, .55);
+  --b1: rgba(110, 180, 230, .85);
   --t0: #061018;
-  --t1: #0e2a44;
-  --t2: #1a4a6a;
-  --t3: #2a6a8a;
-  --t4: #3a8aaa;
-  --t5: #6ab8d8;
+  --t1: #2d5a7a;
+  --t2: #4f87aa;
+  --t3: #69a9cc;
+  --t4: #8bc8e8;
+  --t5: #b5e4ff;
   --t6: #aad8f0;
   --cf: #1a7acc;
   --ci: #1aaa8a;
@@ -22,13 +22,16 @@
   --ease: 150ms ease;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   background: var(--bg);
@@ -90,14 +93,15 @@ input {
   font-size: 10px;
   font-weight: 500;
   letter-spacing: .45em;
-  color: var(--cf);
+  color: var(--6);
+  text-shadow: 0 0 12px rgba(106, 184, 216, .25);
   text-transform: uppercase;
 }
 
 .hd-s {
   font-size: 7.5px;
   letter-spacing: .22em;
-  color: var(--t1);
+  color: var(--t3);
   text-transform: uppercase;
   margin-top: 3px;
 }
@@ -120,13 +124,13 @@ input {
   font-family: var(--font);
   font-size: 11px;
   letter-spacing: .06em;
-  color: var(--t5);
+  color: var(--t6);
   outline: none;
   transition: border-color var(--ease), box-shadow var(--ease);
 }
 
 #si::placeholder {
-  color: var(--t2);
+  color: var(--t4);
 }
 
 #si:focus {
@@ -194,7 +198,8 @@ input {
   border-bottom: none;
 }
 
-.sri:hover, .sri.ak {
+.sri:hover,
+.sri.ak {
   background: rgba(26, 74, 106, .15);
 }
 
@@ -233,18 +238,19 @@ input {
 .hd-btn {
   height: 26px;
   padding: 0 10px;
-  background: var(--sf2);
-  border: 1px solid var(--b0);
+  background: rgba(26, 122, 204, .08);
+  border: 1px solid var(--cf);
   border-radius: var(--r);
   font-size: 8px;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--t2);
+  color: var(--t5);
   transition: color var(--ease), border-color var(--ease);
 }
 
 .hd-btn:hover {
-  color: var(--t5);
+  color: var(--t6);
+  box-shadow: 0 0 12px rgba(26, 122, 204, .25);
   border-color: var(--b1);
 }
 
@@ -889,10 +895,13 @@ input {
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     opacity: .25;
   }
+
   50% {
     transform: scale(4);
     opacity: 1;
