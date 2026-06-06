@@ -26,7 +26,7 @@ const ET = {
 const NODES = [
   { id: "bdd", nom: "Base de données", annee: 1970, cat: "Backend", simple: "Stocker, retrouver et manipuler des informations de façon organisée.", precise: "Formalisé par Edgar Codd chez IBM en 1970. Structure relationnelle dominante 50 ans plus tard." },
   { id: "ftp", nom: "FTP", annee: 1971, cat: "Fondations", simple: "Le protocole pour transférer des fichiers entre ordinateurs.", precise: "File Transfer Protocol. Précède le Web. Remplacé par SFTP et HTTPS." },
-  { id: "email", nom: "Email", annee: 1972, cat: "Fondations", simple: "Envoyer des messages électroniques d'une machine à une autre.", precise: "Ray Tomlinson introduit le @ en 1971. 300 milliards d'emails envoyés par jour en 2023." },
+  { id: "email", nom: "Email", annee: 1971, cat: "Fondations", simple: "Envoyer des messages électroniques d'une machine à une autre.", precise: "Ray Tomlinson introduit le @ en 1971. 300 milliards d'emails envoyés par jour en 2023." },
   { id: "sql", nom: "SQL", annee: 1974, cat: "Backend", simple: "Le langage universel pour interroger une base de données.", precise: "Standardisé par IBM dans les années 70. Omniprésent depuis 50 ans. PostgreSQL, MySQL, SQLite." },
   { id: "crypto", nom: "Cryptographie", annee: 1976, cat: "Sécurité", simple: "Protéger des données en les rendant illisibles sans la clé.", precise: "Diffie et Hellman formalisent la clé publique en 1976. Fondation de HTTPS, SSL et TLS." },
   { id: "tcpip", nom: "TCP/IP", annee: 1983, cat: "Fondations", simple: "Les règles qui permettent à deux ordinateurs de se comprendre.", precise: "TCP découpe en paquets, IP adresse chaque machine. Standard universel depuis 1983." },
@@ -35,7 +35,7 @@ const NODES = [
   { id: "fw", nom: "Firewall", annee: 1988, cat: "Sécurité", simple: "Filtrer le trafic réseau contre les intrusions.", precise: "Émerge en 1988 après le Morris Worm. Première ligne de défense des réseaux." },
   { id: "srv", nom: "Serveur", annee: 1990, cat: "Infrastructure", simple: "Un ordinateur qui stocke et envoie des données aux autres.", precise: "Premier serveur web : Tim Berners-Lee au CERN en 1990. Base de toute l'infrastructure web." },
   { id: "linux", nom: "Linux", annee: 1991, cat: "Infrastructure", simple: "Le système d'exploitation libre qui fait tourner la majorité des serveurs.", precise: "Linus Torvalds en 1991. 96% des serveurs web. Android. Tous les supercalculateurs du top 500." },
-  { id: "net", nom: "Internet", annee: 1991, cat: "Fondations", simple: "Le réseau mondial qui relie des milliards d'ordinateurs.", precise: "Né des recherches ARPANET militaires. Ne pas confondre avec le Web : l'Internet est l'autoroute." },
+  { id: "net", nom: "Internet", annee: 1983, cat: "Fondations", simple: "Le réseau mondial qui relie des milliards d'ordinateurs.", precise: "Né des recherches ARPANET (1969), structuré par TCP/IP en 1983, ouvert au grand public en 1991. Ne pas confondre avec le Web : l'Internet est l'autoroute." },
   { id: "web", nom: "Web", annee: 1991, cat: "Fondations", simple: "Un système de pages reliées, accessibles via Internet.", precise: "Tim Berners-Lee au CERN, 1991. Trois piliers : HTML, HTTP, URL. La plus grande bibliothèque." },
   { id: "http", nom: "HTTP", annee: 1991, cat: "Fondations", simple: "Le protocole qui permet au navigateur de demander une page.", precise: "HyperText Transfer Protocol. Non sécurisé — HTTPS l'a remplacé. HTTP/3 en 2022." },
   { id: "html", nom: "HTML", annee: 1991, cat: "Frontend", simple: "Le langage qui structure le contenu d'une page web.", precise: "HyperText Markup Language. Squelette de chaque page. De HTML 1.0 à HTML5." },
@@ -47,7 +47,7 @@ const NODES = [
   { id: "cookie", nom: "Cookie", annee: 1994, cat: "Frontend", simple: "Un petit fichier qui permet aux sites de se souvenir de toi.", precise: "Lou Montulli, Netscape, 1994. Fondation des sessions et du tracking publicitaire." },
   { id: "https", nom: "HTTPS", annee: 1994, cat: "Sécurité", simple: "La version sécurisée du HTTP.", precise: "HTTP + SSL/TLS. Universel après 2014. Let's Encrypt en 2015 rend les certificats gratuits." },
   { id: "stream", nom: "Streaming", annee: 1995, cat: "Fondations", simple: "Diffuser de la vidéo ou de l'audio en continu.", precise: "RealNetworks 1995. YouTube 2005, Netflix 2007, Spotify 2008. 80% du trafic Internet." },
-  { id: "apache", nom: "Apache", annee: 1995, cat: "Infrastructure", simple: "Le logiciel qui fait tourner la majorité des serveurs web.", precise: "Open source, 1995. 'A patchy server'. Pilier de LAMP (Linux, Apache, MySQL, PHP)." },
+  { id: "apache", nom: "Apache", annee: 1995, cat: "Infrastructure", simple: "Le logiciel qui fait tourner la majorité des serveurs web.", precise: "Open source, 1995. Nommé en hommage au peuple Apache. Pilier de LAMP (Linux, Apache, MySQL, PHP)." },
   { id: "ecom", nom: "E-commerce", annee: 1995, cat: "Fondations", simple: "Acheter et vendre via Internet.", precise: "Amazon et eBay naissent tous deux en 1995. L'année zéro du commerce en ligne." },
   { id: "js", nom: "JavaScript", annee: 1995, cat: "Frontend", simple: "Le langage qui rend les pages web interactives.", precise: "Brendan Eich, 10 jours, 1995. Le langage le plus utilisé au monde. Du browser au serveur." },
   { id: "mysql", nom: "MySQL", annee: 1995, cat: "Backend", simple: "Un système de base de données open source massivement adopté.", precise: "1995. Pilier de LAMP. Racheté par Oracle en 2010. MariaDB en est le fork libre." },
@@ -56,9 +56,9 @@ const NODES = [
   { id: "flash", nom: "Flash", annee: 1996, cat: "Frontend", simple: "L'outil d'animation du Web avant JavaScript.", precise: "Macromedia 1996. 15 ans de règne. Tué par l'iPhone 2010. Arrêté définitivement en 2020." },
   { id: "portal", nom: "Portail Web", annee: 1996, cat: "Fondations", simple: "Un site généraliste servant de point d'entrée unique sur Internet.", precise: "Yahoo, AOL, MSN. Dominants 1996–2002. Ancêtres des plateformes et réseaux sociaux." },
   { id: "vpn", nom: "VPN", annee: 1996, cat: "Sécurité", simple: "Un tunnel sécurisé qui chiffre toute ta connexion.", precise: "Microsoft, 1996. D'abord entreprise. Grand public dans les années 2010 pour la confidentialité." },
-  { id: "xml", nom: "XML", annee: 1996, cat: "Fondations", simple: "Un langage universel pour structurer et échanger des données.", precise: "W3C 1998. Supplanté par JSON pour les APIs. Influence : SVG, XHTML, RSS, SOAP." },
   { id: "blog", nom: "Blog", annee: 1997, cat: "Fondations", simple: "Un site de publication personnelle régulière.", precise: "'Weblog' Jorn Barger 1997. WordPress 2003. Précurseur des réseaux sociaux." },
   { id: "seo", nom: "SEO", annee: 1997, cat: "Marketing", simple: "Optimiser un site pour les moteurs de recherche.", precise: "Naît avec les premiers moteurs. Google transforme le SEO avec PageRank. 80 Md$/an d'industrie." },
+  { id: "xml", nom: "XML", annee: 1998, cat: "Fondations", simple: "Un langage universel pour structurer et échanger des données.", precise: "W3C 1998. Supplanté par JSON pour les APIs. Influence : SVG, XHTML, RSS, SOAP." },
   { id: "css2", nom: "CSS2", annee: 1998, cat: "Frontend", simple: "La version enrichie de CSS pour les mises en page avancées.", precise: "W3C 1998. Positionnement, pseudo-classes, sélecteurs avancés. Base pendant 10 ans." },
   { id: "emkt", nom: "Email Marketing", annee: 1998, cat: "Marketing", simple: "L'utilisation de l'email comme canal commercial.", precise: "1998 : explosion du potentiel et du spam simultanément. ROI de 42$ pour 1$ investi." },
   { id: "google", nom: "Google", annee: 1998, cat: "Fondations", simple: "Le moteur de recherche qui a réorganisé l'accès à l'information.", precise: "Page et Brin, Stanford, 1998. PageRank écrase tous les concurrents en 5 ans. 92% de part." },
@@ -83,6 +83,7 @@ const NODES = [
   { id: "bt", nom: "BitTorrent", annee: 2001, cat: "Fondations", simple: "Un protocole d'échange décentralisé ultra-efficace.", precise: "Bram Cohen, 2001. Plus il y a de téléchargeurs, plus c'est rapide. Précurseur du P2P moderne." },
   { id: "itunes", nom: "iTunes / MP3", annee: 2001, cat: "Fondations", simple: "L'écosystème qui a numérisé la musique et préfiguré le streaming.", precise: "Apple 2001. iTunes Store 2003 prouve qu'on peut vendre du contenu numérique." },
   { id: "wp", nom: "WordPress", annee: 2003, cat: "Backend", simple: "Le CMS open source qui propulse 43% des sites du monde.", precise: "Matt Mullenweg, 2003. De blog à plateforme CMS complète. 60 000 plugins." },
+  { id: "wk", nom: "WebKit", annee: 2003, cat: "Fondations", simple: "Le moteur de rendu qui propulse Safari et les navigateurs mobiles.", precise: "Apple fork de KHTML, intégré à Safari dès 2003. Google l'adopte puis crée Blink en 2013. Moteur de Safari/iOS." },
   { id: "fb", nom: "Facebook", annee: 2004, cat: "Fondations", simple: "Le réseau social qui a connecté des milliards d'humains.", precise: "Zuckerberg, Harvard, 2004. 3 milliards d'utilisateurs actifs. Inventeur du graphe social." },
   { id: "gmail", nom: "Gmail", annee: 2004, cat: "Fondations", simple: "Le service email de Google avec 1 Go de stockage gratuit.", precise: "1er avril 2004. Interface AJAX ultra-fluide. Rivalise avec les apps de bureau. 1,8 Md d'utilisateurs." },
   { id: "ff", nom: "Firefox", annee: 2004, cat: "Fondations", simple: "Le navigateur open source qui a brisé le monopole d'IE.", precise: "Firefox 1.0, novembre 2004. 100 millions de téléchargements en un an." },
@@ -91,7 +92,6 @@ const NODES = [
   { id: "web2", nom: "Web 2.0", annee: 2004, cat: "Fondations", simple: "Le tournant où les utilisateurs deviennent créateurs de contenu.", precise: "Tim O'Reilly, 2004. Blogs, wikis, réseaux sociaux. Naissance de l'économie de l'attention." },
   { id: "ga", nom: "Google Analytics", annee: 2005, cat: "Marketing", simple: "Mesurer précisément le comportement des visiteurs d'un site.", precise: "Google rachète Urchin 2005. Gratuit. Données sur la moitié du Web mondial." },
   { id: "yt", nom: "YouTube", annee: 2005, cat: "Fondations", simple: "La plateforme qui a démocratisé la vidéo en ligne.", precise: "2005. Racheté par Google 2006 pour 1,65 Md$. 500h uploadées par minute en 2023." },
-  { id: "wk", nom: "WebKit", annee: 2005, cat: "Fondations", simple: "Le moteur de rendu qui propulse Safari et les navigateurs mobiles.", precise: "Apple fork de KHTML 2005. Google l'adopte pour Chrome. Blink en 2013. Moteur de Safari/iOS." },
   { id: "saas", nom: "SaaS", annee: 2005, cat: "Infrastructure", simple: "Un logiciel via Internet par abonnement, sans installation.", precise: "Software as a Service. Salesforce pionnier. Google Apps, Dropbox, Slack. Modèle dominant." },
   { id: "sass", nom: "Sass / LESS", annee: 2006, cat: "Frontend", simple: "Des langages qui enrichissent CSS avec variables et logique.", precise: "Hampton Catlin 2006. Variables, imbrication, mixins. CSS Variables en 2017 absorbe leurs idées." },
   { id: "jq", nom: "jQuery", annee: 2006, cat: "Frontend", simple: "La bibliothèque JavaScript qui a rendu le Web accessible à tous.", precise: "John Resig 2006. Résout les incompatibilités navigateurs. Sur 77% des sites en 2012." },
@@ -123,7 +123,7 @@ const NODES = [
   { id: "next", nom: "Next.js", annee: 2016, cat: "Frontend", simple: "Le framework React qui simplifie le rendu côté serveur.", precise: "Vercel, 2016. Rendu hybride SSR/SSG, API Routes, optimisation automatique. Devient la référence du React moderne avec l’App Router en 2023." },
   { id: "gatsby", nom: "Gatsby", annee: 2016, cat: "Frontend", simple: "Le générateur de sites statiques basé sur React.", precise: "Kyle Mathews, 2016. GraphQL intégré, écosystème de plugins. Pionnier du JAMstack avant d’être dépassé par Next.js et Astro." },
   { id: "nuxt", nom: "Nuxt.js", annee: 2016, cat: "Frontend", simple: "Le framework Vue pour créer des apps universelles.", precise: "2016. SSR, SSG, routing automatique. Nuxt 3 (2022) modernise l’écosystème Vue avec Nitro et Vite." },
-  { id: "wasm", nom: "WebAssembly", annee: 2017, cat: "Frontend", simple: "Exécuter du code ultra-rapide dans le navigateur.", precise: "Standard W3C 2019. Compile C, C++, Rust. Performances proches du natif." },
+  { id: "wasm", nom: "WebAssembly", annee: 2017, cat: "Frontend", simple: "Exécuter du code ultra-rapide dans le navigateur.", precise: "Disponible dans les navigateurs dès 2017, standard W3C 2019. Compile C, C++, Rust. Performances proches du natif." },
   { id: "tailwind", nom: "Tailwind CSS", annee: 2017, cat: "Frontend", simple: "Le framework CSS utilitaire qui remplace les classes personnalisées.", precise: "Adam Wathan, 2017. Approche utility-first, purge automatique, design system intégré. Devient dominant dans les années 2020." },
   { id: "cfw", nom: "Cloudflare Workers", annee: 2017, cat: "Infrastructure", simple: "Exécuter du JavaScript à la périphérie du réseau.", precise: "Cloudflare, 2017. Edge computing ultra-rapide, sans serveur, proche des utilisateurs. Base de l’architecture moderne distribuée." },
   { id: "flutterweb", nom: "Flutter Web", annee: 2017, cat: "Frontend", simple: "Compiler des interfaces Flutter pour le Web.", precise: "Google, 2017. Rendu Canvas/WebGL. Une approche cross‑platform unifiée pour mobile, desktop et web." },
@@ -131,42 +131,10 @@ const NODES = [
   { id: "jam", nom: "JAMstack", annee: 2016, cat: "Infrastructure", simple: "Une architecture qui pré-génère des pages statiques ultra-rapides et sécurisées.", precise: "Formalisée par Mathias Biilmann (Netlify) en 2016. Principe : générer les pages à l'avance, les servir via CDN, déléguer le dynamique aux APIs. Zéro serveur, performance maximale. Next.js, Gatsby, Nuxt. Rebaptisée 'Composable Architecture' en 2022." },
   { id: "lit", nom: "Lit", annee: 2018, cat: "Frontend", simple: "Une librairie légère pour créer des Web Components.", precise: "Google, 2018. Syntaxe minimaliste, rendu ultra-rapide, adoption croissante dans les design systems." },
   { id: "svelte", nom: "Svelte", annee: 2018, cat: "Frontend", simple: "Le framework qui compile les composants au lieu de les exécuter.", precise: "Rich Harris, 2018. Pas de virtual DOM, performances exceptionnelles. SvelteKit devient son framework officiel en 2023." },
-  { id: "netlify", nom: "Netlify", annee: 2018, cat: "Infrastructure", simple: "La plateforme qui a popularisé le JAMstack.", precise: "Netlify, 2018. Déploiement Git, fonctions serverless, edge. Accélère la transition vers les sites statiques modernes." },
-  { id: "vercel", nom: "Vercel", annee: 2018, cat: "Infrastructure", simple: "La plateforme d’hébergement optimisée pour React et Next.js.", precise: "Ex-Zeit, 2018. Edge Functions, ISR, App Router. Devient un pilier du Web moderne." },
-  {
-    id: "lit", nom: "Lit", annee: 2018, cat: "Frontend",
-    simple: "Une librairie légère pour créer des Web Components.",
-    precise: "Google, 2018. Syntaxe minimaliste, rendu ultra-rapide, adoption croissante dans les design systems."
-  },
-
-  {
-    id: "svelte", nom: "Svelte", annee: 2018, cat: "Frontend",
-    simple: "Le framework qui compile les composants au lieu de les exécuter.",
-    precise: "Rich Harris, 2018. Pas de virtual DOM, performances exceptionnelles. SvelteKit devient son framework officiel en 2023."
-  },
-
-  {
-    id: "netlify", nom: "Netlify", annee: 2018, cat: "Infrastructure",
-    simple: "La plateforme qui a popularisé le JAMstack.",
-    precise: "Netlify, 2018. Déploiement Git, fonctions serverless, edge. Accélère la transition vers les sites statiques modernes."
-  },
-
-  {
-    id: "vercel", nom: "Vercel", annee: 2018, cat: "Infrastructure",
-    simple: "La plateforme d’hébergement optimisée pour React et Next.js.",
-    precise: "Ex-Zeit, 2018. Edge Functions, ISR, App Router. Devient un pilier du Web moderne."
-  },
-  {
-    id: "deno", nom: "Deno", annee: 2019, cat: "Backend",
-    simple: "Le runtime JavaScript sécurisé créé par l’auteur de Node.",
-    precise: "Ryan Dahl, 2019. Permissions explicites, TypeScript natif, modules ES. Alternative moderne à Node.js."
-  },
-
-  {
-    id: "snowpack", nom: "Snowpack", annee: 2019, cat: "Frontend",
-    simple: "Le bundler qui a introduit le développement sans build.",
-    precise: "2019. Basé sur les modules ES natifs. Précurseur direct de Vite."
-  },
+  { id: "netlify", nom: "Netlify", annee: 2015, cat: "Infrastructure", simple: "La plateforme qui a popularisé le JAMstack.", precise: "Fondé en 2014, lancé publiquement en 2015. Déploiement Git, fonctions serverless, edge. Accélère la transition vers les sites statiques modernes." },
+  { id: "vercel", nom: "Vercel", annee: 2015, cat: "Infrastructure", simple: "La plateforme d'hébergement optimisée pour React et Next.js.", precise: "Fondé sous le nom Zeit en 2015, rebaptisé Vercel en 2020. Edge Functions, ISR, App Router. Devient un pilier du Web moderne." },
+  { id: "deno", nom: "Deno", annee: 2019, cat: "Backend", simple: "Le runtime JavaScript sécurisé créé par l’auteur de Node.", precise: "Ryan Dahl, 2019. Permissions explicites, TypeScript natif, modules ES. Alternative moderne à Node.js." },
+  { id: "snowpack", nom: "Snowpack", annee: 2019, cat: "Frontend", simple: "Le bundler qui a introduit le développement sans build.", precise: "2019. Basé sur les modules ES natifs. Précurseur direct de Vite." },
 
   {
     id: "svelte3", nom: "Svelte 3", annee: 2019, cat: "Frontend",
@@ -216,11 +184,7 @@ const NODES = [
     precise: "2021. Loaders, actions, navigation progressive. Racheté par Shopify en 2022."
   },
 
-  {
-    id: "esbuild", nom: "esbuild", annee: 2021, cat: "Frontend",
-    simple: "Le bundler écrit en Go, 100× plus rapide que Webpack.",
-    precise: "Evan Wallace, 2021. Base de nombreux outils modernes (Vite, Bun, etc.)."
-  },
+  { id: "esbuild", nom: "esbuild", annee: 2020, cat: "Frontend", simple: "Le bundler écrit en Go, 100× plus rapide que Webpack.", precise: "Evan Wallace, 2020. Base de nombreux outils modernes (Vite, Bun, etc.)." },
 
   {
     id: "swc", nom: "SWC", annee: 2021, cat: "Frontend",
@@ -264,11 +228,7 @@ const NODES = [
     precise: "2023. Accès bas niveau au GPU. IA, 3D, calcul parallèle. Révolution pour le Web haute performance."
   },
 
-  {
-    id: "sveltekit", nom: "SvelteKit", annee: 2023, cat: "Frontend",
-    simple: "Le framework officiel de Svelte.",
-    precise: "2023. Routing, SSR, adaptateurs multiples. Devient un concurrent majeur de Next.js et Astro."
-  },
+  { id: "sveltekit", nom: "SvelteKit", annee: 2022, cat: "Frontend", simple: "Le framework officiel de Svelte.", precise: "Sorti en version stable en décembre 2022. Routing, SSR, adaptateurs multiples. Concurrent majeur de Next.js et Astro." },
 
   {
     id: "next13", nom: "Next.js 13", annee: 2023, cat: "Frontend",
@@ -282,23 +242,9 @@ const NODES = [
     precise: "2023. Basé sur Nitro, Vite, TypeScript. Performances et DX modernisées."
   },
 
-  {
-    id: "rsc", nom: "React Server Components", annee: 2024, cat: "Frontend",
-    simple: "Le modèle React qui exécute les composants côté serveur.",
-    precise: "2024. Moins de JavaScript côté client, streaming natif. Devient la base du React moderne."
-  },
-
-  {
-    id: "islands", nom: "Islands Architecture", annee: 2024, cat: "Frontend",
-    simple: "Une approche où seules les parties interactives sont hydratées.",
-    precise: "Concept popularisé par Astro. Réduit drastiquement le JavaScript envoyé au client."
-  },
-
-  {
-    id: "htmx", nom: "HTMX", annee: 2024, cat: "Frontend",
-    simple: "Créer des interfaces dynamiques sans JavaScript explicite.",
-    precise: "2024. Attributs HTML pour requêtes AJAX, SSE, WebSockets. Retour aux fondamentaux du Web."
-  },
+  { id: "rsc", nom: "React Server Components", annee: 2022, cat: "Frontend", simple: "Le modèle React qui exécute les composants côté serveur.", precise: "Introduit expérimentalement en 2020, intégré dans Next.js 13 en 2022. Moins de JavaScript côté client, streaming natif." },
+  { id: "islands", nom: "Islands Architecture", annee: 2021, cat: "Frontend", simple: "Une approche où seules les parties interactives sont hydratées.", precise: "Concept formalisé par Jason Miller en 2019, popularisé par Astro dès 2021. Réduit drastiquement le JavaScript envoyé au client." },
+  { id: "htmx", nom: "HTMX", annee: 2020, cat: "Frontend", simple: "Créer des interfaces dynamiques sans JavaScript explicite.", precise: "Carson Gross, 2020. Attributs HTML pour requêtes AJAX, SSE, WebSockets. Retour aux fondamentaux du Web." },
 
   {
     id: "unjs", nom: "UnJS", annee: 2024, cat: "Backend",
@@ -312,29 +258,10 @@ const NODES = [
     precise: "2024. Exécution distribuée, cold starts quasi nuls. Alternative à Vercel et Cloudflare."
   },
 
-  {
-    id: "webcontainer", nom: "WebContainer", annee: 2025, cat: "Infrastructure",
-    simple: "Exécuter Node.js directement dans le navigateur.",
-    precise: "StackBlitz, 2025. Environnement de développement complet sans serveur distant."
-  },
-
-  {
-    id: "turbopack", nom: "Turbopack", annee: 2025, cat: "Frontend",
-    simple: "Le bundler Rust de Vercel, successeur de Webpack.",
-    precise: "2025. 10× plus rapide que Webpack. Intégré à Next.js."
-  },
-
-  {
-    id: "parcel2", nom: "Parcel 2", annee: 2025, cat: "Frontend",
-    simple: "La nouvelle version du bundler zéro‑config.",
-    precise: "2025. Support Rust, HMR amélioré, compilation parallèle."
-  },
-
-  {
-    id: "fresh", nom: "Fresh", annee: 2026, cat: "Frontend",
-    simple: "Le framework Deno basé sur l’hydratation progressive.",
-    precise: "2026. Pas de build, rendu serveur natif, composants islands. Alternative moderne à React."
-  },
+  { id: "webcontainer", nom: "WebContainer", annee: 2021, cat: "Infrastructure", simple: "Exécuter Node.js directement dans le navigateur.", precise: "StackBlitz, 2021. Environnement de développement complet sans serveur distant." },
+  { id: "turbopack", nom: "Turbopack", annee: 2022, cat: "Frontend", simple: "Le bundler Rust de Vercel, successeur de Webpack.", precise: "Annoncé avec Next.js 13 en octobre 2022. Intégré nativement à Next.js, conçu pour dépasser Webpack." },
+  { id: "parcel2", nom: "Parcel 2", annee: 2021, cat: "Frontend", simple: "La nouvelle version du bundler zéro‑config.", precise: "Sorti en 2021. Support Rust, HMR amélioré, compilation parallèle." },
+  { id: "fresh", nom: "Fresh", annee: 2022, cat: "Frontend", simple: "Le framework Deno basé sur l'hydratation progressive.", precise: "Sorti en version stable en 2022. Pas de build, rendu serveur natif, composants islands. Alternative moderne à React." },
 
 
 ];
@@ -343,27 +270,29 @@ const NODES = [
 const EDGES = [
   ["ftp", "tcpip", "DEPENDS_ON"], ["ftp", "srv", "DEPENDS_ON"],
   ["email", "tcpip", "DEPENDS_ON"], ["email", "srv", "DEPENDS_ON"],
-  ["tcpip", "net", "EVOLVES_INTO"], ["tcpip", "dns", "INFLUENCE"], ["tcpip", "ip", "DEPENDS_ON"],
+  ["tcpip", "net", "DEPENDS_ON"], ["tcpip", "dns", "INFLUENCE"], ["tcpip", "ip", "DEPENDS_ON"],
   ["dns", "url", "INFLUENCE"], ["net", "web", "EVOLVES_INTO"],
-  ["web", "http", "DEPENDS_ON"], ["web", "html", "DEPENDS_ON"], ["web", "url", "DEPENDS_ON"],
+  ["web", "http", "DEPENDS_ON"], ["web", "html", "DEPENDS_ON"], ["web", "url", "DEPENDS_ON"], ["web", "net", "DEPENDS_ON"],
   ["http", "https", "REPLACED_BY"],
-  ["html", "css", "EVOLVES_INTO"], ["html", "js", "EVOLVES_INTO"], ["html", "dom", "EVOLVES_INTO"], ["html", "html5", "EVOLVES_INTO"],
+  ["html", "html5", "EVOLVES_INTO"],
   ["linux", "apache", "INFLUENCE"], ["linux", "aws", "DEPENDS_ON"], ["linux", "docker", "DEPENDS_ON"], ["linux", "gh", "DEPENDS_ON"],
   ["apache", "srv", "DEPENDS_ON"], ["apache", "php", "INFLUENCE"],
   ["bdd", "sql", "EVOLVES_INTO"], ["sql", "mysql", "EVOLVES_INTO"],
-  ["php", "mysql", "DEPENDS_ON"], ["php", "wp", "EVOLVES_INTO"], ["php5", "php", "EVOLVES_INTO"], ["php5", "wp", "INFLUENCE"],
+  ["php", "mysql", "DEPENDS_ON"], ["php", "php5", "EVOLVES_INTO"], ["php", "wp", "EVOLVES_INTO"],
+  ["php5", "php", "EVOLVES_INTO"], ["php5", "wp", "INFLUENCE"],
   ["wp", "mysql", "DEPENDS_ON"], ["cms", "php", "DEPENDS_ON"], ["cms", "mysql", "DEPENDS_ON"], ["cms", "wp", "EVOLVES_INTO"],
-  ["node", "js", "EVOLVES_INTO"], ["node", "chrome", "DEPENDS_ON"],
+  ["node", "js", "EVOLVES_INTO"], ["node", "npm", "EVOLVES_INTO"],
   ["css", "html", "DEPENDS_ON"], ["css2", "css", "EVOLVES_INTO"], ["css3", "css2", "EVOLVES_INTO"],
-  ["css3", "html5", "DEPENDS_ON"], ["sass", "css", "EVOLVES_INTO"], ["sass", "css3", "INFLUENCE"],
+  ["css3", "html5", "DEPENDS_ON"], ["css3", "tailwind", "INFLUENCE"],
+  ["sass", "css", "EVOLVES_INTO"], ["sass", "css3", "INFLUENCE"],
   ["flash", "html5", "REPLACED_BY"], ["flash", "js", "REPLACED_BY"],
   ["js", "dom", "DEPENDS_ON"],
   ["jq", "js", "DEPENDS_ON"], ["jq", "dom", "DEPENDS_ON"], ["jq", "ajax", "DEPENDS_ON"], ["jq", "react", "INFLUENCE"],
   ["ajax", "js", "DEPENDS_ON"], ["ajax", "dom", "DEPENDS_ON"], ["ajax", "api", "INFLUENCE"],
   ["bb", "js", "DEPENDS_ON"], ["bb", "jq", "DEPENDS_ON"], ["bb", "react", "INFLUENCE"],
   ["ang", "js", "DEPENDS_ON"], ["ang", "ts", "DEPENDS_ON"],
-  ["ts", "js", "EVOLVES_INTO"], ["ts", "react", "INFLUENCE"], ["ts", "ang", "INFLUENCE"],
-  ["react", "js", "DEPENDS_ON"], ["react", "dom", "EVOLVES_INTO"], ["react", "ts", "DEPENDS_ON"], ["react", "node", "DEPENDS_ON"],
+  ["ts", "angular", "DEPENDS_ON"], ["ts", "js", "EVOLVES_INTO"], ["ts", "react", "INFLUENCE"], ["ts", "ang", "INFLUENCE"],
+  ["react", "js", "DEPENDS_ON"], ["react", "dom", "DEPENDS_ON"], ["react", "ts", "DEPENDS_ON"],
   ["vue", "js", "DEPENDS_ON"], ["vue", "react", "INFLUENCE"],
   ["wp2", "js", "DEPENDS_ON"], ["wp2", "react", "DEPENDS_ON"], ["wp2", "node", "DEPENDS_ON"],
   ["html5", "js", "DEPENDS_ON"], ["html5", "css3", "DEPENDS_ON"],
@@ -376,17 +305,17 @@ const EDGES = [
   ["json", "js", "DEPENDS_ON"], ["xml", "json", "CONCURRENCE"],
   ["gql", "rest", "EVOLVES_INTO"], ["gql", "api", "EVOLVES_INTO"], ["gql", "react", "INFLUENCE"],
   ["xmlrpc", "xml", "DEPENDS_ON"], ["xmlrpc", "api", "DEPENDS_ON"],
-  ["crypto", "ssl", "INFLUENCE"], ["ssl", "tls", "EVOLVES_INTO"], ["tls", "https", "DEPENDS_ON"], ["https", "http", "EVOLVES_INTO"],
+  ["crypto", "ssl", "INFLUENCE"], ["ssl", "tls", "EVOLVES_INTO"], ["tls", "https", "DEPENDS_ON"],
   ["auth", "cookie", "DEPENDS_ON"], ["auth", "https", "DEPENDS_ON"], ["fw", "srv", "DEPENDS_ON"], ["vpn", "https", "DEPENDS_ON"],
-  ["aws", "srv", "EVOLVES_INTO"], ["aws", "linux", "DEPENDS_ON"],
-  ["cloud", "aws", "DEPENDS_ON"], ["cloud", "srv", "EVOLVES_INTO"],
+  ["aws", "srv", "DEPENDS_ON"], ["aws", "linux", "DEPENDS_ON"],
+  ["cloud", "aws", "DEPENDS_ON"], ["cloud", "srv", "DEPENDS_ON"],
   ["saas", "cloud", "DEPENDS_ON"], ["saas", "aws", "DEPENDS_ON"], ["saas", "api", "DEPENDS_ON"],
   ["docker", "linux", "DEPENDS_ON"], ["docker", "cloud", "DEPENDS_ON"],
   ["k8s", "docker", "DEPENDS_ON"], ["k8s", "cloud", "DEPENDS_ON"],
   ["srvless", "aws", "DEPENDS_ON"], ["srvless", "cloud", "DEPENDS_ON"], ["srvless", "node", "DEPENDS_ON"],
   ["drop", "cloud", "DEPENDS_ON"], ["drop", "aws", "DEPENDS_ON"],
   ["iphone", "nav", "INFLUENCE"], ["iphone", "html5", "INFLUENCE"],
-  ["ipad", "iphone", "EVOLVES_INTO"], ["ipad", "rwd", "INFLUENCE"],
+  ["ipad", "iphone", "DEPENDS_ON"], ["ipad", "rwd", "INFLUENCE"],
   ["ig", "iphone", "DEPENDS_ON"], ["ig", "api", "DEPENDS_ON"],
   ["fb", "api", "DEPENDS_ON"], ["fb", "js", "DEPENDS_ON"], ["fb", "react", "INFLUENCE"],
   ["tw", "api", "DEPENDS_ON"], ["tw", "web2", "DEPENDS_ON"],
@@ -399,7 +328,7 @@ const EDGES = [
   ["itunes", "stream", "INFLUENCE"], ["p2p", "net", "DEPENDS_ON"], ["bt", "p2p", "EVOLVES_INTO"],
   ["web2", "ajax", "DEPENDS_ON"], ["web2", "blog", "DEPENDS_ON"], ["web2", "api", "DEPENDS_ON"],
   ["google", "msr", "EVOLVES_INTO"], ["google", "pgrnk", "DEPENDS_ON"], ["pgrnk", "seo", "INFLUENCE"],
-  ["gmail", "email", "EVOLVES_INTO"], ["ajax", "gmail", "INFLUENCE"], ["gmail", "google", "DEPENDS_ON"],
+  ["gmail", "email", "DEPENDS_ON"], ["ajax", "gmail", "INFLUENCE"], ["gmail", "google", "DEPENDS_ON"],
   ["ga", "google", "DEPENDS_ON"], ["ga", "cookie", "DEPENDS_ON"],
   ["adwords", "google", "DEPENDS_ON"], ["adwords", "seo", "INFLUENCE"],
   ["chrome", "nav", "EVOLVES_INTO"], ["chrome", "js", "DEPENDS_ON"],
@@ -413,141 +342,48 @@ const EDGES = [
   ["nav", "web", "DEPENDS_ON"], ["nav", "html", "DEPENDS_ON"],
   ["broad", "net", "DEPENDS_ON"], ["broad", "stream", "INFLUENCE"],
   ["portal", "msr", "DEPENDS_ON"], ["portal", "email", "DEPENDS_ON"],
-  ["wc", "html5", "DEPENDS_ON"], ["wc", "dom", "DEPENDS_ON"], ["wc", "js", "DEPENDS_ON"], ["wc", "w3c", "STANDARDISATION"], ["wc", "react", "CONCURRENCE"],
+  ["wc", "html5", "DEPENDS_ON"], ["wc", "lit", "INFLUENCE"], ["wc", "dom", "DEPENDS_ON"], ["wc", "js", "DEPENDS_ON"], ["wc", "w3c", "STANDARDISATION"], ["wc", "react", "CONCURRENCE"],
   ["jam", "srvless", "DEPENDS_ON"], ["jam", "api", "DEPENDS_ON"], ["jam", "react", "INFLUENCE"],
-
-  ["next", "react", "DEPENDS_ON"],
-  ["next", "node", "DEPENDS_ON"],
-  ["next", "vercel", "DEPENDS_ON"],
-
-  ["gatsby", "react", "DEPENDS_ON"],
-  ["gatsby", "graphql", "DEPENDS_ON"],
-  ["gatsby", "jam", "INFLUENCE"],
-
-  ["nuxt", "vue", "DEPENDS_ON"],
-  ["nuxt", "node", "DEPENDS_ON"],
-  ["nuxt", "jam", "INFLUENCE"],
-
-  ["tailwind", "css3", "DEPENDS_ON"],
-  ["tailwind", "rwd", "INFLUENCE"],
-
-  ["cfw", "srvless", "EVOLVES_INTO"],
-  ["cfw", "api", "DEPENDS_ON"],
-  ["cfw", "net", "DEPENDS_ON"],
-
-  ["flutterweb", "html5", "DEPENDS_ON"],
-  ["flutterweb", "wasm", "INFLUENCE"],
-
-  ["lit", "wc", "DEPENDS_ON"],
-  ["lit", "js", "DEPENDS_ON"],
-
-  ["svelte", "js", "DEPENDS_ON"],
-  ["svelte", "dom", "INFLUENCE"],
-
-  ["netlify", "jam", "EVOLVES_INTO"],
-  ["netlify", "srvless", "DEPENDS_ON"],
-  ["netlify", "api", "DEPENDS_ON"],
-
-  ["vercel", "next", "INFLUENCE"],
-  ["vercel", "srvless", "DEPENDS_ON"],
-  ["vercel", "edgefunc", "EVOLVES_INTO"],
-
-  ["deno", "js", "EVOLVES_INTO"],
-  ["deno", "ts", "DEPENDS_ON"],
-
-  ["snowpack", "js", "DEPENDS_ON"],
-  ["snowpack", "esm", "INFLUENCE"],
-
-  ["svelte3", "svelte", "EVOLVES_INTO"],
-  ["svelte3", "js", "DEPENDS_ON"],
-
-  ["vite", "esbuild", "INFLUENCE"],
-  ["vite", "js", "DEPENDS_ON"],
-  ["vite", "ts", "DEPENDS_ON"],
-
-  ["redwood", "react", "DEPENDS_ON"],
-  ["redwood", "gql", "DEPENDS_ON"],
-  ["redwood", "jam", "INFLUENCE"],
-
-  ["blitz", "next", "DEPENDS_ON"],
-  ["blitz", "react", "DEPENDS_ON"],
-
-  ["supabase", "sql", "DEPENDS_ON"],
-  ["supabase", "api", "DEPENDS_ON"],
-  ["supabase", "auth", "DEPENDS_ON"],
-
-  ["cfpages", "jam", "EVOLVES_INTO"],
-  ["cfpages", "cfw", "DEPENDS_ON"],
-
-  ["astro", "html5", "DEPENDS_ON"],
-  ["astro", "islands", "INFLUENCE"],
-  ["astro", "react", "INFLUENCE"],
-  ["astro", "vue", "INFLUENCE"],
-  ["astro", "svelte", "INFLUENCE"],
-
-  ["remix", "react", "DEPENDS_ON"],
-  ["remix", "web", "DEPENDS_ON"],
-
-  ["esbuild", "js", "DEPENDS_ON"],
-  ["esbuild", "go", "INFLUENCE"],
-
-  ["swc", "js", "DEPENDS_ON"],
-  ["swc", "rust", "INFLUENCE"],
-
+  ["next", "react", "DEPENDS_ON"], ["next", "node", "DEPENDS_ON"], ["next", "vercel", "DEPENDS_ON"],
+  ["gatsby", "react", "DEPENDS_ON"], ["gatsby", "graphql", "DEPENDS_ON"], ["gatsby", "gql", "DEPENDS_ON"], ["gatsby", "jam", "INFLUENCE"],
+  ["nuxt", "vue", "DEPENDS_ON"], ["nuxt", "node", "DEPENDS_ON"], ["nuxt", "jam", "INFLUENCE"],
+  ["tailwind", "css3", "DEPENDS_ON"], ["tailwind", "rwd", "INFLUENCE"],
+  ["cfw", "srvless", "EVOLVES_INTO"], ["cfw", "api", "DEPENDS_ON"], ["cfw", "net", "DEPENDS_ON"],
+  ["flutterweb", "html5", "DEPENDS_ON"], ["flutterweb", "wasm", "INFLUENCE"],
+  ["lit", "wc", "DEPENDS_ON"], ["lit", "js", "DEPENDS_ON"],
+  ["svelte", "js", "DEPENDS_ON"], ["svelte", "dom", "INFLUENCE"],
+  ["netlify", "jam", "EVOLVES_INTO"], ["netlify", "srvless", "DEPENDS_ON"], ["netlify", "api", "DEPENDS_ON"],
+  ["vercel", "srvless", "DEPENDS_ON"], ["vercel", "edgefunc", "EVOLVES_INTO"],
+  ["deno", "js", "EVOLVES_INTO"], ["deno", "ts", "DEPENDS_ON"], ["deno", "node", "CONCURRENCE"],
+  ["snowpack", "js", "DEPENDS_ON"], ["snowpack", "esm", "INFLUENCE"],
+  ["svelte3", "svelte", "EVOLVES_INTO"], ["svelte3", "js", "DEPENDS_ON"], ["svelte3", "sveltekit", "EVOLVES_INTO"],
+  ["vite", "esbuild", "INFLUENCE"], ["vite", "js", "DEPENDS_ON"], ["vite", "ts", "DEPENDS_ON"], ["vite", "svelte", "INFLUENCE"], ["vite", "vue", "INFLUENCE"],
+  ["redwood", "react", "DEPENDS_ON"], ["redwood", "gql", "DEPENDS_ON"], ["redwood", "jam", "INFLUENCE"],
+  ["blitz", "next", "DEPENDS_ON"], ["blitz", "react", "DEPENDS_ON"],
+  ["supabase", "sql", "DEPENDS_ON"], ["supabase", "api", "DEPENDS_ON"], ["supabase", "auth", "DEPENDS_ON"], ["supabase", "firebase", "CONCURRENCE"],
+  ["cfpages", "jam", "EVOLVES_INTO"], ["cfpages", "cfw", "DEPENDS_ON"],
+  ["astro", "html5", "DEPENDS_ON"], ["astro", "islands", "DEPENDS_ON"], ["astro", "react", "INFLUENCE"], ["astro", "vue", "INFLUENCE"], ["astro", "svelte", "INFLUENCE"],
+  ["remix", "react", "DEPENDS_ON"], ["remix", "web", "DEPENDS_ON"],
+  ["esbuild", "js", "DEPENDS_ON"], ["esbuild", "go", "INFLUENCE"],
+  ["swc", "js", "DEPENDS_ON"], ["swc", "rust", "INFLUENCE"],
   ["edgefunc", "srvless", "EVOLVES_INTO"],
-  ["edgefunc", "vercel", "DEPENDS_ON"],
-
-  ["bun", "js", "EVOLVES_INTO"],
-  ["bun", "esbuild", "INFLUENCE"],
-  ["bun", "node", "CONCURRENCE"],
-
-  ["wasi", "wasm", "EVOLVES_INTO"],
-  ["wasi", "linux", "DEPENDS_ON"],
-
-  ["qwik", "js", "DEPENDS_ON"],
-  ["qwik", "islands", "INFLUENCE"],
-
-  ["solidstart", "solid", "DEPENDS_ON"],
-  ["solidstart", "js", "DEPENDS_ON"],
-
-  ["webgpu", "wasm", "INFLUENCE"],
-  ["webgpu", "js", "DEPENDS_ON"],
-
-  ["sveltekit", "svelte3", "EVOLVES_INTO"],
-  ["sveltekit", "node", "DEPENDS_ON"],
-
-  ["next13", "next", "EVOLVES_INTO"],
-  ["next13", "rsc", "DEPENDS_ON"],
-
-  ["nuxt3", "nuxt", "EVOLVES_INTO"],
-  ["nuxt3", "vite", "DEPENDS_ON"],
-
-  ["rsc", "react", "EVOLVES_INTO"],
-  ["rsc", "next13", "INFLUENCE"],
-
+  ["bun", "js", "EVOLVES_INTO"], ["bun", "esbuild", "INFLUENCE"], ["bun", "node", "CONCURRENCE"], ["bun", "deno", "CONCURRENCE"],
+  ["wasi", "wasm", "EVOLVES_INTO"], ["wasi", "linux", "DEPENDS_ON"],
+  ["qwik", "js", "DEPENDS_ON"], ["qwik", "islands", "INFLUENCE"],
+  ["solidstart", "solid", "DEPENDS_ON"], ["solidstart", "js", "DEPENDS_ON"],
+  ["webgpu", "wasm", "INFLUENCE"], ["webgpu", "js", "DEPENDS_ON"],
+  ["sveltekit", "svelte3", "EVOLVES_INTO"], ["sveltekit", "node", "DEPENDS_ON"],
+  ["next13", "next", "EVOLVES_INTO"], ["next13", "rsc", "DEPENDS_ON"],
+  ["nuxt3", "nuxt", "EVOLVES_INTO"], ["nuxt3", "vite", "DEPENDS_ON"],
+  ["rsc", "react", "EVOLVES_INTO"], ["rsc", "next13", "INFLUENCE"],
   ["islands", "html5", "DEPENDS_ON"],
-  ["islands", "astro", "INFLUENCE"],
-
-  ["htmx", "html", "DEPENDS_ON"],
-  ["htmx", "ajax", "EVOLVES_INTO"],
-
-  ["unjs", "nuxt3", "INFLUENCE"],
-  ["unjs", "node", "DEPENDS_ON"],
-
-  ["denodeploy", "deno", "EVOLVES_INTO"],
-  ["denodeploy", "edgefunc", "DEPENDS_ON"],
-
-  ["webcontainer", "node", "EVOLVES_INTO"],
-  ["webcontainer", "wasm", "DEPENDS_ON"],
-
-  ["turbopack", "webpack", "EVOLVES_INTO"],
-  ["turbopack", "rust", "INFLUENCE"],
-
-  ["parcel2", "parcel", "EVOLVES_INTO"],
-  ["parcel2", "swc", "DEPENDS_ON"],
-
-  ["fresh", "deno", "DEPENDS_ON"],
-  ["fresh", "islands", "INFLUENCE"],
+  ["htmx", "html", "DEPENDS_ON"], ["htmx", "ajax", "EVOLVES_INTO"],
+  ["unjs", "nuxt3", "INFLUENCE"], ["unjs", "node", "DEPENDS_ON"],
+  ["denodeploy", "deno", "EVOLVES_INTO"], ["denodeploy", "edgefunc", "DEPENDS_ON"],
+  ["webcontainer", "node", "EVOLVES_INTO"], ["webcontainer", "wasm", "DEPENDS_ON"],
+  ["turbopack", "webpack", "EVOLVES_INTO"], ["turbopack", "rust", "INFLUENCE"],
+  ["parcel2", "parcel", "EVOLVES_INTO"], ["parcel2", "swc", "DEPENDS_ON"],
+  ["fresh", "deno", "DEPENDS_ON"], ["fresh", "islands", "INFLUENCE"],
 
 
 ].map(([s, t, type]) => ({ s, t, type }));
