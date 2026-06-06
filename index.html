@@ -1,86 +1,99 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Et Internet Fût · Atlas Vivant du Web</title>
-  <meta name="description" content="Graphe de connaissances interactif de l'histoire du Web — des protocoles fondateurs aux frameworks modernes.">
+  <meta name="description"
+    content="Graphe de connaissances interactif de l'histoire du Web — des protocoles fondateurs aux frameworks modernes.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="intro">
-  <div class="i-dot"></div>
-  <div class="i-t">Et Internet Fût</div>
-  <div class="i-s">Atlas Vivant du Web · Initialisation</div>
-</div>
-
-<canvas id="cv"></canvas>
-
-<header id="hd">
-  <div class="hd-brand">
-    <div class="hd-t">Et Internet Fût</div>
-    <div class="hd-s">Atlas Vivant · 1970–2020</div>
+  <div id="intro">
+    <div class="i-dot"></div>
+    <div class="i-t">Et Internet Fût</div>
+    <div class="i-s">Atlas Vivant du Web · Initialisation</div>
   </div>
-  <div id="sw" role="search">
-    <span class="si-ico">⌕</span>
-    <input type="search" id="si" placeholder="Rechercher… (ou appuyer /)" autocomplete="off" spellcheck="false">
-    <span id="skbd">/</span>
-    <div id="sr" role="listbox"></div>
-  </div>
-  <div class="hd-acts">
-    <button class="hd-btn on" id="btn-edges">Connexions</button>
-    <button class="hd-btn on" id="btn-labels">Étiquettes</button>
-  </div>
-</header>
 
-<button id="btn-nar">Parcours</button>
+  <canvas id="cv"></canvas>
 
-<nav id="np">
-  <div class="np-top">
-    <div class="np-lbl">Parcours narratifs</div>
-    <div class="np-sub">Explorer l'histoire par thème.</div>
-    <button class="px" id="np-x">×</button>
+  <header id="hd">
+    <div class="hd-brand">
+      <div class="hd-t">...Et Internet Fût</div>
+      <div class="hd-s">Atlas Vivant · 1970–2020</div>
+    </div>
+    <div id="sw" role="search">
+      <span class="si-ico">⌕</span>
+      <input type="search" id="si" placeholder="Rechercher… (ou appuyer /)" autocomplete="off" spellcheck="false">
+      <span id="skbd">/</span>
+      <div id="sr" role="listbox"></div>
+    </div>
+    <div class="hd-acts">
+      <button class="hd-btn on" id="btn-edges">Connexions</button>
+      <button class="hd-btn on" id="btn-labels">Étiquettes</button>
+    </div>
+  </header>
+
+  <button id="btn-nar">Parcours</button>
+
+  <nav id="np">
+    <div class="np-top">
+      <div class="np-lbl">Parcours narratifs</div>
+      <div class="np-sub">Explorer l'histoire par thème.</div>
+      <button class="px" id="np-x">×</button>
+    </div>
+    <div class="np-list" id="np-list"></div>
+    <div id="nsteps">
+      <div class="ns-t" id="ns-t"></div>
+      <div id="ns-list"></div>
+      <div class="ns-ctrl">
+        <button class="ns-btn" id="ns-prev" disabled>← Préc.</button>
+        <button class="ns-btn" id="ns-next">Suiv. →</button>
+        <button class="ns-x" id="ns-exit" title="Quitter">×</button>
+      </div>
+    </div>
+  </nav>
+
+  <aside id="dp">
+    <div class="dp-hd">
+      <button class="px" id="dp-x">×</button>
+      <div class="dp-y" id="dp-y"></div>
+      <div class="dp-n" id="dp-n"></div>
+      <div class="dp-c" id="dp-c"></div>
+    </div>
+    <div class="dp-body" id="dp-body"></div>
+    <div class="dp-foot">
+      <button class="dp-fb" id="dp-const">◎ Explorer les connexions</button>
+      <button class="dp-fb" id="dp-story">▷ Voir dans un parcours</button>
+    </div>
+  </aside>
+
+  <div id="leg"></div>
+  <div id="csh">Mode constellation · Échap pour quitter</div>
+  <nav id="tl"></nav>
+  <div id="zb">
+    <button class="z-b" id="z-in">+</button>
+    <button class="z-b" id="z-out">−</button>
+    <button class="z-b" id="z-fit" style="font-size:11px">⊡</button>
   </div>
-  <div class="np-list" id="np-list"></div>
-  <div id="nsteps">
-    <div class="ns-t" id="ns-t"></div>
-    <div id="ns-list"></div>
-    <div class="ns-ctrl">
-      <button class="ns-btn" id="ns-prev" disabled>← Préc.</button>
-      <button class="ns-btn" id="ns-next">Suiv. →</button>
-      <button class="ns-x" id="ns-exit" title="Quitter">×</button>
+  <div id="tt">
+    <div class="tt-i">
+      <div class="tt-n" id="tt-n"></div>
+      <div class="tt-m" id="tt-m"></div>
+      <div class="tt-d" id="tt-d"></div>
+      <div class="tt-h">Cliquer pour les détails</div>
     </div>
   </div>
-</nav>
+  <div id="mm"><canvas id="mmc" width="178" height="58"></canvas></div>
 
-<aside id="dp">
-  <div class="dp-hd">
-    <button class="px" id="dp-x">×</button>
-    <div class="dp-y" id="dp-y"></div>
-    <div class="dp-n" id="dp-n"></div>
-    <div class="dp-c" id="dp-c"></div>
-  </div>
-  <div class="dp-body" id="dp-body"></div>
-  <div class="dp-foot">
-    <button class="dp-fb" id="dp-const">◎ Explorer les connexions</button>
-    <button class="dp-fb" id="dp-story">▷ Voir dans un parcours</button>
-  </div>
-</aside>
-
-<div id="leg"></div>
-<div id="csh">Mode constellation · Échap pour quitter</div>
-<nav id="tl"></nav>
-<div id="zb">
-  <button class="z-b" id="z-in">+</button>
-  <button class="z-b" id="z-out">−</button>
-  <button class="z-b" id="z-fit" style="font-size:11px">⊡</button>
-</div>
-<div id="tt"><div class="tt-i"><div class="tt-n" id="tt-n"></div><div class="tt-m" id="tt-m"></div><div class="tt-d" id="tt-d"></div><div class="tt-h">Cliquer pour les détails</div></div></div>
-<div id="mm"><canvas id="mmc" width="178" height="58"></canvas></div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
