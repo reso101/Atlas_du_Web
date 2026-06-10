@@ -14,11 +14,11 @@ const CATS = {
 };
 
 const ET = {
-  INFLUENCE: { color: "#1a7acc", dash: [4, 6], label: "Influence", w: .9, animType: 'dashFlow', speed: -10 },
+  INFLUENCE: { color: "#1a7acc", dash: [4, 6], label: "Influence", w: .9, animType: 'particles', speed: 1.2 },
   DEPENDS_ON: { color: "#1aaa8a", dash: [], label: "Dépend de", w: .7, animType: 'particles', speed: 1.5 },
-  REPLACED_BY: { color: "#dd8a3a", dash: [8, 4], label: "Remplacé par", w: 1.1, animType: 'dashFlow', speed: -30 },
-  EVOLVES_INTO: { color: "#cc6aaa", dash: [6, 4], label: "Évolue vers", w: 1, animType: 'dashFlow', speed: -15 },
-  STANDARDISATION: { color: "#8a6add", dash: [], label: "Standardise", w: .8, animType: 'pulse', speed: 2 },
+  REPLACED_BY: { color: "#dd8a3a", dash: [8, 4], label: "Remplacé par", w: 1.1, animType: 'particles', speed: 0.8 },
+  EVOLVES_INTO: { color: "#cc6aaa", dash: [6, 4], label: "Évolue vers", w: 1, animType: 'particles', speed: 1.0 },
+  STANDARDISATION: { color: "#8a6add", dash: [], label: "Standardise", w: .8, animType: 'particles', speed: 0.6 },
   CONCURRENCE: { color: "#e26a6a", dash: [3, 3], label: "Concurrence", w: 1, animType: 'pingPong', speed: 2 }
 };
 
@@ -135,134 +135,34 @@ const NODES = [
   { id: "vercel", nom: "Vercel", annee: 2015, cat: "Infrastructure", simple: "La plateforme d'hébergement optimisée pour React et Next.js.", precise: "Fondé sous le nom Zeit en 2015, rebaptisé Vercel en 2020. Edge Functions, ISR, App Router. Devient un pilier du Web moderne." },
   { id: "deno", nom: "Deno", annee: 2019, cat: "Backend", simple: "Le runtime JavaScript sécurisé créé par l’auteur de Node.", precise: "Ryan Dahl, 2019. Permissions explicites, TypeScript natif, modules ES. Alternative moderne à Node.js." },
   { id: "snowpack", nom: "Snowpack", annee: 2019, cat: "Frontend", simple: "Le bundler qui a introduit le développement sans build.", precise: "2019. Basé sur les modules ES natifs. Précurseur direct de Vite." },
-
-  {
-    id: "svelte3", nom: "Svelte 3", annee: 2019, cat: "Frontend",
-    simple: "La version qui a redéfini l’expérience développeur.",
-    precise: "2019. Réactivité déclarative, syntaxe simplifiée. Lance la popularité massive de Svelte."
-  },
-
-  {
-    id: "vite", nom: "Vite", annee: 2020, cat: "Frontend",
-    simple: "Le bundler ultra-rapide basé sur ES modules.",
-    precise: "Evan You, 2020. Dev server instantané, build via Rollup. Devient le standard du tooling frontend."
-  },
-
-  {
-    id: "redwood", nom: "RedwoodJS", annee: 2020, cat: "Frontend",
-    simple: "Le framework full-stack React + GraphQL.",
-    precise: "2020. Pensé pour le JAMstack. Intègre Prisma, GraphQL, Cells et un workflow complet."
-  },
-
-  {
-    id: "blitz", nom: "Blitz.js", annee: 2020, cat: "Frontend",
-    simple: "Le framework inspiré de Ruby on Rails pour React.",
-    precise: "2020. Full-stack, conventions fortes, migrations Prisma. Devient un sur-ensemble de Next.js."
-  },
-
-  {
-    id: "supabase", nom: "Supabase", annee: 2020, cat: "Backend",
-    simple: "L’alternative open source à Firebase.",
-    precise: "2020. PostgreSQL, authentification, stockage, edge functions. Croissance fulgurante."
-  },
-
-  {
-    id: "cfpages", nom: "Cloudflare Pages", annee: 2020, cat: "Infrastructure",
-    simple: "Le déploiement statique ultra-rapide de Cloudflare.",
-    precise: "2020. Intégré à Workers, idéal pour JAMstack et frameworks modernes."
-  },
-
-  {
-    id: "astro", nom: "Astro", annee: 2021, cat: "Frontend",
-    simple: "Le framework orienté contenu avec zéro JavaScript par défaut.",
-    precise: "Fred K. Schott, 2021. Islands Architecture, support multi-framework. Révolutionne le Web statique."
-  },
-
-  {
-    id: "remix", nom: "Remix", annee: 2021, cat: "Frontend",
-    simple: "Le framework React basé sur le Web natif.",
-    precise: "2021. Loaders, actions, navigation progressive. Racheté par Shopify en 2022."
-  },
-
+  { id: "svelte3", nom: "Svelte 3", annee: 2019, cat: "Frontend", simple: "La version qui a redéfini l’expérience développeur.", precise: "2019. Réactivité déclarative, syntaxe simplifiée. Lance la popularité massive de Svelte." },
+  { id: "vite", nom: "Vite", annee: 2020, cat: "Frontend", simple: "Le bundler ultra-rapide basé sur ES modules.", precise: "Evan You, 2020. Dev server instantané, build via Rollup. Devient le standard du tooling frontend." },
+  { id: "redwood", nom: "RedwoodJS", annee: 2020, cat: "Frontend", simple: "Le framework full-stack React + GraphQL.", precise: "2020. Pensé pour le JAMstack. Intègre Prisma, GraphQL, Cells et un workflow complet." },
+  { id: "blitz", nom: "Blitz.js", annee: 2020, cat: "Frontend", simple: "Le framework inspiré de Ruby on Rails pour React.", precise: "2020. Full-stack, conventions fortes, migrations Prisma. Devient un sur-ensemble de Next.js." },
+  { id: "supabase", nom: "Supabase", annee: 2020, cat: "Backend", simple: "L’alternative open source à Firebase.", precise: "2020. PostgreSQL, authentification, stockage, edge functions. Croissance fulgurante." },
+  { id: "cfpages", nom: "Cloudflare Pages", annee: 2020, cat: "Infrastructure", simple: "Le déploiement statique ultra-rapide de Cloudflare.", precise: "2020. Intégré à Workers, idéal pour JAMstack et frameworks modernes." },
+  { id: "astro", nom: "Astro", annee: 2021, cat: "Frontend", simple: "Le framework orienté contenu avec zéro JavaScript par défaut.", precise: "Fred K. Schott, 2021. Islands Architecture, support multi-framework. Révolutionne le Web statique." },
+  { id: "remix", nom: "Remix", annee: 2021, cat: "Frontend", simple: "Le framework React basé sur le Web natif.", precise: "2021. Loaders, actions, navigation progressive. Racheté par Shopify en 2022." },
   { id: "esbuild", nom: "esbuild", annee: 2020, cat: "Frontend", simple: "Le bundler écrit en Go, 100× plus rapide que Webpack.", precise: "Evan Wallace, 2020. Base de nombreux outils modernes (Vite, Bun, etc.)." },
-
-  {
-    id: "swc", nom: "SWC", annee: 2021, cat: "Frontend",
-    simple: "Le compilateur JavaScript ultra-rapide écrit en Rust.",
-    precise: "2021. Adopté par Next.js, Parcel, Deno. Alternative moderne à Babel."
-  },
-
-  {
-    id: "edgefunc", nom: "Edge Functions", annee: 2021, cat: "Infrastructure",
-    simple: "Exécuter du code au plus près de l’utilisateur.",
-    precise: "Vercel, 2021. Temps de réponse ultra-faible, idéal pour le Web distribué."
-  },
-
-  {
-    id: "bun", nom: "Bun", annee: 2022, cat: "Backend",
-    simple: "Le runtime JavaScript ultra-rapide tout-en-un.",
-    precise: "Jarred Sumner, 2022. Bundler, test runner, package manager intégrés. Concurrence directe à Node et Deno."
-  },
-
-  {
-    id: "wasi", nom: "WASI", annee: 2022, cat: "Backend",
-    simple: "L’interface système standardisée pour WebAssembly.",
-    precise: "2022. Permet d’exécuter du WebAssembly en dehors du navigateur. Base du futur Web natif."
-  },
-
-  {
-    id: "qwik", nom: "Qwik", annee: 2022, cat: "Frontend",
-    simple: "Le framework conçu pour le chargement instantané.",
-    precise: "Misko Hevery, 2022. Résume le code en micro-chunks. Hydratation paresseuse révolutionnaire."
-  },
-
-  {
-    id: "solidstart", nom: "SolidStart", annee: 2022, cat: "Frontend",
-    simple: "Le framework full-stack basé sur SolidJS.",
-    precise: "2022. SSR, routing, streaming. Performances extrêmes grâce à Solid."
-  },
-
-  {
-    id: "webgpu", nom: "WebGPU", annee: 2023, cat: "Frontend",
-    simple: "La nouvelle API graphique du Web, successeur de WebGL.",
-    precise: "2023. Accès bas niveau au GPU. IA, 3D, calcul parallèle. Révolution pour le Web haute performance."
-  },
-
+  { id: "swc", nom: "SWC", annee: 2021, cat: "Frontend", simple: "Le compilateur JavaScript ultra-rapide écrit en Rust.", precise: "2021. Adopté par Next.js, Parcel, Deno. Alternative moderne à Babel." },
+  { id: "edgefunc", nom: "Edge Functions", annee: 2021, cat: "Infrastructure", simple: "Exécuter du code au plus près de l’utilisateur.", precise: "Vercel, 2021. Temps de réponse ultra-faible, idéal pour le Web distribué." },
+  { id: "bun", nom: "Bun", annee: 2022, cat: "Backend", simple: "Le runtime JavaScript ultra-rapide tout-en-un.", precise: "Jarred Sumner, 2022. Bundler, test runner, package manager intégrés. Concurrence directe à Node et Deno." },
+  { id: "wasi", nom: "WASI", annee: 2022, cat: "Backend", simple: "L’interface système standardisée pour WebAssembly.", precise: "2022. Permet d’exécuter du WebAssembly en dehors du navigateur. Base du futur Web natif." },
+  { id: "qwik", nom: "Qwik", annee: 2022, cat: "Frontend", simple: "Le framework conçu pour le chargement instantané.", precise: "Misko Hevery, 2022. Résume le code en micro-chunks. Hydratation paresseuse révolutionnaire." },
+  { id: "solidstart", nom: "SolidStart", annee: 2022, cat: "Frontend", simple: "Le framework full-stack basé sur SolidJS.", precise: "2022. SSR, routing, streaming. Performances extrêmes grâce à Solid." },
+  { id: "webgpu", nom: "WebGPU", annee: 2023, cat: "Frontend", simple: "La nouvelle API graphique du Web, successeur de WebGL.", precise: "2023. Accès bas niveau au GPU. IA, 3D, calcul parallèle. Révolution pour le Web haute performance." },
   { id: "sveltekit", nom: "SvelteKit", annee: 2022, cat: "Frontend", simple: "Le framework officiel de Svelte.", precise: "Sorti en version stable en décembre 2022. Routing, SSR, adaptateurs multiples. Concurrent majeur de Next.js et Astro." },
-
-  {
-    id: "next13", nom: "Next.js 13", annee: 2023, cat: "Frontend",
-    simple: "La version qui introduit l’App Router et React Server Components.",
-    precise: "2023. Architecture server-first, streaming, layouts imbriqués. Redéfinit le développement React."
-  },
-
-  {
-    id: "nuxt3", nom: "Nuxt 3", annee: 2023, cat: "Frontend",
-    simple: "La nouvelle génération du framework Vue.",
-    precise: "2023. Basé sur Nitro, Vite, TypeScript. Performances et DX modernisées."
-  },
-
+  { id: "next13", nom: "Next.js 13", annee: 2023, cat: "Frontend", simple: "La version qui introduit l’App Router et React Server Components.", precise: "2023. Architecture server-first, streaming, layouts imbriqués. Redéfinit le développement React." },
+  { id: "nuxt3", nom: "Nuxt 3", annee: 2023, cat: "Frontend", simple: "La nouvelle génération du framework Vue.", precise: "2023. Basé sur Nitro, Vite, TypeScript. Performances et DX modernisées." },
   { id: "rsc", nom: "React Server Components", annee: 2022, cat: "Frontend", simple: "Le modèle React qui exécute les composants côté serveur.", precise: "Introduit expérimentalement en 2020, intégré dans Next.js 13 en 2022. Moins de JavaScript côté client, streaming natif." },
   { id: "islands", nom: "Islands Architecture", annee: 2021, cat: "Frontend", simple: "Une approche où seules les parties interactives sont hydratées.", precise: "Concept formalisé par Jason Miller en 2019, popularisé par Astro dès 2021. Réduit drastiquement le JavaScript envoyé au client." },
   { id: "htmx", nom: "HTMX", annee: 2020, cat: "Frontend", simple: "Créer des interfaces dynamiques sans JavaScript explicite.", precise: "Carson Gross, 2020. Attributs HTML pour requêtes AJAX, SSE, WebSockets. Retour aux fondamentaux du Web." },
-
-  {
-    id: "unjs", nom: "UnJS", annee: 2024, cat: "Backend",
-    simple: "L’écosystème d’outils JavaScript de l’équipe Nuxt.",
-    precise: "Nitro, H3, Unstorage, Unbuild. Devient un socle majeur pour le Web moderne."
-  },
-
-  {
-    id: "denodeploy", nom: "Deno Deploy", annee: 2024, cat: "Infrastructure",
-    simple: "Le déploiement edge natif pour Deno.",
-    precise: "2024. Exécution distribuée, cold starts quasi nuls. Alternative à Vercel et Cloudflare."
-  },
-
+  { id: "unjs", nom: "UnJS", annee: 2024, cat: "Backend", simple: "L’écosystème d’outils JavaScript de l’équipe Nuxt.", precise: "Nitro, H3, Unstorage, Unbuild. Devient un socle majeur pour le Web moderne." },
+  { id: "denodeploy", nom: "Deno Deploy", annee: 2024, cat: "Infrastructure", simple: "Le déploiement edge natif pour Deno.", precise: "2024. Exécution distribuée, cold starts quasi nuls. Alternative à Vercel et Cloudflare." },
   { id: "webcontainer", nom: "WebContainer", annee: 2021, cat: "Infrastructure", simple: "Exécuter Node.js directement dans le navigateur.", precise: "StackBlitz, 2021. Environnement de développement complet sans serveur distant." },
   { id: "turbopack", nom: "Turbopack", annee: 2022, cat: "Frontend", simple: "Le bundler Rust de Vercel, successeur de Webpack.", precise: "Annoncé avec Next.js 13 en octobre 2022. Intégré nativement à Next.js, conçu pour dépasser Webpack." },
   { id: "parcel2", nom: "Parcel 2", annee: 2021, cat: "Frontend", simple: "La nouvelle version du bundler zéro‑config.", precise: "Sorti en 2021. Support Rust, HMR amélioré, compilation parallèle." },
   { id: "fresh", nom: "Fresh", annee: 2022, cat: "Frontend", simple: "Le framework Deno basé sur l'hydratation progressive.", precise: "Sorti en version stable en 2022. Pas de build, rendu serveur natif, composants islands. Alternative moderne à React." },
-
 
 ];
 
@@ -546,6 +446,7 @@ function zoomAt(sx, sy, factor) {
 let dirty = true, renderMode = 'map', selectedNode = null;
 let hoveredNode = null, showEdges = true, showLabels = true;
 let activeNarrative = null, activeStep = -1;
+let activeEdgeFilters = new Set(['INFLUENCE', 'DEPENDS_ON', 'REPLACED_BY', 'EVOLVES_INTO', 'STANDARDISATION', 'CONCURRENCE']);
 
 const canvas = document.getElementById('cv');
 const ctx = canvas.getContext('2d');
@@ -561,8 +462,6 @@ function setDirty() { dirty = true; schedRender(); }
 
 /* ── MAIN RENDER ────────────────────────────── */
 function render() {
-  if (!dirty) return;
-  dirty = false;
   ctx.clearRect(0, 0, W, H);
   if (renderMode === 'constellation' && selectedNode) renderConstellation();
   else renderMap();
@@ -627,6 +526,7 @@ function drawEdges() {
   const time = performance.now();
 
   EDGES.forEach(e => {
+    if (!activeEdgeFilters.has(e.type)) return;
     const sn = nodeMap[e.s], tn = nodeMap[e.t];
     if (!sn || !tn) return;
     const { sx: x1, sy: y1 } = w2s(sn._wx, sn._wy);
@@ -644,12 +544,12 @@ function drawEdges() {
     const narIds = isNar ? activeNarrative.steps.map(s => s.id) : [];
     const isNarEdge = narIds.includes(sn.id) && narIds.includes(tn.id);
 
-    let a = isHov ? .6 : isNarEdge ? .35 : (alpha * .18);
+    let a = isHov ? .8 : isNarEdge ? .5 : (alpha * .12);
 
     // Animations modifications to alpha
     if (et.animType === 'pulse') {
       const pulseFactor = 0.5 + 0.5 * Math.sin(time / 200);
-      a = a * (0.4 + pulseFactor * 0.6);
+      a = Math.max(0.15, a * (0.4 + pulseFactor * 0.6));
     }
 
     let mx = (x1 + x2) / 2, my = (y1 + y2) / 2 - 20;
@@ -658,11 +558,11 @@ function drawEdges() {
     ctx.moveTo(x1, y1);
     ctx.quadraticCurveTo(mx, my, x2, y2);
     ctx.strokeStyle = et.color + hexA(a);
-    ctx.lineWidth = isHov ? et.w * 1.5 : et.w * (sc > .6 ? 1 : .7);
+    ctx.lineWidth = isHov ? et.w * 2 : Math.max(1, et.w * (sc > .6 ? 1.2 : .9));
 
     if (et.animType === 'dashFlow') {
       ctx.setLineDash(et.dash);
-      ctx.lineDashOffset = (time * et.speed) / 1000;
+      ctx.lineDashOffset = -(time * Math.abs(et.speed)) / 1000;
     } else {
       ctx.setLineDash(isHov ? [] : et.dash);
     }
@@ -671,14 +571,14 @@ function drawEdges() {
 
     // Draw particles
     if (et.animType === 'particles') {
-      const numParticles = 2;
+      const numParticles = 1;
       const tBase = (time / (2000 / et.speed)) % 1;
       ctx.fillStyle = et.color + hexA(isHov ? 0.9 : 0.6);
       for (let i = 0; i < numParticles; i++) {
         const t = (tBase + i / numParticles) % 1;
         const pt = getQuadraticBezierPoint(t, x1, y1, mx, my, x2, y2);
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, isHov ? 3 : 1.8, 0, Math.PI * 2);
+        ctx.arc(pt.x, pt.y, isHov ? 3 : 1.2, 0, Math.PI * 2);
         ctx.fill();
       }
     } else if (et.animType === 'pingPong') {
@@ -840,13 +740,14 @@ function renderConstellation() {
   });
   // Draw edges
   positions.forEach(p => {
+    if (!activeEdgeFilters.has(p.type)) return;
     const et = ET[p.type];
     if (!et) return;
 
     let a = 0.33;
     if (et.animType === 'pulse') {
-      const pulseFactor = 0.5 + 0.5 * Math.sin(time / 200);
-      a = a * (0.5 + pulseFactor * 0.5);
+      const pulseFactor = 0.5 + 0.5 * Math.sin(time / 500);
+      a = 0.2 + pulseFactor * 0.5;
     }
 
     ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(p.sx, p.sy);
@@ -1206,7 +1107,7 @@ document.getElementById('ns-exit').addEventListener('click', () => {
 
 /* ── TIMELINE ────────────────────────────────── */
 const tlEl = document.getElementById('tl');
-const decades = [1970, 1980, 1990, 2000, 2010, 2020];
+const decades = [1970, 1980, 1990, 2000, 2010, 2020, 2025, 2030];
 decades.forEach(d => {
   const cnt = NODES.filter(n => n.annee >= d && n.annee < d + 10).length;
   const div = document.createElement('div');
@@ -1223,6 +1124,7 @@ decades.forEach(d => {
 });
 
 /* ── LEGEND ──────────────────────────────────── */
+
 const legEl = document.getElementById('leg');
 legEl.innerHTML = `
 <div class="leg-g">
@@ -1233,11 +1135,28 @@ legEl.innerHTML = `
 <div class="leg-g">
   <div class="leg-gt">Relations</div>
   ${Object.entries(ET).map(([k, v]) => `
-    <div class="leg-i">
+    <div class="leg-i leg-rel on" data-type="${k}" style="cursor:pointer" title="Filtrer ${v.label}">
       <div class="leg-ln" style="border-color:${v.color};border-style:${v.dash.length ? 'dashed' : 'solid'}"></div>
-      ${v.label}
+      <span>${v.label}</span>
     </div>`).join('')}
 </div>`;
+
+// Rendre cliquable
+legEl.querySelectorAll('.leg-rel').forEach(el => {
+  el.addEventListener('click', () => {
+    const type = el.dataset.type;
+    if (activeEdgeFilters.has(type)) {
+      activeEdgeFilters.delete(type);
+      el.classList.remove('on');
+      el.style.opacity = '0.3';
+    } else {
+      activeEdgeFilters.add(type);
+      el.classList.add('on');
+      el.style.opacity = '1';
+    }
+    dirty = true; schedRender();
+  });
+});
 
 /* ── EVENTS ──────────────────────────────────── */
 // Wheel zoom
@@ -1377,8 +1296,15 @@ setTimeout(() => {
 
 // Global animation loop
 function animationLoop() {
-  dirty = true;
-  render();
+  const hasActiveAnim = showEdges && cam.scale > .15;
+  if (hasActiveAnim) dirty = true;
+  if (dirty) {
+    dirty = false;
+    ctx.clearRect(0, 0, W, H);
+    if (renderMode === 'constellation' && selectedNode) renderConstellation();
+    else renderMap();
+    renderMinimap();
+  }
   requestAnimationFrame(animationLoop);
 }
 requestAnimationFrame(animationLoop);
