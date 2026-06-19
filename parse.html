@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Data Extractor</title>
+</head>
+<body>
+  <pre id="output">Loading...</pre>
+
+  <!-- Load the main script.js which defines the arrays -->
+  <script src="script.js"></script>
+  
+  <script>
+    // Wait for the script to execute and register globals
+    window.addEventListener('load', () => {
+      try {
+        const outputData = {
+          nodes: NODES,
+          edges: EDGES,
+          prospective: PROSPECTIVE
+        };
+        document.getElementById('output').textContent = JSON.stringify(outputData, null, 2);
+      } catch (err) {
+        document.getElementById('output').textContent = 'Error: ' + err.message + '\n' + err.stack;
+      }
+    });
+  </script>
+</body>
+</html>
