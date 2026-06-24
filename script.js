@@ -290,6 +290,33 @@ function computeLayout() {
 let W = window.innerWidth, H = window.innerHeight;
 const cam = { cx: WW / 2, cy: WH / 2, scale: .15 };
 
+/* ── UTILITAIRE : alpha hex ──────────────────────────────
+   Convertit un float 0–1 en suffixe hexadécimal 2 chiffres
+   Utilisé partout pour composer des couleurs canvas
+   ─────────────────────────────────────────────────────── */
+function hexA(a) {
+  const v = Math.max(0, Math.min(1, a));
+  return Math.round(v * 255).toString(16).padStart(2, '0');
+}
+
+/* ── MODE CONSTELLATION ─────────────────────────────────── */
+function enterConstellation(n) {
+  renderMode = 'constellation';
+  selectedNode = n;
+  constAngle = 0;
+  const csh = document.getElementById('csh');
+  if (csh) csh.classList.add('on');
+  dirty = true; schedRender();
+}
+function exitConstellation() {
+  renderMode = 'map';
+  const csh = document.getElementById('csh');
+  if (csh) csh.classList.remove('on');
+  dirty = true; schedRender();
+}
+
+
+
 function w2s(wx, wy) {
   return { sx: (wx - cam.cx) * cam.scale + W / 2, sy: (wy - cam.cy) * cam.scale + H / 2 };
 }
@@ -348,16 +375,8 @@ const mmctx  = mmc.getContext('2d');
 function setSize() { W = window.innerWidth; H = window.innerHeight; canvas.width = W; canvas.height = H; dirty = true; }
 setSize();
 
-let _raf = null;
-function schedRender() { if (!_raf) _raf = requestAnimationFrame(() => { _raf = null; render(); }); }
-function setDirty() { dirty = true; schedRender(); }
-
-function render() {
-  ctx.clearRect(0, 0, W, H);
-  if (renderMode === 'constellation' && selectedNode) renderConstellation();
-  else renderMap();
-  renderMinimap();
-}
+function schedRender() { dirty = true; }
+function setDirty() { dirty = true; }
 
 function renderMap() {
   drawGrid();
@@ -1103,7 +1122,8 @@ window.addEventListener('resize', () => { setSize(); schedRender(); });
 loadAtlasData();
 
 function animationLoop() {
-  const hasAnim = showEdges && cam.scale > .12;
+  // Les particules et la constellation nécessitent une animation continue
+  const hasAnim = (showEdges && cam.scale > .12) || renderMode === 'constellation';
   if (hasAnim) dirty = true;
   if (dirty) {
     dirty = false;

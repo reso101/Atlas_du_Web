@@ -93,7 +93,7 @@ input {
   font-size: 10px;
   font-weight: 500;
   letter-spacing: .45em;
-  color: var(--6);
+  color: var(--t6);
   text-shadow: 0 0 12px rgba(106, 184, 216, .25);
   text-transform: uppercase;
 }
@@ -936,4 +936,45 @@ input {
 :focus-visible {
   outline: 1px solid var(--cf);
   outline-offset: 2px;
+}
+
+/* ── Panneau de détail — classes manquantes ─────────────── */
+.dp-imp {
+  font-size: 8px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.dp-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.dp-src {
+  font-size: 9px;
+  color: var(--t3);
+  text-decoration: none;
+  border: 1px solid var(--b0);
+  border-radius: var(--r);
+  padding: 2px 7px;
+  transition: color var(--ease), border-color var(--ease);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.dp-src:hover {
+  color: var(--t5);
+  border-color: var(--b1);
+}
+
+.dp-rel-arrow {
+  font-size: 8.5px;
+  flex-shrink: 0;
+  letter-spacing: .05em;
 }
