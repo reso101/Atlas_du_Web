@@ -1,0 +1,2056 @@
+{
+  "nodes": [
+    {
+      "id": "bdd",
+      "nom": "Base de données",
+      "annee": 1970,
+      "categorie": "Backend",
+      "importance": 1,
+      "description_courte": "Stocker, retrouver et manipuler des informations de façon organisée.",
+      "description_longue": "Formalisé par Edgar Codd chez IBM en 1970 avec le modèle relationnel. Structure le stockage d'information depuis 50 ans. Fondation de SQL, MySQL, PostgreSQL, MongoDB.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Base_de_donn%C3%A9es",
+        "https://www.ibm.com/history/relational-database"
+      ]
+    },
+    {
+      "id": "ftp",
+      "nom": "FTP",
+      "annee": 1971,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Le protocole pour transférer des fichiers entre ordinateurs.",
+      "description_longue": "File Transfer Protocol, RFC 114 (1971). Précède le Web de 20 ans. Largement remplacé par SFTP et HTTPS. Toujours présent dans les environnements legacy.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/File_Transfer_Protocol",
+        "https://www.rfc-editor.org/rfc/rfc959"
+      ]
+    },
+    {
+      "id": "email",
+      "nom": "Email",
+      "annee": 1971,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "Envoyer des messages électroniques d'une machine à une autre.",
+      "description_longue": "Ray Tomlinson introduit le symbole @ en 1971 pour distinguer utilisateur et machine. 300 milliards d'emails envoyés par jour en 2023. Protocoles fondateurs : SMTP, POP3, IMAP.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Courrier_%C3%A9lectronique",
+        "https://computerhistory.org/blog/ray-tomlinson-internet-pioneer/"
+      ]
+    },
+    {
+      "id": "sql",
+      "nom": "SQL",
+      "annee": 1974,
+      "categorie": "Backend",
+      "importance": 1,
+      "description_courte": "Le langage universel pour interroger une base de données.",
+      "description_longue": "Structured Query Language, IBM 1974. Standardisé ANSI en 1986. Omniprésent depuis 50 ans dans PostgreSQL, MySQL, SQLite, SQL Server. Fondation de l'économie de la donnée.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Structured_Query_Language",
+        "https://www.iso.org/standard/63555.html"
+      ]
+    },
+    {
+      "id": "crypto",
+      "nom": "Cryptographie",
+      "annee": 1976,
+      "categorie": "Sécurité",
+      "importance": 1,
+      "description_courte": "Protéger des données en les rendant illisibles sans la clé.",
+      "description_longue": "Diffie et Hellman formalisent la cryptographie à clé publique en 1976. Fondation de SSL, TLS, HTTPS, signatures numériques et blockchain. Sans cryptographie, aucun commerce en ligne n'est possible.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Cryptographie_%C3%A0_cl%C3%A9_publique",
+        "https://www-ee.stanford.edu/~hellman/publications/24.pdf"
+      ]
+    },
+    {
+      "id": "tcpip",
+      "nom": "TCP/IP",
+      "annee": 1983,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "Les règles qui permettent à deux ordinateurs de se comprendre.",
+      "description_longue": "TCP découpe les données en paquets numérotés ; IP adresse chaque machine. Standard universel depuis le 1er janvier 1983 (Flag Day). Fondation absolue de l'Internet et du Web.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Internet_Protocol",
+        "https://www.rfc-editor.org/rfc/rfc793"
+      ]
+    },
+    {
+      "id": "ip",
+      "nom": "Adresse IP",
+      "annee": 1983,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "L'identifiant unique de chaque machine connectée à Internet.",
+      "description_longue": "IPv4 (32 bits, ~4 milliards d'adresses) adopté en 1983, épuisé en 2011. IPv6 (128 bits) en déploiement progressif. Sans adresse IP, aucune communication réseau n'est possible.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Adresse_IP"
+      ]
+    },
+    {
+      "id": "dns",
+      "nom": "DNS",
+      "annee": 1985,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "L'annuaire d'Internet : traduit un nom de site en adresse machine.",
+      "description_longue": "Domain Name System, RFC 1034/1035 (1985). Convertit google.com en adresse IP. Hiérarchique et distribué. Une panne DNS rend le Web inaccessible malgré un Internet fonctionnel.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Domain_Name_System",
+        "https://www.rfc-editor.org/rfc/rfc1034"
+      ]
+    },
+    {
+      "id": "fw",
+      "nom": "Firewall",
+      "annee": 1988,
+      "categorie": "Sécurité",
+      "importance": 2,
+      "description_courte": "Filtrer le trafic réseau pour bloquer les intrusions.",
+      "description_longue": "Émerge en 1988 après le ver Morris, premier malware à grande échelle. Première ligne de défense des réseaux. Évolue en IDS/IPS, WAF, zero-trust network access.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Pare-feu_(informatique)"
+      ]
+    },
+    {
+      "id": "srv",
+      "nom": "Serveur",
+      "annee": 1990,
+      "categorie": "Infrastructure",
+      "importance": 1,
+      "description_courte": "Un ordinateur qui stocke et distribue des ressources aux autres.",
+      "description_longue": "Premier serveur web : Tim Berners-Lee au CERN, décembre 1990. Base de toute infrastructure web. Évolution : serveurs physiques → virtuels → conteneurs → serverless.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Serveur_informatique",
+        "https://info.cern.ch"
+      ]
+    },
+    {
+      "id": "linux",
+      "nom": "Linux",
+      "annee": 1991,
+      "categorie": "Infrastructure",
+      "importance": 1,
+      "description_courte": "Le système d'exploitation libre qui fait tourner la majorité des serveurs.",
+      "description_longue": "Linus Torvalds, 25 août 1991. Noyau open source sous licence GPL. 96% des serveurs web, 100% du Top500 supercalculateurs, Android. Pilier de l'économie numérique mondiale.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Linux",
+        "https://www.kernel.org"
+      ]
+    },
+    {
+      "id": "net",
+      "nom": "Internet",
+      "annee": 1983,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "Le réseau mondial qui relie des milliards d'ordinateurs.",
+      "description_longue": "Né des recherches ARPANET (1969), structuré par TCP/IP au 1er janvier 1983. Ouvert au grand public vers 1991. Ne pas confondre avec le Web : Internet est le réseau physique, le Web est un service qui y circule.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Internet"
+      ]
+    },
+    {
+      "id": "web",
+      "nom": "Web",
+      "annee": 1991,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "Un système de pages hypertextes reliées, accessibles via Internet.",
+      "description_longue": "Tim Berners-Lee au CERN, proposition en 1989, premier site en 1991. Trois piliers : HTML (structure), HTTP (transport), URL (adresse). Devenu la plus grande bibliothèque humaine jamais créée.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/World_Wide_Web",
+        "https://info.cern.ch/hypertext/WWW/TheProject.html"
+      ]
+    },
+    {
+      "id": "http",
+      "nom": "HTTP",
+      "annee": 1991,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "Le protocole qui permet au navigateur de demander une page web.",
+      "description_longue": "HyperText Transfer Protocol, Tim Berners-Lee 1991. Non chiffré — HTTPS l'a remplacé comme standard. Évolution : HTTP/1.1 (1997), HTTP/2 (2015), HTTP/3 basé sur QUIC (2022).",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Hypertext_Transfer_Protocol",
+        "https://www.rfc-editor.org/rfc/rfc9110"
+      ]
+    },
+    {
+      "id": "html",
+      "nom": "HTML",
+      "annee": 1991,
+      "categorie": "Frontend",
+      "importance": 1,
+      "description_courte": "Le langage qui structure le contenu d'une page web.",
+      "description_longue": "HyperText Markup Language, Tim Berners-Lee 1991. Squelette de chaque page web. Standardisé par le W3C. De HTML 1.0 à HTML5 (2014), chaque version enrichit les capacités natives du navigateur.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Hypertext_Markup_Language",
+        "https://html.spec.whatwg.org"
+      ]
+    },
+    {
+      "id": "url",
+      "nom": "URL",
+      "annee": 1991,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "L'adresse unique qui localise n'importe quelle ressource sur le Web.",
+      "description_longue": "Uniform Resource Locator, Tim Berners-Lee 1991. Système de coordonnées universel du Web. Trois parties : protocole, domaine, chemin. Base du fonctionnement de tout hyperlien.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Uniform_Resource_Locator",
+        "https://www.rfc-editor.org/rfc/rfc3986"
+      ]
+    },
+    {
+      "id": "msr",
+      "nom": "Moteur de recherche",
+      "annee": 1993,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Indexer le Web pour retrouver une page parmi des milliards.",
+      "description_longue": "Excite, AltaVista, Yahoo (1993-1995). Google en 1998 révolutionne l'indexation avec PageRank. Aujourd'hui : 92% de part de marché Google. Fondation du marketing digital.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Moteur_de_recherche"
+      ]
+    },
+    {
+      "id": "nav",
+      "nom": "Navigateur",
+      "annee": 1993,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "Le logiciel qui interprète le Web et l'affiche à l'utilisateur.",
+      "description_longue": "Mosaic 1993, Netscape 1994, IE 1995, Firefox 2004, Chrome 2008. Guerre des navigateurs, guerre des standards. La fenêtre sur le Web. Chrome domine à ~65% en 2024.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Navigateur_web"
+      ]
+    },
+    {
+      "id": "php",
+      "nom": "PHP",
+      "annee": 1994,
+      "categorie": "Backend",
+      "importance": 2,
+      "description_courte": "Un langage serveur pour créer des pages web au contenu dynamique.",
+      "description_longue": "Rasmus Lerdorf, 1994. Personal Home Page Tools. WordPress, Wikipedia, Facebook (origines) construits en PHP. Présent sur 79% des sites à serveur côté serveur en 2024.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/PHP",
+        "https://www.php.net"
+      ]
+    },
+    {
+      "id": "w3c",
+      "nom": "W3C",
+      "annee": 1994,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "L'organisation qui définit et maintient les standards du Web.",
+      "description_longue": "World Wide Web Consortium, Tim Berners-Lee, octobre 1994. Définit HTML, CSS, XML, SVG, WebAssembly, WebRTC. Gardien du Web ouvert et interopérable face aux intérêts commerciaux.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/World_Wide_Web_Consortium",
+        "https://www.w3.org"
+      ]
+    },
+    {
+      "id": "cookie",
+      "nom": "Cookie",
+      "annee": 1994,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Un petit fichier texte qui permet aux sites de mémoriser des informations.",
+      "description_longue": "Lou Montulli, Netscape, 1994. Fondation des sessions authentifiées et du tracking publicitaire. Régulation RGPD (2018) impose le consentement explicite. En cours de suppression via Privacy Sandbox.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Cookie_(informatique)"
+      ]
+    },
+    {
+      "id": "https",
+      "nom": "HTTPS",
+      "annee": 1994,
+      "categorie": "Sécurité",
+      "importance": 1,
+      "description_courte": "La version chiffrée du HTTP — le cadenas dans la barre d'adresse.",
+      "description_longue": "HTTP + SSL/TLS. Netscape 1994 pour sécuriser les paiements. Universel après 2014 (Google déclasse les sites non-HTTPS). Let's Encrypt (2015) rend les certificats SSL gratuits et automatisés.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/HyperText_Transfer_Protocol_Secure"
+      ]
+    },
+    {
+      "id": "stream",
+      "nom": "Streaming",
+      "annee": 1995,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Diffuser de la vidéo ou de l'audio en continu sans téléchargement préalable.",
+      "description_longue": "RealNetworks 1995, premier lecteur de streaming. YouTube 2005, Netflix 2007, Spotify 2008 créent les plateformes dominantes. Représente aujourd'hui 80% du trafic Internet mondial.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Streaming"
+      ]
+    },
+    {
+      "id": "apache",
+      "nom": "Apache",
+      "annee": 1995,
+      "categorie": "Infrastructure",
+      "importance": 2,
+      "description_courte": "Le serveur web open source qui a propulsé la démocratisation du Web.",
+      "description_longue": "Apache HTTP Server, 1995. Open source, modulaire. Pilier de la stack LAMP (Linux, Apache, MySQL, PHP). Dominant jusqu'en 2015, progressivement remplacé par Nginx et les CDN modernes.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Apache_HTTP_Server",
+        "https://httpd.apache.org"
+      ]
+    },
+    {
+      "id": "ecom",
+      "nom": "E-commerce",
+      "annee": 1995,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Acheter et vendre via Internet.",
+      "description_longue": "Amazon et eBay naissent tous deux en 1995. L'année zéro du commerce en ligne. Nécessite HTTPS, cookies de session, bases de données. Représente 6 000 milliards de dollars en 2024.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Commerce_%C3%A9lectronique"
+      ]
+    },
+    {
+      "id": "js",
+      "nom": "JavaScript",
+      "annee": 1995,
+      "categorie": "Frontend",
+      "importance": 1,
+      "description_courte": "Le langage de programmation qui rend les pages web interactives.",
+      "description_longue": "Brendan Eich, Netscape, en 10 jours en mai 1995. Le langage le plus utilisé au monde depuis 11 ans (Stack Overflow). Du navigateur au serveur (Node.js), mobile (React Native), IA.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/JavaScript",
+        "https://ecma-international.org/publications-and-standards/standards/ecma-262/"
+      ]
+    },
+    {
+      "id": "mysql",
+      "nom": "MySQL",
+      "annee": 1995,
+      "categorie": "Backend",
+      "importance": 2,
+      "description_courte": "Le système de base de données relationnelle open source le plus répandu.",
+      "description_longue": "Michael Widenius et David Axmark, 1995. Pilier de la stack LAMP. Racheté par Sun Microsystems (2008) puis Oracle (2010). MariaDB créé en 2009 comme fork libre communautaire.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/MySQL",
+        "https://www.mysql.com"
+      ]
+    },
+    {
+      "id": "ssl",
+      "nom": "SSL",
+      "annee": 1995,
+      "categorie": "Sécurité",
+      "importance": 2,
+      "description_courte": "Le protocole inventé par Netscape pour chiffrer les communications web.",
+      "description_longue": "Secure Sockets Layer, Netscape 1995. Remplacé par TLS (plus sûr) à partir de 1999. Le terme 'SSL' est aujourd'hui un abus de langage pour désigner TLS. Fondation du Web sécurisé.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Transport_Layer_Security"
+      ]
+    },
+    {
+      "id": "css",
+      "nom": "CSS",
+      "annee": 1996,
+      "categorie": "Frontend",
+      "importance": 1,
+      "description_courte": "Le langage qui contrôle la présentation visuelle des pages web.",
+      "description_longue": "Cascading Style Sheets, Håkon Wium Lie et Bert Bos, standardisé W3C en 1996. Sépare contenu (HTML) et présentation. Évolution : CSS1 → CSS2 → CSS3 (modules indépendants).",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Feuilles_de_style_en_cascade",
+        "https://www.w3.org/Style/CSS/"
+      ]
+    },
+    {
+      "id": "flash",
+      "nom": "Flash",
+      "annee": 1996,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "La technologie d'animation et de multimédia interactif du Web pré-HTML5.",
+      "description_longue": "FutureWave → Macromedia → Adobe Flash, 1996. 15 ans de domination sur l'animation web, la vidéo, les jeux navigateur. Tué par l'iPhone (2010 — Steve Jobs refuse Flash sur iOS). Arrêté définitivement le 31 décembre 2020.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Adobe_Flash"
+      ]
+    },
+    {
+      "id": "portal",
+      "nom": "Portail Web",
+      "annee": 1996,
+      "categorie": "Fondations",
+      "importance": 3,
+      "description_courte": "Un site généraliste servant de point d'entrée unique sur Internet.",
+      "description_longue": "Yahoo, AOL, MSN — dominants 1996–2002. Premier modèle d'agrégation de contenu. Ancêtres conceptuels des plateformes et des flux d'actualité des réseaux sociaux.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Portail_web"
+      ]
+    },
+    {
+      "id": "vpn",
+      "nom": "VPN",
+      "annee": 1996,
+      "categorie": "Sécurité",
+      "importance": 2,
+      "description_courte": "Un tunnel chiffré qui sécurise et anonymise une connexion Internet.",
+      "description_longue": "Virtual Private Network, Microsoft PPTP 1996. D'abord outil d'entreprise pour relier des bureaux distants. Grand public dans les années 2010 pour la confidentialité et le contournement géographique.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/R%C3%A9seau_priv%C3%A9_virtuel"
+      ]
+    },
+    {
+      "id": "blog",
+      "nom": "Blog",
+      "annee": 1997,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Un site de publication personnelle régulière, ancêtre des réseaux sociaux.",
+      "description_longue": "'Weblog', terme créé par Jorn Barger en 1997. Blogger (1999), WordPress (2003) démocratisent la publication. Précurseur structurel des fils d'actualité, des réseaux sociaux et de l'économie des créateurs.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Blog"
+      ]
+    },
+    {
+      "id": "seo",
+      "nom": "SEO",
+      "annee": 1997,
+      "categorie": "Marketing",
+      "importance": 2,
+      "description_courte": "L'art d'optimiser un site pour apparaître en tête des moteurs de recherche.",
+      "description_longue": "Search Engine Optimization. Naît avec les premiers moteurs (1993-1997). Google et PageRank transforment radicalement le SEO en 1998. Industrie mondiale de 80 milliards de dollars en 2024.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Optimisation_pour_les_moteurs_de_recherche"
+      ]
+    },
+    {
+      "id": "xml",
+      "nom": "XML",
+      "annee": 1998,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Un langage universel pour structurer et échanger des données.",
+      "description_longue": "eXtensible Markup Language, W3C 1998. Supplanté par JSON pour les APIs légères. Influence fondatrice : SVG, XHTML, RSS, ATOM, SOAP, Office Open XML.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Extensible_Markup_Language",
+        "https://www.w3.org/XML/"
+      ]
+    },
+    {
+      "id": "css2",
+      "nom": "CSS2",
+      "annee": 1998,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "La version enrichie de CSS ajoutant positionnement et sélecteurs avancés.",
+      "description_longue": "W3C 1998. Apporte positionnement absolu/relatif, z-index, pseudo-classes, sélecteurs avancés. Standard de référence pendant plus de 10 ans, base sur laquelle CSS3 a été construit.",
+      "sources": [
+        "https://www.w3.org/TR/CSS2/"
+      ]
+    },
+    {
+      "id": "emkt",
+      "nom": "Email Marketing",
+      "annee": 1998,
+      "categorie": "Marketing",
+      "importance": 3,
+      "description_courte": "L'utilisation de l'email comme canal commercial direct.",
+      "description_longue": "1998 : explosion du potentiel commercial et du spam simultanément. ROI moyen de 42$ pour 1$ investi en 2024. Régulé par CAN-SPAM (2003) aux USA, RGPD (2018) en Europe.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Email_marketing"
+      ]
+    },
+    {
+      "id": "google",
+      "nom": "Google",
+      "annee": 1998,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "Le moteur de recherche qui a réorganisé l'accès à l'information mondiale.",
+      "description_longue": "Larry Page et Sergey Brin, Stanford, 4 septembre 1998. PageRank écrase tous les concurrents en 5 ans. 92% de part de marché mondial en 2024. Redéfinit le SEO, la publicité en ligne et l'économie de l'attention.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Google"
+      ]
+    },
+    {
+      "id": "os",
+      "nom": "Open Source",
+      "annee": 1998,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "Le code accessible, modifiable et redistribuable par tous.",
+      "description_longue": "Terme officialisé par l'Open Source Initiative en 1998. Linux, Apache, MySQL, PHP — les quatre piliers du Web libre. GitHub (2008) révolutionne la collaboration. Modèle de développement dominant aujourd'hui.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Open_source",
+        "https://opensource.org"
+      ]
+    },
+    {
+      "id": "pgrnk",
+      "nom": "PageRank",
+      "annee": 1998,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "L'algorithme de Google qui mesure l'importance d'une page par ses liens entrants.",
+      "description_longue": "Larry Page, thèse Stanford 1998. Principe bibliométrique : une page est importante si d'importantes pages y pointent. Révolutionne la pertinence des résultats de recherche et fonde l'économie du SEO.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/PageRank",
+        "https://infolab.stanford.edu/~backrub/google.html"
+      ]
+    },
+    {
+      "id": "dom",
+      "nom": "DOM",
+      "annee": 1998,
+      "categorie": "Frontend",
+      "importance": 1,
+      "description_courte": "La représentation vivante d'une page que JavaScript peut lire et modifier.",
+      "description_longue": "Document Object Model, standard W3C 1998. Structure arborescente qui expose HTML à JavaScript. Toute manipulation d'interface web passe par le DOM. Le Virtual DOM (React) est né pour l'optimiser.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Document_Object_Model",
+        "https://www.w3.org/TR/REC-DOM-Level-1/"
+      ]
+    },
+    {
+      "id": "ajax",
+      "nom": "AJAX",
+      "annee": 1999,
+      "categorie": "Frontend",
+      "importance": 1,
+      "description_courte": "Mettre à jour une partie de page sans la recharger entièrement.",
+      "description_longue": "Asynchronous JavaScript And XML. XMLHttpRequest inventé par Microsoft (1999). Gmail et Google Maps (2004) révèlent au grand public les possibilités d'AJAX. Prémices des Single Page Applications.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Ajax_(informatique)"
+      ]
+    },
+    {
+      "id": "api",
+      "nom": "API",
+      "annee": 1999,
+      "categorie": "Backend",
+      "importance": 1,
+      "description_courte": "Une interface qui permet à deux logiciels de communiquer et s'échanger des données.",
+      "description_longue": "Application Programming Interface. Moteur invisible du Web moderne. Chaque application dépend de dizaines d'APIs tierces. L'économie des APIs représente plusieurs milliers de milliards de dollars.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Interface_de_programmation"
+      ]
+    },
+    {
+      "id": "broad",
+      "nom": "Haut débit (Broadband)",
+      "annee": 1999,
+      "categorie": "Infrastructure",
+      "importance": 2,
+      "description_courte": "La connexion rapide qui a remplacé le modem téléphonique et changé Internet.",
+      "description_longue": "ADSL, câble, puis fibre optique. Rend possible streaming, téléchargement massif, cloud. Internet devient un media à part entière. La fibre atteint 10 Gbps en environnement domestique en 2024.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Haut_d%C3%A9bit"
+      ]
+    },
+    {
+      "id": "cms",
+      "nom": "CMS",
+      "annee": 1999,
+      "categorie": "Backend",
+      "importance": 2,
+      "description_courte": "Créer et gérer un site web sans connaître le code.",
+      "description_longue": "Content Management System. Premiers CMS commerciaux vers 1999. WordPress (2003) domine avec 43% des sites mondiaux. Drupal, Joomla, Contentful, Strapi constituent l'écosystème.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Syst%C3%A8me_de_gestion_de_contenu"
+      ]
+    },
+    {
+      "id": "p2p",
+      "nom": "Peer-to-Peer",
+      "annee": 1999,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Un réseau d'échange direct entre ordinateurs, sans serveur central.",
+      "description_longue": "Napster 1999, premier P2P de masse pour la musique. BitTorrent 2001 optimise l'efficacité. Précurseur conceptuel direct des architectures décentralisées et des blockchains.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Pair_%C3%A0_pair"
+      ]
+    },
+    {
+      "id": "rss",
+      "nom": "RSS",
+      "annee": 1999,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Un format qui permet de s'abonner à un site et recevoir ses nouveaux contenus.",
+      "description_longue": "Really Simple Syndication, Netscape 1999. Précurseur des fils d'actualité et des algorithmes de recommandation. Toujours vivant dans les podcasts (format de base de distribution).",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/RSS"
+      ]
+    },
+    {
+      "id": "wifi",
+      "nom": "Wi-Fi",
+      "annee": 1999,
+      "categorie": "Infrastructure",
+      "importance": 2,
+      "description_courte": "La connexion Internet sans fil qui libère le numérique du câble.",
+      "description_longue": "Standard IEEE 802.11b certifié en 1999. Libère Internet du câble et démocratise la mobilité. Wi-Fi 7 (802.11be) en 2024 : 46 Gbps théoriques. Fondation de l'IoT et du smart home.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Wi-Fi",
+        "https://www.wi-fi.org"
+      ]
+    },
+    {
+      "id": "y2k",
+      "nom": "Bug Y2K",
+      "annee": 1999,
+      "categorie": "Fondations",
+      "importance": 3,
+      "description_courte": "La crise mondiale du passage à l'an 2000 dans les systèmes informatiques.",
+      "description_longue": "Bug né d'une économie de mémoire des années 60 (dates sur 2 chiffres). 300 milliards de dollars investis mondialement pour le corriger. Révèle la fragilité systémique du numérique et accélère la professionnalisation du secteur.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Passage_de_l%27an_2000"
+      ]
+    },
+    {
+      "id": "auth",
+      "nom": "Authentification",
+      "annee": 1999,
+      "categorie": "Sécurité",
+      "importance": 2,
+      "description_courte": "Le mécanisme qui vérifie l'identité d'un utilisateur en ligne.",
+      "description_longue": "Login/password standardisés fin des années 90. Fondation de toute expérience personnalisée. Évolution : 2FA, OAuth, SSO, WebAuthn, passkeys. La gestion des identités est l'un des défis majeurs du Web.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Authentification"
+      ]
+    },
+    {
+      "id": "tls",
+      "nom": "TLS",
+      "annee": 1999,
+      "categorie": "Sécurité",
+      "importance": 1,
+      "description_courte": "Le successeur sécurisé de SSL — le vrai protocole derrière HTTPS.",
+      "description_longue": "Transport Layer Security, RFC 2246 (1999). Succède à SSL. TLS 1.3 (2018) supprime les algorithmes vulnérables. Chiffrement universel pour HTTPS, email, VoIP. SSL is obsolète mais le terme persiste par abus de langage.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Transport_Layer_Security",
+        "https://www.rfc-editor.org/rfc/rfc8446"
+      ]
+    },
+    {
+      "id": "rest",
+      "nom": "REST",
+      "annee": 2000,
+      "categorie": "Backend",
+      "importance": 1,
+      "description_courte": "Un style d'architecture pour concevoir des APIs web simples et standardisées.",
+      "description_longue": "Representational State Transfer, Roy Fielding, thèse USC 2000. Verbes HTTP (GET, POST, PUT, DELETE) sur des ressources identifiées par URLs. Standard universel des APIs web pendant 20 ans.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Representational_state_transfer",
+        "https://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm"
+      ]
+    },
+    {
+      "id": "xmlrpc",
+      "nom": "XML-RPC",
+      "annee": 2000,
+      "categorie": "Backend",
+      "importance": 3,
+      "description_courte": "Un protocole pour appeler des fonctions distantes via XML et HTTP.",
+      "description_longue": "Précurseur de REST et SOAP. WordPress l'utilise encore pour son API de publication. Progressivement remplacé par JSON-RPC puis REST, puis GraphQL.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/XML-RPC"
+      ]
+    },
+    {
+      "id": "adwords",
+      "nom": "Google AdWords",
+      "annee": 2000,
+      "categorie": "Marketing",
+      "importance": 2,
+      "description_courte": "Le système publicitaire de Google basé sur les mots-clés de recherche.",
+      "description_longue": "Lancé en octobre 2000. Modèle coût-par-clic (CPC). Rebaptisé Google Ads en 2018. Génère environ 200 milliards de dollars par an. Modèle copié par tous les concurrents (Meta Ads, Amazon Ads).",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Google_Ads"
+      ]
+    },
+    {
+      "id": "json",
+      "nom": "JSON",
+      "annee": 2001,
+      "categorie": "Backend",
+      "importance": 1,
+      "description_courte": "Un format léger et lisible pour échanger des données entre applications.",
+      "description_longue": "JavaScript Object Notation, Douglas Crockford, 2001. Supplante XML pour les APIs : plus léger, nativement lisible en JavaScript. Standardisé RFC 4627 (2006), puis RFC 8259 (2017). Format quasi-universel des APIs web.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/JavaScript_Object_Notation",
+        "https://www.json.org"
+      ]
+    },
+    {
+      "id": "wiki",
+      "nom": "Wikipedia",
+      "annee": 2001,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "La première encyclopédie collaborative en ligne à grande échelle.",
+      "description_longue": "Jimmy Wales et Larry Sanger, 15 janvier 2001. 60 millions d'articles en 330 langues en 2024. Modèle de gouvernance contributive. L'une des ressources les plus consultées au monde.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Wikip%C3%A9dia"
+      ]
+    },
+    {
+      "id": "bt",
+      "nom": "BitTorrent",
+      "annee": 2001,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Le protocole P2P où plus il y a d'utilisateurs, plus le transfert est rapide.",
+      "description_longue": "Bram Cohen, 2001. Découpe les fichiers en morceaux échangés simultanément entre pairs. Représente encore 3% du trafic Internet mondial. Influence directe sur les architectures CDN et décentralisées.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/BitTorrent_(protocole)"
+      ]
+    },
+    {
+      "id": "itunes",
+      "nom": "iTunes / iPod",
+      "annee": 2001,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "L'écosystème Apple qui a numérisé la musique et préfiguré l'économie du streaming.",
+      "description_longue": "iTunes lancé en janvier 2001, iPod en octobre 2001, iTunes Store en 2003 (99 cents par chanson). Prouve qu'un modèle légal de vente de contenu numérique est viable. Précurseur de Spotify et Apple Music.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/ITunes"
+      ]
+    },
+    {
+      "id": "wp",
+      "nom": "WordPress",
+      "annee": 2003,
+      "categorie": "Backend",
+      "importance": 1,
+      "description_courte": "Le CMS open source qui propulse 43% des sites web mondiaux.",
+      "description_longue": "Matt Mullenweg et Mike Little, 27 mai 2003. Fork de b2/cafelog. De blog à plateforme CMS complète. Plus de 60 000 plugins, 10 000 thèmes. Automattic gère WordPress.com.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/WordPress",
+        "https://wordpress.org"
+      ]
+    },
+    {
+      "id": "wk",
+      "nom": "WebKit",
+      "annee": 2003,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Le moteur de rendu web d'Apple, base de Safari et des navigateurs iOS.",
+      "description_longue": "Apple fork du moteur KHTML de KDE, intégré à Safari dès 2003. Google l'adopte pour Chrome (2008) puis crée Blink en 2013 (fork de WebKit). Moteur obligatoire sur iOS par les règles de l'App Store.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/WebKit",
+        "https://webkit.org"
+      ]
+    },
+    {
+      "id": "fb",
+      "nom": "Facebook",
+      "annee": 2004,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "Le réseau social qui a connecté et transformé des milliards d'humains.",
+      "description_longue": "Mark Zuckerberg, Harvard, 4 février 2004. 3 milliards d'utilisateurs actifs en 2024. Inventeur du graphe social comme produit. Rebaptisé Meta en 2021. A acquis Instagram (2012) et WhatsApp (2014).",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Facebook"
+      ]
+    },
+    {
+      "id": "gmail",
+      "nom": "Gmail",
+      "annee": 2004,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Le service email de Google qui a révolutionné la messagerie avec 1 Go gratuit.",
+      "description_longue": "1er avril 2004. Démocratise AJAX : interface fluide rivalisant avec les clients de bureau. Impose le standard du gigaoctet gratuit. 1,8 milliard d'utilisateurs actifs en 2024.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Gmail"
+      ]
+    },
+    {
+      "id": "ff",
+      "nom": "Firefox",
+      "annee": 2004,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Le navigateur open source qui a brisé le monopole d'Internet Explorer.",
+      "description_longue": "Mozilla Firefox 1.0, 9 novembre 2004. 100 millions de téléchargements en un an. Introduit onglets, extensions, respect des standards. Ouvre la voie à Chrome. Maintenu par la fondation Mozilla.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Mozilla_Firefox",
+        "https://www.mozilla.org"
+      ]
+    },
+    {
+      "id": "pod",
+      "nom": "Podcast",
+      "annee": 2004,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Un format audio diffusé via Internet et consommé à la demande.",
+      "description_longue": "Terme créé par Ben Hammersley (The Guardian) en 2004. Intégré à iTunes en 2005. Basé sur RSS. 4 millions de podcasts actifs en 2024, 500 millions d'auditeurs mensuels.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Podcast"
+      ]
+    },
+    {
+      "id": "php5",
+      "nom": "PHP 5",
+      "annee": 2004,
+      "categorie": "Backend",
+      "importance": 2,
+      "description_courte": "La version de PHP qui introduit la programmation orientée objet mature.",
+      "description_longue": "Juillet 2004, Zend Engine 2. Apporte une POO complète, exceptions, PDO. Symfony, Laravel, WordPress modernes se construisent sur cette base. PHP 5.6 support terminé en 2018.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/PHP#PHP_5",
+        "https://www.php.net/releases/5_0_0.php"
+      ]
+    },
+    {
+      "id": "web2",
+      "nom": "Web 2.0",
+      "annee": 2004,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Le tournant où les utilisateurs deviennent eux-mêmes créateurs de contenu.",
+      "description_longue": "Tim O'Reilly, octobre 2004. Blogs, wikis, réseaux sociaux, AJAX, APIs ouvertes. Naissance de l'économie de l'attention et du contenu généré par les utilisateurs (UGC). Prémices du Web social.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Web_2.0"
+      ]
+    },
+    {
+      "id": "ga",
+      "nom": "Google Analytics",
+      "annee": 2005,
+      "categorie": "Marketing",
+      "importance": 2,
+      "description_courte": "Mesurer précisément le comportement des visiteurs d'un site web.",
+      "description_longue": "Google rachète Urchin Software en 2005. Gratuit, s'impose immédiatement. Collecte des données sur environ 50% du Web mondial. GA4 (2020) migre vers un modèle événementiel sans cookies.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Google_Analytics",
+        "https://analytics.google.com"
+      ]
+    },
+    {
+      "id": "yt",
+      "nom": "YouTube",
+      "annee": 2005,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "La plateforme qui a démocratisé la création et la consommation vidéo en ligne.",
+      "description_longue": "Fondé février 2005, racheté par Google octobre 2006 pour 1,65 milliard de dollars. 500 heures de vidéo uploadées par minute en 2023. Deuxième site le plus visité au monde. Révolutionne la télévision.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/YouTube"
+      ]
+    },
+    {
+      "id": "saas",
+      "nom": "SaaS",
+      "annee": 2005,
+      "categorie": "Infrastructure",
+      "importance": 2,
+      "description_courte": "Un logiciel livré via Internet par abonnement, sans installation locale.",
+      "description_longue": "Software as a Service. Salesforce pionnier (1999), terme popularisé 2005. Google Workspace, Dropbox, Slack, Notion. Modèle économique dominant du logiciel. Marché de 200 milliards de dollars en 2024.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Logiciel_en_tant_que_service"
+      ]
+    },
+    {
+      "id": "sass",
+      "nom": "Sass / LESS",
+      "annee": 2006,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Des préprocesseurs CSS qui ajoutent variables, fonctions et logique.",
+      "description_longue": "Sass (Hampton Catlin, 2006), LESS (Alexis Sellier, 2009). Apportent variables, imbrication, mixins, héritage. CSS Custom Properties (2017) absorbe leurs idées dans le standard natif.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Sass_(langage)",
+        "https://sass-lang.com"
+      ]
+    },
+    {
+      "id": "jq",
+      "nom": "jQuery",
+      "annee": 2006,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "La bibliothèque JavaScript qui a rendu la manipulation du DOM universellement accessible.",
+      "description_longue": "John Resig, janvier 2006. Résout les incompatibilités entre navigateurs. Présent sur 77% des sites en 2012. Progressivement remplacé par les frameworks composants et par les APIs natives modernisées.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/JQuery",
+        "https://jquery.com"
+      ]
+    },
+    {
+      "id": "tw",
+      "nom": "Twitter / X",
+      "annee": 2006,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "Le réseau social du message court, du hashtag et de l'information en temps réel.",
+      "description_longue": "Jack Dorsey, 21 mars 2006. 140 caractères → 280. Inventeur du hashtag (#) et du retweet comme mécanismes sociaux. Racheté par Elon Musk en octobre 2022, rebaptisé X. 550 millions d'utilisateurs.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/X_(r%C3%A9seau_social)"
+      ]
+    },
+    {
+      "id": "aws",
+      "nom": "AWS",
+      "annee": 2006,
+      "categorie": "Infrastructure",
+      "importance": 1,
+      "description_courte": "La plateforme cloud d'Amazon qui a inventé l'infrastructure à la demande.",
+      "description_longue": "Amazon S3 (mars 2006), EC2 (août 2006). Invente le cloud computing grand public. 32% du marché mondial en 2024, devant Azure (23%) et GCP (12%). Héberge une part majeure d'Internet.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Amazon_Web_Services",
+        "https://aws.amazon.com"
+      ]
+    },
+    {
+      "id": "cloud",
+      "nom": "Cloud Computing",
+      "annee": 2006,
+      "categorie": "Infrastructure",
+      "importance": 1,
+      "description_courte": "Utiliser des serveurs, du stockage et des logiciels via Internet sans les posséder.",
+      "description_longue": "L'informatique comme l'électricité : on branche, on consomme. 94% des entreprises utilisent au moins un service cloud en 2024. Marché de 600 milliards de dollars. Modèle CapEx → OpEx.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Cloud_computing"
+      ]
+    },
+    {
+      "id": "iphone",
+      "nom": "iPhone / Mobile",
+      "annee": 2007,
+      "categorie": "Mobile",
+      "importance": 1,
+      "description_courte": "L'appareil qui a mis Internet dans chaque poche et recréé le Web.",
+      "description_longue": "Steve Jobs, 9 janvier 2007. Condamne Flash. Impose le tactile, le responsive design, l'App Store. Mobile dépasse Desktop en 2016. 1,4 milliard d'iPhones actifs. Transforme la consommation numérique.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/IPhone",
+        "https://www.apple.com/iphone/"
+      ]
+    },
+    {
+      "id": "drop",
+      "nom": "Dropbox",
+      "annee": 2008,
+      "categorie": "Infrastructure",
+      "importance": 3,
+      "description_courte": "Le service qui a popularisé le stockage et la synchronisation de fichiers dans le cloud.",
+      "description_longue": "Drew Houston, 2008. 100 millions d'utilisateurs en 2012. Inventeur du modèle freemium cloud. Précurseur de Google Drive, OneDrive, iCloud. Pionnier de l'expérience de synchronisation transparente.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Dropbox"
+      ]
+    },
+    {
+      "id": "gh",
+      "nom": "GitHub",
+      "annee": 2008,
+      "categorie": "DevOps",
+      "importance": 1,
+      "description_courte": "La plateforme sociale d'hébergement de code qui a transformé le développement collaboratif.",
+      "description_longue": "Tom Preston-Werner et al., avril 2008. Interface sociale autour de Git (Linus Torvalds, 2005). Racheté by Microsoft en 2018 pour 7,5 milliards de dollars. 100 millions de développeurs en 2023.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/GitHub",
+        "https://github.com"
+      ]
+    },
+    {
+      "id": "chrome",
+      "nom": "Chrome",
+      "annee": 2008,
+      "categorie": "Fondations",
+      "importance": 1,
+      "description_courte": "Le navigateur de Google qui domine le Web avec 65% de parts de marché.",
+      "description_longue": "Google Chrome, 2 septembre 2008. Moteur V8 JavaScript ultra-rapide, sandboxing par onglet. Dépasse IE en 2012. Chrome 120 (2024) : V8 optimisé, WebGPU, Passkeys. Blink engine.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Google_Chrome"
+      ]
+    },
+    {
+      "id": "sp",
+      "nom": "Spotify",
+      "annee": 2008,
+      "categorie": "Fondations",
+      "importance": 2,
+      "description_courte": "La plateforme qui a légalisé et démocratisé le streaming musical.",
+      "description_longue": "Daniel Ek et Martin Lorentzon, Suède, 2008. Résout l'équation post-Napster : streaming légal, rémunération des artistes, accessibilité globale. 600 millions d'utilisateurs, 240 millions de payants en 2024.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Spotify"
+      ]
+    },
+    {
+      "id": "html5",
+      "nom": "HTML5",
+      "annee": 2008,
+      "categorie": "Frontend",
+      "importance": 1,
+      "description_courte": "La version moderne de HTML avec vidéo, audio et applications web natives.",
+      "description_longue": "Draft WHATWG 2008, standard W3C finalisé octobre 2014. Tue Flash : vidéo/audio natifs, canvas 2D, WebGL. Ajoute : WebSockets, localStorage, Service Workers, Geolocation, WebRTC.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/HTML5",
+        "https://html.spec.whatwg.org"
+      ]
+    },
+    {
+      "id": "node",
+      "nom": "Node.js",
+      "annee": 2009,
+      "categorie": "Backend",
+      "importance": 1,
+      "description_courte": "Exécuter JavaScript côté serveur grâce au moteur V8 de Chrome.",
+      "description_longue": "Ryan Dahl, mai 2009. Moteur V8, I/O non-bloquant, event loop. npm : 2,5 millions de paquets en 2024. Rend le JavaScript full-stack possible. Express, Fastify, NestJS, Next.js s'appuient sur Node.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Node.js",
+        "https://nodejs.org"
+      ]
+    },
+    {
+      "id": "css3",
+      "nom": "CSS3",
+      "annee": 2009,
+      "categorie": "Frontend",
+      "importance": 1,
+      "description_courte": "L'évolution de CSS en modules indépendants : animations, transitions, layouts modernes.",
+      "description_longue": "Modules CSS3 développés indépendamment depuis 2009. Flexbox (2012), CSS Grid (2017), animations, custom properties, media queries avancées. Transforme le CSS en système de design complet.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Feuilles_de_style_en_cascade#CSS3",
+        "https://www.w3.org/Style/CSS/current-work"
+      ]
+    },
+    {
+      "id": "ang",
+      "nom": "Angular",
+      "annee": 2010,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le framework JavaScript de Google pour applications web complexes et d'entreprise.",
+      "description_longue": "AngularJS (Miško Hevery, Google) 2010. Data-binding bidirectionnel révolutionnaire. Réécrit en TypeScript sous le nom Angular 2+ en 2016. Framework enterprise par excellence avec injection de dépendances.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Angular",
+        "https://angular.io"
+      ]
+    },
+    {
+      "id": "rwd",
+      "nom": "Responsive Design",
+      "annee": 2010,
+      "categorie": "Frontend",
+      "importance": 1,
+      "description_courte": "Une approche CSS qui adapte l'interface à toutes les tailles d'écran.",
+      "description_longue": "Ethan Marcotte, A List Apart, mai 2010. Trois piliers : grilles fluides, images flexibles, media queries. Google impose le responsive en 2012 comme critère SEO. Mobile-first devient le standard.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Site_web_adaptatif",
+        "https://alistapart.com/article/responsive-web-design/"
+      ]
+    },
+    {
+      "id": "ipad",
+      "nom": "iPad",
+      "annee": 2010,
+      "categorie": "Mobile",
+      "importance": 2,
+      "description_courte": "La tablette Apple qui a créé une catégorie entre smartphone et ordinateur.",
+      "description_longue": "Apple, 3 avril 2010. Troisième breakpoint du responsive design. 500 millions d'iPads vendus. Accélère la mort du Flash et valide le Web sans plugins. Utilisé massivement en médical, éducation, industrie.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/IPad"
+      ]
+    },
+    {
+      "id": "ig",
+      "nom": "Instagram",
+      "annee": 2010,
+      "categorie": "Mobile",
+      "importance": 2,
+      "description_courte": "Le réseau social de la photo mobile qui a créé la culture visuelle numérique.",
+      "description_longue": "Kevin Systrom et Mike Krieger, octobre 2010. Application mobile native d'abord, web ensuite. Racheté par Facebook/Meta en 2012 pour 1 milliard de dollars. 2 milliards d'utilisateurs. Crée l'économie des influenceurs.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Instagram"
+      ]
+    },
+    {
+      "id": "bb",
+      "nom": "Backbone.js",
+      "annee": 2010,
+      "categorie": "Frontend",
+      "importance": 3,
+      "description_courte": "La première bibliothèque JavaScript structurant les apps complexes avec le patron MVC.",
+      "description_longue": "Jeremy Ashkenas, 2010. MVC côté client : Models, Views, Routers. Précurseur conceptuel direct d'Angular, React, Vue. Adopté par Airbnb, Trello, LinkedIn dans leurs premières versions.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Backbone.js",
+        "https://backbonejs.org"
+      ]
+    },
+    {
+      "id": "wp2",
+      "nom": "Webpack",
+      "annee": 2012,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "L'outil qui assemble, optimise et transforme les fichiers d'une application web.",
+      "description_longue": "Tobias Koppers, 2012. Module bundler : résout les dépendances, transpile (Babel), minifie, génère les sourcemaps. Standard industriel jusqu'en 2020. Concurrencé par Vite, esbuild, Turbopack.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Webpack",
+        "https://webpack.js.org"
+      ]
+    },
+    {
+      "id": "ts",
+      "nom": "TypeScript",
+      "annee": 2012,
+      "categorie": "Frontend",
+      "importance": 1,
+      "description_courte": "Un sur-ensemble typé de JavaScript qui améliore la robustesse du code.",
+      "description_longue": "Microsoft, Anders Hejlsberg, octobre 2012. Sur-ensemble de JavaScript avec typage statique optionnel. Adopté par Angular (2016), puis React, Vue, Node. Standard de l'industrie pour les projets à grande échelle.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/TypeScript",
+        "https://www.typescriptlang.org"
+      ]
+    },
+    {
+      "id": "react",
+      "nom": "React",
+      "annee": 2013,
+      "categorie": "Frontend",
+      "importance": 1,
+      "description_courte": "La bibliothèque de Facebook qui a révolutionné la création d'interfaces web.",
+      "description_longue": "Jordan Walke, Facebook, open-sourcé mai 2013. Virtual DOM, architecture composants, JSX. 20 millions de téléchargements/semaine en 2024. Évolue vers React Server Components (2023).",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/React",
+        "https://react.dev"
+      ]
+    },
+    {
+      "id": "docker",
+      "nom": "Docker",
+      "annee": 2013,
+      "categorie": "DevOps",
+      "importance": 1,
+      "description_courte": "Empaqueter une application et son environnement dans un conteneur portable.",
+      "description_longue": "Solomon Hykes, dotCloud, mars 2013. Résout 'ça marche sur ma machine'. Révolution DevOps : images, registres, orchestration. 20 milliards de téléchargements d'images en 2024.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Docker_(logiciel)",
+        "https://www.docker.com"
+      ]
+    },
+    {
+      "id": "srvless",
+      "nom": "Serverless",
+      "annee": 2014,
+      "categorie": "Infrastructure",
+      "importance": 2,
+      "description_courte": "Déployer des fonctions sans gérer aucun serveur — payer à l'usage.",
+      "description_longue": "AWS Lambda, novembre 2014. Payer à la milliseconde d'exécution. Vercel et Netlify popularisent avec les fonctions edge. FaaS (Function as a Service) : idéal pour les APIs légères et les traitements événementiels.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Informatique_sans_serveur",
+        "https://aws.amazon.com/lambda/"
+      ]
+    },
+    {
+      "id": "k8s",
+      "nom": "Kubernetes",
+      "annee": 2014,
+      "categorie": "DevOps",
+      "importance": 1,
+      "description_courte": "Orchestrer et automatiser des milliers de conteneurs Docker en production.",
+      "description_longue": "Google, open-sourcé juin 2014 (basé sur Borg interne). Standard universel d'orchestration cloud. 5,6 millions de développeurs en 2023. EKS, GKE, AKS — tous les clouds proposent Kubernetes managé.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Kubernetes",
+        "https://kubernetes.io"
+      ]
+    },
+    {
+      "id": "vue",
+      "nom": "Vue.js",
+      "annee": 2014,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le framework JavaScript progressif qui combine simplicité et puissance.",
+      "description_longue": "Evan You, ex-Google, février 2014. Progressif : on intègre Vue partiellement ou totalement. Dominant en Chine (Alibaba, Tencent). Trinité avec React et Angular. Vue 3 (2020) avec Composition API.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Vue.js",
+        "https://vuejs.org"
+      ]
+    },
+    {
+      "id": "gql",
+      "nom": "GraphQL",
+      "annee": 2015,
+      "categorie": "Backend",
+      "importance": 2,
+      "description_courte": "Un langage de requête pour APIs qui retourne exactement les données demandées.",
+      "description_longue": "Facebook usage interne 2012, open-sourcé septembre 2015. Résout le sur-fetching et le sous-fetching de REST. Schéma typé, subscriptions temps réel. Adopté par GitHub, Shopify, Twitter.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/GraphQL",
+        "https://graphql.org"
+      ]
+    },
+    {
+      "id": "pwa",
+      "nom": "Progressive Web App",
+      "annee": 2015,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Un site web qui se comporte comme une application mobile native.",
+      "description_longue": "Terme créé par Frances Berriman et Alex Russell, Google, 2015. Service Workers pour le mode offline, Web App Manifest pour l'installation. Réduit le fossé entre Web et apps natives.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Progressive_web_app",
+        "https://web.dev/progressive-web-apps/"
+      ]
+    },
+    {
+      "id": "netlify",
+      "nom": "Netlify",
+      "annee": 2015,
+      "categorie": "Infrastructure",
+      "importance": 2,
+      "description_courte": "La plateforme qui a popularisé le déploiement automatisé et le JAMstack.",
+      "description_longue": "Fondé 2014, lancé publiquement 2015. Déploiement continu depuis Git, fonctions serverless, CDN edge global. Crée et popularise le concept JAMstack. Concurrent direct de Vercel.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Netlify",
+        "https://www.netlify.com"
+      ]
+    },
+    {
+      "id": "vercel",
+      "nom": "Vercel",
+      "annee": 2015,
+      "categorie": "Infrastructure",
+      "importance": 2,
+      "description_courte": "La plateforme d'hébergement optimisée pour React, Next.js et le frontend moderne.",
+      "description_longue": "Fondé sous le nom Zeit 2015, rebaptisé Vercel 2020. Edge Functions, Incremental Static Regeneration, intégration App Router Next.js. Pilier du Web moderne. Crée et maintient Next.js.",
+      "sources": [
+        "https://vercel.com"
+      ]
+    },
+    {
+      "id": "next",
+      "nom": "Next.js",
+      "annee": 2016,
+      "categorie": "Frontend",
+      "importance": 1,
+      "description_courte": "Le framework React qui unifie rendu serveur et rendu client.",
+      "description_longue": "Vercel, octobre 2016. SSR, SSG, ISR, puis App Router (2023) avec React Server Components. Référence du React moderne. 300 000 sites en production. Adopté par Vercel, TikTok, Hulu, Twitch.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Next.js",
+        "https://nextjs.org"
+      ]
+    },
+    {
+      "id": "gatsby",
+      "nom": "Gatsby",
+      "annee": 2016,
+      "categorie": "Frontend",
+      "importance": 3,
+      "description_courte": "Le générateur de sites statiques React basé sur GraphQL.",
+      "description_longue": "Kyle Mathews, 2016. GraphQL intégré, écosystème de plugins, optimisation images automatique. Pionnier du JAMstack. Dépassé par Next.js et Astro dans les années 2020.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Gatsby_(framework)",
+        "https://www.gatsbyjs.com"
+      ]
+    },
+    {
+      "id": "nuxt",
+      "nom": "Nuxt.js",
+      "annee": 2016,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le framework Vue qui unifie rendu serveur et génération statique.",
+      "description_longue": "Sébastien Chopin et al., 2016. SSR, SSG, routing automatique basé sur les fichiers. Nuxt 3 (2022) modernise l'écosystème Vue avec Nitro (server engine) et Vite.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Nuxt.js",
+        "https://nuxt.com"
+      ]
+    },
+    {
+      "id": "jam",
+      "nom": "JAMstack",
+      "annee": 2016,
+      "categorie": "Infrastructure",
+      "importance": 2,
+      "description_courte": "Une architecture web où les pages sont pré-générées et servies depuis un CDN.",
+      "description_longue": "Formalisé par Mathias Biilmann (Netlify) en 2016. JavaScript + APIs + Markup. Pages pré-générées, dynamique via APIs, CDN global. Performances maximales, surface d'attaque minimale. Rebaptisé 'Composable Architecture' en 2022.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Jamstack",
+        "https://jamstack.org"
+      ]
+    },
+    {
+      "id": "wasm",
+      "nom": "WebAssembly",
+      "annee": 2017,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Exécuter du code compilé depuis n'importe quel langage directement dans le navigateur.",
+      "description_longue": "Disponible dans les 4 grands navigateurs dès mars 2017, standard W3C 2019. Compile C, C++, Rust, Go. Performances proches du natif. Utilisé par Figma, AutoCAD Web, jeux navigateur, IA edge.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/WebAssembly",
+        "https://webassembly.org"
+      ]
+    },
+    {
+      "id": "tailwind",
+      "nom": "Tailwind CSS",
+      "annee": 2017,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le framework CSS utilitaire qui remplace les classes sémantiques par des classes atomiques.",
+      "description_longue": "Adam Wathan, novembre 2017. Approche utility-first, purge CSS automatique, design system configurable. Tailwind v4 (2025) adopte les CSS Custom Properties nativement. Dominant dans l'écosystème React/Next.js.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Tailwind_CSS",
+        "https://tailwindcss.com"
+      ]
+    },
+    {
+      "id": "cfw",
+      "nom": "Cloudflare Workers",
+      "annee": 2017,
+      "categorie": "Infrastructure",
+      "importance": 2,
+      "description_courte": "Exécuter du JavaScript au plus près des utilisateurs, à la périphérie du réseau.",
+      "description_longue": "Cloudflare, 2017. Edge computing distribué sur 300+ datacenters mondiaux. Temps de démarrage <0ms (pas de cold start). Base de l'architecture Web moderne distribuée. KV store, R2 storage.",
+      "sources": [
+        "https://developers.cloudflare.com/workers/"
+      ]
+    },
+    {
+      "id": "flutterweb",
+      "nom": "Flutter Web",
+      "annee": 2017,
+      "categorie": "Frontend",
+      "importance": 3,
+      "description_courte": "Compiler des interfaces Flutter pour le Web avec rendu Canvas ou DOM.",
+      "description_longue": "Google, Flutter annoncé 2017. Flutter Web stable en 2021. Rendu Canvas/WebGL ou HTML. Approche cross-platform : une codebase pour iOS, Android, Web, Desktop.",
+      "sources": [
+        "https://flutter.dev/web"
+      ]
+    },
+    {
+      "id": "wc",
+      "nom": "Web Components",
+      "annee": 2018,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Créer ses propres balises HTML réutilisables, sans dépendance à un framework.",
+      "description_longue": "Standardisés W3C 2018. Trois piliers : Custom Elements, Shadow DOM, HTML Templates. Interopérables nativement dans tous les navigateurs modernes. Promesse d'interopérabilité face aux frameworks propriétaires.",
+      "sources": [
+        "https://developer.mozilla.org/fr/docs/Web/Web_Components",
+        "https://www.webcomponents.org"
+      ]
+    },
+    {
+      "id": "lit",
+      "nom": "Lit",
+      "annee": 2018,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Une bibliothèque Google légère pour créer des Web Components réactifs.",
+      "description_longue": "Google, 2018 (LitElement, évolution de Polymer). Syntaxe template literals, rendu ultra-rapide, adoption croissante dans les design systems d'entreprise. Base des design systems Adobe, SAP, Shoelace.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/LitElement",
+        "https://lit.dev"
+      ]
+    },
+    {
+      "id": "svelte",
+      "nom": "Svelte",
+      "annee": 2018,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le framework qui compile les composants en JavaScript natif, sans Virtual DOM.",
+      "description_longue": "Rich Harris (New York Times), 2018. Pas de runtime, pas de virtual DOM : compilé en JS natif au build. Performances exceptionnelles, bundle minimal. SvelteKit devient son framework full-stack officiel.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Svelte",
+        "https://svelte.dev"
+      ]
+    },
+    {
+      "id": "deno",
+      "nom": "Deno",
+      "annee": 2019,
+      "categorie": "Backend",
+      "importance": 2,
+      "description_courte": "Le runtime JavaScript sécurisé créé par l'auteur de Node.js.",
+      "description_longue": "Ryan Dahl, mai 2019. Corrige les regrets de Node : permissions explicites, TypeScript natif, modules ES, Deno.land pour les packages. Deno 2 (2024) compatible npm. Alternative moderne.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Deno_(logiciel)",
+        "https://deno.com"
+      ]
+    },
+    {
+      "id": "snowpack",
+      "nom": "Snowpack",
+      "annee": 2019,
+      "categorie": "Frontend",
+      "importance": 3,
+      "description_courte": "Le bundler qui a introduit le développement sans build grâce aux ES modules natifs.",
+      "description_longue": "2019. Premier outil à exploiter les modules ES natifs du navigateur pour un dev server instantané. Précurseur conceptuel direct de Vite. Déprécié en 2022 au profit de Vite.",
+      "sources": [
+        "https://www.snowpack.dev"
+      ]
+    },
+    {
+      "id": "svelte3",
+      "nom": "Svelte 3",
+      "annee": 2019,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "La refonte de Svelte avec réactivité déclarative qui a lancé sa popularité mondiale.",
+      "description_longue": "2019. Réactivité basée sur les assignments, syntaxe simplifiée, stories, transitions natives. Popularité massive dans les sondages développeurs. Base de SvelteKit.",
+      "sources": [
+        "https://svelte.dev/blog/svelte-3-rethinking-reactivity"
+      ]
+    },
+    {
+      "id": "vite",
+      "nom": "Vite",
+      "annee": 2020,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le bundler ultra-rapide basé sur les ES modules natifs qui remplace Webpack.",
+      "description_longue": "Evan You, janvier 2020. Dev server instantané via ES modules natifs, build production via Rollup. Standard du tooling frontend en 2024. Utilisé par Vue, Svelte, React, Astro, SolidJS.",
+      "sources": [
+        "https://fr.wikipedia.org/wiki/Vite_(logiciel)",
+        "https://vitejs.dev"
+      ]
+    },
+    {
+      "id": "redwood",
+      "nom": "RedwoodJS",
+      "annee": 2020,
+      "categorie": "Frontend",
+      "importance": 3,
+      "description_courte": "Le framework full-stack React + GraphQL inspiré de Ruby on Rails.",
+      "description_longue": "Tom Preston-Werner (créateur de GitHub), 2020. Pensé pour le JAMstack avec GraphQL, Prisma, Cells. Convention over configuration appliquée au JavaScript.",
+      "sources": [
+        "https://redwoodjs.com"
+      ]
+    },
+    {
+      "id": "blitz",
+      "nom": "Blitz.js",
+      "annee": 2020,
+      "categorie": "Frontend",
+      "importance": 3,
+      "description_courte": "Le framework full-stack React inspiré de Ruby on Rails.",
+      "description_longue": "2020. Conventions fortes, migrations Prisma, RPC zero-API. Devient un toolkit pour Next.js. Inspiré par la productivité de Rails appliquée à React.",
+      "sources": [
+        "https://blitzjs.com"
+      ]
+    },
+    {
+      "id": "supabase",
+      "nom": "Supabase",
+      "annee": 2020,
+      "categorie": "Backend",
+      "importance": 2,
+      "description_courte": "L'alternative open source à Firebase basée sur PostgreSQL.",
+      "description_longue": "Paul Copplestone et Ant Wilson, 2020. PostgreSQL managé, authentification, stockage objet, edge functions, realtime. Croissance fulgurante. Concurrent de Firebase, PlanetScale, Neon.",
+      "sources": [
+        "https://supabase.com"
+      ]
+    },
+    {
+      "id": "cfpages",
+      "nom": "Cloudflare Pages",
+      "annee": 2020,
+      "categorie": "Infrastructure",
+      "importance": 3,
+      "description_courte": "La plateforme de déploiement statique ultra-rapide de Cloudflare.",
+      "description_longue": "Lancé en 2020. Intégré à Cloudflare Workers, idéal pour JAMstack et frameworks modernes. Concurrent direct de Netlify et Vercel avec le réseau Cloudflare mondial.",
+      "sources": [
+        "https://pages.cloudflare.com"
+      ]
+    },
+    {
+      "id": "esbuild",
+      "nom": "esbuild",
+      "annee": 2020,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le bundler JavaScript écrit en Go, 10 à 100× plus rapide que Webpack.",
+      "description_longue": "Evan Wallace, 2020. Traitement parallèle natif en Go. Base de nombreux outils modernes : Vite (dev server), Bun (bundler), Remix (compiler). Change la perception des performances possibles.",
+      "sources": [
+        "https://esbuild.github.io"
+      ]
+    },
+    {
+      "id": "htmx",
+      "nom": "HTMX",
+      "annee": 2020,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Créer des interfaces dynamiques via des attributs HTML sans JavaScript explicite.",
+      "description_longue": "Carson Gross, 2020 (successeur de intercooler.js). Attributs HTML pour requêtes AJAX, SSE, WebSockets. Retour aux fondamentaux du Web hypermedia. Contre-courant aux SPAs. Adoption croissante en Python/Django/Rails.",
+      "sources": [
+        "https://htmx.org"
+      ]
+    },
+    {
+      "id": "astro",
+      "nom": "Astro",
+      "annee": 2021,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le framework orienté contenu avec zéro JavaScript envoyé au client par défaut.",
+      "description_longue": "Fred K. Schott et al., 2021. Islands Architecture : hydratation sélective. Support multi-frameworks (React, Vue, Svelte...). Révolutionne le Web statique orienté contenu. Blogs, docs, marketing sites.",
+      "sources": [
+        "https://astro.build"
+      ]
+    },
+    {
+      "id": "remix",
+      "nom": "Remix",
+      "annee": 2021,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le framework React centré sur les fondamentaux du Web : forms, progressive enhancement.",
+      "description_longue": "Ryan Florence et Michael Jackson, 2021. Loaders, actions, navigation progressive. Philosophie : exploiter le Web natif plutôt que de le contourner. Racheté par Shopify en 2022.",
+      "sources": [
+        "https://remix.run"
+      ]
+    },
+    {
+      "id": "swc",
+      "nom": "SWC",
+      "annee": 2021,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le compilateur JavaScript/TypeScript ultra-rapide écrit en Rust.",
+      "description_longue": "Donny (강동윤), 2021. Alternative à Babel : 20× plus rapide. Adopté par Next.js (compile), Parcel, Deno. Illustre la tendance 'outils frontend en Rust' pour les performances.",
+      "sources": [
+        "https://swc.rs"
+      ]
+    },
+    {
+      "id": "edgefunc",
+      "nom": "Edge Functions",
+      "annee": 2021,
+      "categorie": "Infrastructure",
+      "importance": 2,
+      "description_courte": "Exécuter du code serveur au plus près de l'utilisateur final sur le réseau.",
+      "description_longue": "Vercel Edge Functions, 2021. Latence minimale, démarrage instantané, personnalisation dynamique à l'edge. Utilisé pour A/B testing, auth, géolocalisation, réécriture d'URLs. Standard distribué.",
+      "sources": [
+        "https://vercel.com/docs/functions/edge-functions"
+      ]
+    },
+    {
+      "id": "webcontainer",
+      "nom": "WebContainer",
+      "annee": 2021,
+      "categorie": "Infrastructure",
+      "importance": 2,
+      "description_courte": "Exécuter Node.js et npm directement dans le navigateur sans serveur.",
+      "description_longue": "StackBlitz, 2021. Environnement de développement complet dans le navigateur via WebAssembly. Rend possible StackBlitz IDE, bolt.new. Élimine les frictions de setup.",
+      "sources": [
+        "https://webcontainers.io"
+      ]
+    },
+    {
+      "id": "islands",
+      "nom": "Islands Architecture",
+      "annee": 2021,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "N'hydrater en JavaScript que les parties interactives de la page, pas l'ensemble.",
+      "description_longue": "Concept de Jason Miller (Preact, 2019), popularisé par Astro (2021). Réduction drastique du JavaScript envoyé au client. Pages majoritairement statiques avec 'îlots' interactifs. Inspiré de Marko.",
+      "sources": [
+        "https://jasonformat.com/islands-architecture/"
+      ]
+    },
+    {
+      "id": "parcel2",
+      "nom": "Parcel 2",
+      "annee": 2021,
+      "categorie": "Frontend",
+      "importance": 3,
+      "description_courte": "La refonte du bundler zéro-config avec support Rust et compilation parallèle.",
+      "description_longue": "Sorti en 2021. Core Parcel Rust, HMR amélioré, compilation parallèle. Support SWC. Alternative à Webpack sans configuration.",
+      "sources": [
+        "https://parceljs.org"
+      ]
+    },
+    {
+      "id": "bun",
+      "nom": "Bun",
+      "annee": 2022,
+      "categorie": "Backend",
+      "importance": 2,
+      "description_courte": "Le runtime JavaScript tout-en-un ultra-rapide écrit en Zig.",
+      "description_longue": "Jarred Sumner, 2022. Runtime (JavaScriptCore), bundler, test runner, package manager intégrés. 3× plus rapide que Node pour de nombreux benchmarks. Bun 1.0 stable en septembre 2023.",
+      "sources": [
+        "https://bun.sh"
+      ]
+    },
+    {
+      "id": "wasi",
+      "nom": "WASI",
+      "annee": 2022,
+      "categorie": "Backend",
+      "importance": 2,
+      "description_courte": "L'interface système standardisée pour exécuter WebAssembly hors du navigateur.",
+      "description_longue": "WebAssembly System Interface, 2022. Permet à Wasm d'accéder au filesystem, réseau, processus. Base du futur runtime universel Wasm. Docker a annoncé son support en 2023.",
+      "sources": [
+        "https://wasi.dev",
+        "https://github.com/WebAssembly/WASI"
+      ]
+    },
+    {
+      "id": "qwik",
+      "nom": "Qwik",
+      "annee": 2022,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le framework conçu pour un chargement instantané via hydratation paresseuse totale.",
+      "description_longue": "Miško Hevery (créateur d'AngularJS), 2022. Resumability : sérialise l'état serveur pour reprendre dans le navigateur sans re-exécution. Micro-chunks JavaScript chargés à la demande.",
+      "sources": [
+        "https://qwik.dev"
+      ]
+    },
+    {
+      "id": "solidstart",
+      "nom": "SolidStart",
+      "annee": 2022,
+      "categorie": "Frontend",
+      "importance": 3,
+      "description_courte": "Le framework full-stack basé sur SolidJS aux performances extrêmes.",
+      "description_longue": "2022. SSR, routing basé sur fichiers, streaming. Performances de rendu extrêmes grâce à la réactivité fine-grained de Solid (pas de Virtual DOM).",
+      "sources": [
+        "https://start.solidjs.com"
+      ]
+    },
+    {
+      "id": "sveltekit",
+      "nom": "SvelteKit",
+      "annee": 2022,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le framework full-stack officiel de Svelte avec routing et SSR.",
+      "description_longue": "Version stable décembre 2022. Routing basé sur les fichiers, SSR, SSG, adaptateurs (Vercel, Netlify, Node, Cloudflare). Concurrent majeur de Next.js et Astro pour les projets Svelte.",
+      "sources": [
+        "https://kit.svelte.dev"
+      ]
+    },
+    {
+      "id": "rsc",
+      "nom": "React Server Components",
+      "annee": 2022,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le modèle React qui exécute certains composants exclusivement côté serveur.",
+      "description_longue": "Introduit expérimentalement 2020, intégré dans Next.js 13 en 2022. Composants rendus côté serveur, zéro JavaScript client pour ces composants. Streaming natif, meilleure performance perçue.",
+      "sources": [
+        "https://react.dev/reference/rsc/server-components"
+      ]
+    },
+    {
+      "id": "turbopack",
+      "nom": "Turbopack",
+      "annee": 2022,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "Le successeur de Webpack écrit en Rust, intégré à Next.js.",
+      "description_longue": "Vercel, annoncé avec Next.js 13 en octobre 2022. Algorithme de compilation incrémentale en Rust. 700× plus rapide que Webpack selon Vercel. Intégré nativement à Next.js depuis Next 15.",
+      "sources": [
+        "https://turbo.build/pack"
+      ]
+    },
+    {
+      "id": "fresh",
+      "nom": "Fresh",
+      "annee": 2022,
+      "categorie": "Frontend",
+      "importance": 3,
+      "description_courte": "Le framework Deno basé sur le serveur et l'hydratation progressive sans build.",
+      "description_longue": "Version stable 2022. Aucun build nécessaire, rendu serveur natif, composants islands. Utilise Preact pour les composants interactifs. Alternative moderne pour l'écosystème Deno.",
+      "sources": [
+        "https://fresh.deno.dev"
+      ]
+    },
+    {
+      "id": "webgpu",
+      "nom": "WebGPU",
+      "annee": 2023,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "La nouvelle API graphique du Web qui accède directement au GPU.",
+      "description_longue": "Standard W3C, disponible dans Chrome 113 en mai 2023. Successeur de WebGL. Calcul parallèle GPU pour l'IA, la 3D, le traitement d'image. Transforme les possibilités du Web haute performance.",
+      "sources": [
+        "https://www.w3.org/TR/webgpu/",
+        "https://developer.mozilla.org/fr/docs/Web/API/WebGPU_API"
+      ]
+    },
+    {
+      "id": "next13",
+      "nom": "Next.js 13+",
+      "annee": 2023,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "La version qui introduit l'App Router et réinvente le développement React.",
+      "description_longue": "Next.js 13 (oct. 2022) → 14 → 15 (2024). App Router, React Server Components, Server Actions, Partial Prerendering. Architecture server-first, streaming, layouts imbriqués. Redéfinit le développement React moderne.",
+      "sources": [
+        "https://nextjs.org/blog/next-13"
+      ]
+    },
+    {
+      "id": "nuxt3",
+      "nom": "Nuxt 3",
+      "annee": 2023,
+      "categorie": "Frontend",
+      "importance": 2,
+      "description_courte": "La nouvelle génération du framework Vue avec Nitro, Vite et TypeScript.",
+      "description_longue": "Version stable nov. 2022, mature 2023. Moteur Nitro (server engine agnostique), dev avec Vite, TypeScript first. Composables, modules Nuxt. Modernise drastiquement l'écosystème Vue.",
+      "sources": [
+        "https://nuxt.com/blog/v3"
+      ]
+    },
+    {
+      "id": "unjs",
+      "nom": "UnJS",
+      "annee": 2023,
+      "categorie": "Backend",
+      "importance": 2,
+      "description_courte": "L'écosystème d'outils JavaScript universels de l'équipe derrière Nuxt.",
+      "description_longue": "Nitro (server), H3 (router HTTP), Unstorage, Unbuild, Jiti, Hookable. Socle JavaScript agnostique de l'environnement d'exécution. Adopté au-delà de l'écosystème Nuxt.",
+      "sources": [
+        "https://unjs.io"
+      ]
+    },
+    {
+      "id": "denodeploy",
+      "nom": "Deno Deploy",
+      "annee": 2023,
+      "categorie": "Infrastructure",
+      "importance": 3,
+      "description_courte": "La plateforme edge native pour déployer des applications Deno.",
+      "description_longue": "2021 beta, mature 2023. Exécution distribuée sur 35+ régions, cold starts quasi nuls. Alternative à Vercel et Cloudflare Workers pour l'écosystème Deno.",
+      "sources": [
+        "https://deno.com/deploy"
+      ]
+    }
+  ],
+  "edges": [
+    {"s": "ftp", "t": "tcpip", "type": "DEPENDS_ON"},
+    {"s": "ftp", "t": "srv", "type": "DEPENDS_ON"},
+    {"s": "email", "t": "tcpip", "type": "DEPENDS_ON"},
+    {"s": "email", "t": "srv", "type": "DEPENDS_ON"},
+    {"s": "tcpip", "t": "net", "type": "DEPENDS_ON"},
+    {"s": "tcpip", "t": "dns", "type": "INFLUENCE"},
+    {"s": "tcpip", "t": "ip", "type": "DEPENDS_ON"},
+    {"s": "dns", "t": "url", "type": "INFLUENCE"},
+    {"s": "net", "t": "web", "type": "EVOLVES_INTO"},
+    {"s": "web", "t": "http", "type": "DEPENDS_ON"},
+    {"s": "web", "t": "html", "type": "DEPENDS_ON"},
+    {"s": "web", "t": "url", "type": "DEPENDS_ON"},
+    {"s": "web", "t": "net", "type": "DEPENDS_ON"},
+    {"s": "http", "t": "https", "type": "REPLACED_BY"},
+    {"s": "html", "t": "html5", "type": "EVOLVES_INTO"},
+    {"s": "linux", "t": "apache", "type": "INFLUENCE"},
+    {"s": "linux", "t": "aws", "type": "DEPENDS_ON"},
+    {"s": "linux", "t": "docker", "type": "DEPENDS_ON"},
+    {"s": "linux", "t": "gh", "type": "DEPENDS_ON"},
+    {"s": "apache", "t": "srv", "type": "DEPENDS_ON"},
+    {"s": "apache", "t": "php", "type": "INFLUENCE"},
+    {"s": "bdd", "t": "sql", "type": "EVOLVES_INTO"},
+    {"s": "sql", "t": "mysql", "type": "EVOLVES_INTO"},
+    {"s": "php", "t": "mysql", "type": "DEPENDS_ON"},
+    {"s": "php", "t": "php5", "type": "EVOLVES_INTO"},
+    {"s": "php", "t": "wp", "type": "EVOLVES_INTO"},
+    {"s": "php5", "t": "php", "type": "EVOLVES_INTO"},
+    {"s": "php5", "t": "wp", "type": "INFLUENCE"},
+    {"s": "wp", "t": "mysql", "type": "DEPENDS_ON"},
+    {"s": "cms", "t": "php", "type": "DEPENDS_ON"},
+    {"s": "cms", "t": "mysql", "type": "DEPENDS_ON"},
+    {"s": "cms", "t": "wp", "type": "EVOLVES_INTO"},
+    {"s": "node", "t": "js", "type": "EVOLVES_INTO"},
+    {"s": "css", "t": "html", "type": "DEPENDS_ON"},
+    {"s": "css2", "t": "css", "type": "EVOLVES_INTO"},
+    {"s": "css3", "t": "css2", "type": "EVOLVES_INTO"},
+    {"s": "css3", "t": "html5", "type": "DEPENDS_ON"},
+    {"s": "css3", "t": "tailwind", "type": "INFLUENCE"},
+    {"s": "sass", "t": "css", "type": "EVOLVES_INTO"},
+    {"s": "sass", "t": "css3", "type": "INFLUENCE"},
+    {"s": "flash", "t": "html5", "type": "REPLACED_BY"},
+    {"s": "flash", "t": "js", "type": "REPLACED_BY"},
+    {"s": "js", "t": "dom", "type": "DEPENDS_ON"},
+    {"s": "jq", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "jq", "t": "dom", "type": "DEPENDS_ON"},
+    {"s": "jq", "t": "ajax", "type": "DEPENDS_ON"},
+    {"s": "jq", "t": "react", "type": "INFLUENCE"},
+    {"s": "ajax", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "ajax", "t": "dom", "type": "DEPENDS_ON"},
+    {"s": "ajax", "t": "api", "type": "INFLUENCE"},
+    {"s": "bb", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "bb", "t": "jq", "type": "DEPENDS_ON"},
+    {"s": "bb", "t": "react", "type": "INFLUENCE"},
+    {"s": "ang", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "ang", "t": "ts", "type": "DEPENDS_ON"},
+    {"s": "ts", "t": "js", "type": "EVOLVES_INTO"},
+    {"s": "ts", "t": "react", "type": "INFLUENCE"},
+    {"s": "ts", "t": "ang", "type": "INFLUENCE"},
+    {"s": "react", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "react", "t": "dom", "type": "DEPENDS_ON"},
+    {"s": "react", "t": "ts", "type": "DEPENDS_ON"},
+    {"s": "vue", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "vue", "t": "react", "type": "INFLUENCE"},
+    {"s": "wp2", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "wp2", "t": "react", "type": "DEPENDS_ON"},
+    {"s": "wp2", "t": "node", "type": "DEPENDS_ON"},
+    {"s": "html5", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "html5", "t": "css3", "type": "DEPENDS_ON"},
+    {"s": "dom", "t": "html", "type": "DEPENDS_ON"},
+    {"s": "dom", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "pwa", "t": "html5", "type": "DEPENDS_ON"},
+    {"s": "pwa", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "pwa", "t": "iphone", "type": "INFLUENCE"},
+    {"s": "wasm", "t": "js", "type": "INFLUENCE"},
+    {"s": "wasm", "t": "html5", "type": "DEPENDS_ON"},
+    {"s": "rwd", "t": "css3", "type": "DEPENDS_ON"},
+    {"s": "rwd", "t": "html5", "type": "DEPENDS_ON"},
+    {"s": "rwd", "t": "iphone", "type": "INFLUENCE"},
+    {"s": "api", "t": "rest", "type": "EVOLVES_INTO"},
+    {"s": "api", "t": "http", "type": "DEPENDS_ON"},
+    {"s": "rest", "t": "json", "type": "DEPENDS_ON"},
+    {"s": "rest", "t": "http", "type": "DEPENDS_ON"},
+    {"s": "json", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "xml", "t": "json", "type": "CONCURRENCE"},
+    {"s": "gql", "t": "rest", "type": "EVOLVES_INTO"},
+    {"s": "gql", "t": "api", "type": "EVOLVES_INTO"},
+    {"s": "gql", "t": "react", "type": "INFLUENCE"},
+    {"s": "xmlrpc", "t": "xml", "type": "DEPENDS_ON"},
+    {"s": "xmlrpc", "t": "api", "type": "DEPENDS_ON"},
+    {"s": "crypto", "t": "ssl", "type": "INFLUENCE"},
+    {"s": "ssl", "t": "tls", "type": "EVOLVES_INTO"},
+    {"s": "tls", "t": "https", "type": "DEPENDS_ON"},
+    {"s": "auth", "t": "cookie", "type": "DEPENDS_ON"},
+    {"s": "auth", "t": "https", "type": "DEPENDS_ON"},
+    {"s": "fw", "t": "srv", "type": "DEPENDS_ON"},
+    {"s": "vpn", "t": "https", "type": "DEPENDS_ON"},
+    {"s": "aws", "t": "srv", "type": "DEPENDS_ON"},
+    {"s": "aws", "t": "linux", "type": "DEPENDS_ON"},
+    {"s": "cloud", "t": "aws", "type": "DEPENDS_ON"},
+    {"s": "cloud", "t": "srv", "type": "DEPENDS_ON"},
+    {"s": "saas", "t": "cloud", "type": "DEPENDS_ON"},
+    {"s": "saas", "t": "aws", "type": "DEPENDS_ON"},
+    {"s": "saas", "t": "api", "type": "DEPENDS_ON"},
+    {"s": "docker", "t": "linux", "type": "DEPENDS_ON"},
+    {"s": "docker", "t": "cloud", "type": "DEPENDS_ON"},
+    {"s": "k8s", "t": "docker", "type": "DEPENDS_ON"},
+    {"s": "k8s", "t": "cloud", "type": "DEPENDS_ON"},
+    {"s": "srvless", "t": "aws", "type": "DEPENDS_ON"},
+    {"s": "srvless", "t": "cloud", "type": "DEPENDS_ON"},
+    {"s": "srvless", "t": "node", "type": "DEPENDS_ON"},
+    {"s": "drop", "t": "cloud", "type": "DEPENDS_ON"},
+    {"s": "drop", "t": "aws", "type": "DEPENDS_ON"},
+    {"s": "iphone", "t": "nav", "type": "INFLUENCE"},
+    {"s": "iphone", "t": "html5", "type": "INFLUENCE"},
+    {"s": "ipad", "t": "iphone", "type": "DEPENDS_ON"},
+    {"s": "ipad", "t": "rwd", "type": "INFLUENCE"},
+    {"s": "ig", "t": "iphone", "type": "DEPENDS_ON"},
+    {"s": "ig", "t": "api", "type": "DEPENDS_ON"},
+    {"s": "fb", "t": "api", "type": "DEPENDS_ON"},
+    {"s": "fb", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "fb", "t": "react", "type": "INFLUENCE"},
+    {"s": "tw", "t": "api", "type": "DEPENDS_ON"},
+    {"s": "tw", "t": "web2", "type": "DEPENDS_ON"},
+    {"s": "blog", "t": "rss", "type": "INFLUENCE"},
+    {"s": "blog", "t": "cms", "type": "DEPENDS_ON"},
+    {"s": "rss", "t": "xml", "type": "DEPENDS_ON"},
+    {"s": "wiki", "t": "cms", "type": "DEPENDS_ON"},
+    {"s": "yt", "t": "stream", "type": "DEPENDS_ON"},
+    {"s": "yt", "t": "flash", "type": "DEPENDS_ON"},
+    {"s": "stream", "t": "broad", "type": "DEPENDS_ON"},
+    {"s": "stream", "t": "http", "type": "DEPENDS_ON"},
+    {"s": "sp", "t": "stream", "type": "DEPENDS_ON"},
+    {"s": "sp", "t": "api", "type": "DEPENDS_ON"},
+    {"s": "pod", "t": "rss", "type": "DEPENDS_ON"},
+    {"s": "pod", "t": "stream", "type": "DEPENDS_ON"},
+    {"s": "itunes", "t": "stream", "type": "INFLUENCE"},
+    {"s": "p2p", "t": "net", "type": "DEPENDS_ON"},
+    {"s": "bt", "t": "p2p", "type": "EVOLVES_INTO"},
+    {"s": "web2", "t": "ajax", "type": "DEPENDS_ON"},
+    {"s": "web2", "t": "blog", "type": "DEPENDS_ON"},
+    {"s": "web2", "t": "api", "type": "DEPENDS_ON"},
+    {"s": "google", "t": "msr", "type": "EVOLVES_INTO"},
+    {"s": "google", "t": "pgrnk", "type": "DEPENDS_ON"},
+    {"s": "pgrnk", "t": "seo", "type": "INFLUENCE"},
+    {"s": "gmail", "t": "email", "type": "DEPENDS_ON"},
+    {"s": "ajax", "t": "gmail", "type": "INFLUENCE"},
+    {"s": "gmail", "t": "google", "type": "DEPENDS_ON"},
+    {"s": "ga", "t": "google", "type": "DEPENDS_ON"},
+    {"s": "ga", "t": "cookie", "type": "DEPENDS_ON"},
+    {"s": "adwords", "t": "google", "type": "DEPENDS_ON"},
+    {"s": "adwords", "t": "seo", "type": "INFLUENCE"},
+    {"s": "chrome", "t": "nav", "type": "EVOLVES_INTO"},
+    {"s": "chrome", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "wk", "t": "nav", "type": "DEPENDS_ON"},
+    {"s": "wk", "t": "html", "type": "DEPENDS_ON"},
+    {"s": "seo", "t": "msr", "type": "DEPENDS_ON"},
+    {"s": "emkt", "t": "email", "type": "DEPENDS_ON"},
+    {"s": "os", "t": "linux", "type": "INFLUENCE"},
+    {"s": "os", "t": "apache", "type": "INFLUENCE"},
+    {"s": "ff", "t": "nav", "type": "EVOLVES_INTO"},
+    {"s": "ff", "t": "os", "type": "DEPENDS_ON"},
+    {"s": "gh", "t": "os", "type": "DEPENDS_ON"},
+    {"s": "w3c", "t": "html", "type": "STANDARDISATION"},
+    {"s": "w3c", "t": "css", "type": "STANDARDISATION"},
+    {"s": "w3c", "t": "xml", "type": "STANDARDISATION"},
+    {"s": "w3c", "t": "html5", "type": "STANDARDISATION"},
+    {"s": "w3c", "t": "wasm", "type": "STANDARDISATION"},
+    {"s": "cookie", "t": "nav", "type": "DEPENDS_ON"},
+    {"s": "cookie", "t": "http", "type": "DEPENDS_ON"},
+    {"s": "cookie", "t": "auth", "type": "INFLUENCE"},
+    {"s": "ecom", "t": "https", "type": "DEPENDS_ON"},
+    {"s": "ecom", "t": "cookie", "type": "DEPENDS_ON"},
+    {"s": "nav", "t": "web", "type": "DEPENDS_ON"},
+    {"s": "nav", "t": "html", "type": "DEPENDS_ON"},
+    {"s": "broad", "t": "net", "type": "DEPENDS_ON"},
+    {"s": "broad", "t": "stream", "type": "INFLUENCE"},
+    {"s": "portal", "t": "msr", "type": "DEPENDS_ON"},
+    {"s": "portal", "t": "email", "type": "DEPENDS_ON"},
+    {"s": "wc", "t": "html5", "type": "DEPENDS_ON"},
+    {"s": "wc", "t": "lit", "type": "INFLUENCE"},
+    {"s": "wc", "t": "dom", "type": "DEPENDS_ON"},
+    {"s": "wc", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "wc", "t": "w3c", "type": "STANDARDISATION"},
+    {"s": "wc", "t": "react", "type": "CONCURRENCE"},
+    {"s": "jam", "t": "srvless", "type": "DEPENDS_ON"},
+    {"s": "jam", "t": "api", "type": "DEPENDS_ON"},
+    {"s": "jam", "t": "react", "type": "INFLUENCE"},
+    {"s": "next", "t": "react", "type": "DEPENDS_ON"},
+    {"s": "next", "t": "node", "type": "DEPENDS_ON"},
+    {"s": "next", "t": "vercel", "type": "DEPENDS_ON"},
+    {"s": "gatsby", "t": "react", "type": "DEPENDS_ON"},
+    {"s": "gatsby", "t": "gql", "type": "DEPENDS_ON"},
+    {"s": "gatsby", "t": "jam", "type": "INFLUENCE"},
+    {"s": "nuxt", "t": "vue", "type": "DEPENDS_ON"},
+    {"s": "nuxt", "t": "node", "type": "DEPENDS_ON"},
+    {"s": "nuxt", "t": "jam", "type": "INFLUENCE"},
+    {"s": "tailwind", "t": "css3", "type": "DEPENDS_ON"},
+    {"s": "tailwind", "t": "rwd", "type": "INFLUENCE"},
+    {"s": "cfw", "t": "srvless", "type": "EVOLVES_INTO"},
+    {"s": "cfw", "t": "api", "type": "DEPENDS_ON"},
+    {"s": "cfw", "t": "net", "type": "DEPENDS_ON"},
+    {"s": "flutterweb", "t": "html5", "type": "DEPENDS_ON"},
+    {"s": "flutterweb", "t": "wasm", "type": "INFLUENCE"},
+    {"s": "lit", "t": "wc", "type": "DEPENDS_ON"},
+    {"s": "lit", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "svelte", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "svelte", "t": "dom", "type": "INFLUENCE"},
+    {"s": "netlify", "t": "jam", "type": "EVOLVES_INTO"},
+    {"s": "netlify", "t": "srvless", "type": "DEPENDS_ON"},
+    {"s": "netlify", "t": "api", "type": "DEPENDS_ON"},
+    {"s": "vercel", "t": "srvless", "type": "DEPENDS_ON"},
+    {"s": "vercel", "t": "edgefunc", "type": "EVOLVES_INTO"},
+    {"s": "deno", "t": "js", "type": "EVOLVES_INTO"},
+    {"s": "deno", "t": "ts", "type": "DEPENDS_ON"},
+    {"s": "deno", "t": "node", "type": "CONCURRENCE"},
+    {"s": "snowpack", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "svelte3", "t": "svelte", "type": "EVOLVES_INTO"},
+    {"s": "svelte3", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "svelte3", "t": "sveltekit", "type": "EVOLVES_INTO"},
+    {"s": "vite", "t": "esbuild", "type": "INFLUENCE"},
+    {"s": "vite", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "vite", "t": "ts", "type": "DEPENDS_ON"},
+    {"s": "vite", "t": "svelte", "type": "INFLUENCE"},
+    {"s": "vite", "t": "vue", "type": "INFLUENCE"},
+    {"s": "redwood", "t": "react", "type": "DEPENDS_ON"},
+    {"s": "redwood", "t": "gql", "type": "DEPENDS_ON"},
+    {"s": "redwood", "t": "jam", "type": "INFLUENCE"},
+    {"s": "blitz", "t": "next", "type": "DEPENDS_ON"},
+    {"s": "blitz", "t": "react", "type": "DEPENDS_ON"},
+    {"s": "supabase", "t": "sql", "type": "DEPENDS_ON"},
+    {"s": "supabase", "t": "api", "type": "DEPENDS_ON"},
+    {"s": "supabase", "t": "auth", "type": "DEPENDS_ON"},
+    {"s": "cfpages", "t": "jam", "type": "EVOLVES_INTO"},
+    {"s": "cfpages", "t": "cfw", "type": "DEPENDS_ON"},
+    {"s": "astro", "t": "html5", "type": "DEPENDS_ON"},
+    {"s": "astro", "t": "islands", "type": "DEPENDS_ON"},
+    {"s": "astro", "t": "react", "type": "INFLUENCE"},
+    {"s": "astro", "t": "vue", "type": "INFLUENCE"},
+    {"s": "astro", "t": "svelte", "type": "INFLUENCE"},
+    {"s": "remix", "t": "react", "type": "DEPENDS_ON"},
+    {"s": "remix", "t": "web", "type": "DEPENDS_ON"},
+    {"s": "esbuild", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "swc", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "edgefunc", "t": "srvless", "type": "EVOLVES_INTO"},
+    {"s": "bun", "t": "js", "type": "EVOLVES_INTO"},
+    {"s": "bun", "t": "esbuild", "type": "INFLUENCE"},
+    {"s": "bun", "t": "node", "type": "CONCURRENCE"},
+    {"s": "bun", "t": "deno", "type": "CONCURRENCE"},
+    {"s": "wasi", "t": "wasm", "type": "EVOLVES_INTO"},
+    {"s": "wasi", "t": "linux", "type": "DEPENDS_ON"},
+    {"s": "qwik", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "qwik", "t": "islands", "type": "INFLUENCE"},
+    {"s": "solidstart", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "webgpu", "t": "wasm", "type": "INFLUENCE"},
+    {"s": "webgpu", "t": "js", "type": "DEPENDS_ON"},
+    {"s": "sveltekit", "t": "svelte3", "type": "EVOLVES_INTO"},
+    {"s": "sveltekit", "t": "node", "type": "DEPENDS_ON"},
+    {"s": "next13", "t": "next", "type": "EVOLVES_INTO"},
+    {"s": "next13", "t": "rsc", "type": "DEPENDS_ON"},
+    {"s": "nuxt3", "t": "nuxt", "type": "EVOLVES_INTO"},
+    {"s": "nuxt3", "t": "vite", "type": "DEPENDS_ON"},
+    {"s": "rsc", "t": "react", "type": "EVOLVES_INTO"},
+    {"s": "rsc", "t": "next13", "type": "INFLUENCE"},
+    {"s": "islands", "t": "html5", "type": "DEPENDS_ON"},
+    {"s": "htmx", "t": "html", "type": "DEPENDS_ON"},
+    {"s": "htmx", "t": "ajax", "type": "EVOLVES_INTO"},
+    {"s": "unjs", "t": "nuxt3", "type": "INFLUENCE"},
+    {"s": "unjs", "t": "node", "type": "DEPENDS_ON"},
+    {"s": "denodeploy", "t": "deno", "type": "EVOLVES_INTO"},
+    {"s": "denodeploy", "t": "edgefunc", "type": "DEPENDS_ON"},
+    {"s": "webcontainer", "t": "node", "type": "EVOLVES_INTO"},
+    {"s": "webcontainer", "t": "wasm", "type": "DEPENDS_ON"},
+    {"s": "turbopack", "t": "wp2", "type": "EVOLVES_INTO"},
+    {"s": "parcel2", "t": "swc", "type": "DEPENDS_ON"},
+    {"s": "fresh", "t": "deno", "type": "DEPENDS_ON"},
+    {"s": "fresh", "t": "islands", "type": "INFLUENCE"},
+    {"s": "gh", "t": "docker", "type": "INFLUENCE"},
+    {"s": "k8s", "t": "gh", "type": "INFLUENCE"}
+  ],
+  "prospective": [
+    {
+      "id": "wasm-universal",
+      "titre": "WebAssembly comme runtime universel",
+      "type": "CONVERGENCE",
+      "probabilite": 0.85,
+      "horizon": 2027,
+      "signal_nodes": ["wasm", "wasi", "bun", "deno", "webcontainer"],
+      "signal_types": ["EVOLVES_INTO", "DEPENDS_ON"],
+      "description": "La convergence WASM+WASI+runtimes alternatifs pointe vers un runtime universel cross-environnement. Docker a annoncé le support WASI en 2023.",
+      "statut": "EN_COURS",
+      "date_prediction": 2024
+    },
+    {
+      "id": "edge-first",
+      "titre": "Architecture Edge-first généralisée",
+      "type": "CONVERGENCE",
+      "probabilite": 0.78,
+      "horizon": 2026,
+      "signal_nodes": ["cfw", "edgefunc", "vercel", "netlify", "cfpages"],
+      "signal_types": ["EVOLVES_INTO", "DEPENDS_ON"],
+      "description": "La multiplication des Edge Functions et CDN programmables pointe vers une architecture où la logique s'exécute au plus près des utilisateurs, éliminant les serveurs centraux.",
+      "statut": "EN_COURS",
+      "date_prediction": 2024
+    },
+    {
+      "id": "ai-native-web",
+      "titre": "Web natif IA — composants intelligents",
+      "type": "CONVERGENCE",
+      "probabilite": 0.72,
+      "horizon": 2028,
+      "signal_nodes": ["webgpu", "wasm", "react", "rsc"],
+      "signal_types": ["INFLUENCE", "EVOLVES_INTO"],
+      "description": "WebGPU + WebAssembly permettront d'exécuter des modèles IA directement dans le navigateur. Le composant React du futur sera potentiellement augmenté par des capacités IA locales.",
+      "statut": "EN_COURS",
+      "date_prediction": 2024
+    }
+  ]
+}
