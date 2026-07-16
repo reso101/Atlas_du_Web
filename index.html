@@ -4,94 +4,292 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Et Internet Fût · Atlas Vivant du Web</title>
-  <meta name="description"
-    content="Graphe de connaissances interactif de l'histoire du Web — des protocoles fondateurs aux frameworks modernes.">
+  <title>Et Internet Fût · Atlas Vivant du Web 1970–2030+</title>
+  <meta name="description" content="Encyclopédie interactive de l'histoire du Web — explorez le graphe des technologies, des protocoles fondateurs aux frameworks modernes, avec prospectives 2024–2035.">
+  <meta name="theme-color" content="#060810">
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
-    rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <div id="intro">
-    <div class="i-dot"></div>
-    <div class="i-t">Et Internet Fût</div>
-    <div class="i-s">Atlas Vivant du Web · Initialisation</div>
+  <!-- ══ INTRO SPLASH ══════════════════════════════════════ -->
+  <div id="intro" role="status" aria-live="polite">
+    <div class="intro__orb"></div>
+    <div class="intro__rings">
+      <div class="intro__ring intro__ring--1"></div>
+      <div class="intro__ring intro__ring--2"></div>
+      <div class="intro__ring intro__ring--3"></div>
+    </div>
+    <div class="intro__content">
+      <div class="intro__title">Et Internet Fût</div>
+      <div class="intro__sub">Atlas Vivant du Web · Initialisation…</div>
+      <div class="intro__bar"><div class="intro__bar-fill" id="intro-bar"></div></div>
+    </div>
   </div>
 
-  <canvas id="cv"></canvas>
+  <!-- ══ HEADER FIXE ═══════════════════════════════════════ -->
+  <header id="hd" role="banner">
+    <!-- Branding -->
+    <div class="hd__brand">
+      <div class="hd__logo" aria-hidden="true">
+        <span class="hd__logo-dot"></span>
+      </div>
+      <div class="hd__text">
+        <div class="hd__title">Et Internet Fût</div>
+        <div class="hd__sub">Atlas Vivant · 1970–2030+</div>
+      </div>
+    </div>
 
-  <header id="hd">
-    <div class="hd-brand">
-      <div class="hd-t">...Et Internet Fût</div>
-      <div class="hd-s">Atlas Vivant · 1970–2030+</div>
+    <!-- Navigation principale vues -->
+    <nav class="hd__nav" role="navigation" aria-label="Vues principales">
+      <button class="hd__nav-btn active" id="btn-view-atlas" data-view="atlas" aria-pressed="true">
+        <span class="hd__nav-ico">◉</span>Atlas
+      </button>
+      <button class="hd__nav-btn" id="btn-view-encyclo" data-view="encyclopedie" aria-pressed="false">
+        <span class="hd__nav-ico">▦</span>Encyclopédie
+      </button>
+      <button class="hd__nav-btn" id="btn-view-prosp" data-view="prospectives" aria-pressed="false">
+        <span class="hd__nav-ico">◈</span>Prospectives
+      </button>
+    </nav>
+
+    <!-- Recherche universelle -->
+    <div class="hd__search" role="search">
+      <span class="hd__search-ico" aria-hidden="true">⌕</span>
+      <input
+        type="search"
+        id="si"
+        class="hd__search-input"
+        placeholder="Rechercher une technologie…"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Recherche universelle"
+        aria-autocomplete="list"
+        aria-controls="sr"
+      >
+      <kbd class="hd__search-kbd" aria-label="Raccourci clavier">/</kbd>
+      <div id="sr" class="search__results" role="listbox" aria-label="Résultats de recherche"></div>
     </div>
-    <div id="sw" role="search">
-      <span class="si-ico">⌕</span>
-      <input type="search" id="si" placeholder="Rechercher… (ou appuyer /)" autocomplete="off" spellcheck="false">
-      <span id="skbd">/</span>
-      <div id="sr" role="listbox"></div>
-    </div>
-    <div class="hd-acts">
-      <button class="hd-btn on" id="btn-edges">Connexions</button>
-      <button class="hd-btn on" id="btn-labels">Étiquettes</button>
+
+    <!-- Contrôles Atlas (visible seulement en mode Atlas) -->
+    <div class="hd__atlas-ctrl" id="hd-atlas-ctrl">
+      <button class="hd__ctrl-btn active" id="btn-edges" aria-pressed="true" title="Afficher/masquer les connexions">
+        Connexions
+      </button>
+      <button class="hd__ctrl-btn active" id="btn-labels" aria-pressed="true" title="Afficher/masquer les étiquettes">
+        Étiquettes
+      </button>
     </div>
   </header>
 
-  <button id="btn-nar">Parcours</button>
+  <!-- ══ LAYOUT PRINCIPAL ═══════════════════════════════════ -->
+  <div id="app-layout">
 
-  <nav id="np">
-    <div class="np-top">
-      <div class="np-lbl">Parcours narratifs</div>
-      <div class="np-sub">Explorer l'histoire par thème.</div>
-      <button class="px" id="np-x">×</button>
-    </div>
-    <div class="np-list" id="np-list"></div>
-    <div id="nsteps">
-      <div class="ns-t" id="ns-t"></div>
-      <div id="ns-list"></div>
-      <div class="ns-ctrl">
-        <button class="ns-btn" id="ns-prev" disabled>← Préc.</button>
-        <button class="ns-btn" id="ns-next">Suiv. →</button>
-        <button class="ns-x" id="ns-exit" title="Quitter">×</button>
+    <!-- ── SIDEBAR GAUCHE ──────────────────────────────────── -->
+    <aside id="sidebar" class="sidebar" aria-label="Filtres et navigation">
+
+      <!-- Sidebar Atlas -->
+      <div class="sidebar__section" id="sb-atlas">
+        <div class="sidebar__section-title">Filtres graphe</div>
+
+        <!-- Catégories -->
+        <div class="filter-group" id="filter-cats">
+          <div class="filter-group__label">Catégories</div>
+          <div class="filter-group__pills" id="cat-pills">
+            <!-- Générés par JS -->
+          </div>
+        </div>
+
+        <!-- Décennie -->
+        <div class="filter-group" id="filter-decade">
+          <div class="filter-group__label">Période</div>
+          <div class="filter-range">
+            <span class="filter-range__val" id="range-from">1970</span>
+            <div class="filter-range__track">
+              <div class="filter-range__fill" id="range-fill"></div>
+            </div>
+            <span class="filter-range__val" id="range-to">2030</span>
+          </div>
+          <div class="filter-range-inputs">
+            <input type="range" id="range-min" min="1970" max="2030" value="1970" aria-label="Année début">
+            <input type="range" id="range-max" min="1970" max="2030" value="2030" aria-label="Année fin">
+          </div>
+        </div>
+
+        <!-- Importance -->
+        <div class="filter-group">
+          <div class="filter-group__label">Importance</div>
+          <div class="filter-importance" id="filter-imp">
+            <button class="imp-btn active" data-imp="1" id="imp-1" aria-pressed="true" title="Fondamental">①</button>
+            <button class="imp-btn active" data-imp="2" id="imp-2" aria-pressed="true" title="Important">②</button>
+            <button class="imp-btn active" data-imp="3" id="imp-3" aria-pressed="true" title="Secondaire">③</button>
+          </div>
+        </div>
+
+        <!-- Relations -->
+        <div class="filter-group">
+          <div class="filter-group__label">Relations</div>
+          <div class="filter-relations" id="filter-rels">
+            <!-- Générés par JS -->
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="sidebar__stats" id="atlas-stats">
+          <span id="stats-nodes">–</span> nœuds · <span id="stats-edges">–</span> liens
+        </div>
       </div>
-    </div>
-  </nav>
 
-  <aside id="dp">
-    <div class="dp-hd">
-      <button class="px" id="dp-x">×</button>
-      <div class="dp-y" id="dp-y"></div>
-      <div class="dp-n" id="dp-n"></div>
-      <div class="dp-c" id="dp-c"></div>
-    </div>
-    <div class="dp-body" id="dp-body"></div>
-    <div class="dp-foot">
-      <button class="dp-fb" id="dp-const">◎ Explorer les connexions</button>
-      <button class="dp-fb" id="dp-story">▷ Voir dans un parcours</button>
-    </div>
-  </aside>
+      <!-- Sidebar Encyclopédie -->
+      <div class="sidebar__section hidden" id="sb-encyclo">
+        <div class="sidebar__section-title">Trier par</div>
+        <div class="sort-btns">
+          <button class="sort-btn active" id="sort-alpha" data-sort="alpha">A → Z</button>
+          <button class="sort-btn" id="sort-chrono" data-sort="chrono">Chronologique</button>
+          <button class="sort-btn" id="sort-imp" data-sort="importance">Importance</button>
+          <button class="sort-btn" id="sort-cat" data-sort="categorie">Catégorie</button>
+        </div>
 
-  <div id="leg"></div>
-  <div id="csh">Mode constellation · Échap pour quitter</div>
+        <div class="sidebar__section-title" style="margin-top:20px">Filtrer par catégorie</div>
+        <div class="filter-group__pills" id="encyclo-cat-pills">
+          <!-- Générés par JS -->
+        </div>
 
-  <div id="zb">
-    <button class="z-b" id="z-in">+</button>
-    <button class="z-b" id="z-out">−</button>
-    <button class="z-b" id="z-fit" style="font-size:11px">⊡</button>
-  </div>
-  <div id="tt">
-    <div class="tt-i">
-      <div class="tt-n" id="tt-n"></div>
-      <div class="tt-m" id="tt-m"></div>
-      <div class="tt-d" id="tt-d"></div>
-      <div class="tt-h">Cliquer pour les détails</div>
-    </div>
-  </div>
-  <div id="mm"><canvas id="mmc" width="178" height="58"></canvas></div>
+        <div class="sidebar__stats" id="encyclo-stats">
+          <span id="encyclo-count">–</span> entrées affichées
+        </div>
+      </div>
+
+      <!-- Sidebar Prospectives -->
+      <div class="sidebar__section hidden" id="sb-prosp">
+        <div class="sidebar__section-title">Type de signal</div>
+        <div class="filter-group__pills" id="prosp-type-pills">
+          <button class="cat-pill active" data-type="all" id="prosp-type-all">Tous</button>
+          <button class="cat-pill" data-type="CONVERGENCE" id="prosp-type-conv">Convergence</button>
+          <button class="cat-pill" data-type="RUPTURE" id="prosp-type-rupt">Rupture</button>
+          <button class="cat-pill" data-type="EMERGENCE" id="prosp-type-emer">Émergence</button>
+        </div>
+        <div class="sidebar__section-title" style="margin-top:20px">Horizon</div>
+        <div class="sidebar__stats">2024 → 2035</div>
+      </div>
+
+      <!-- Sidebar Parcours narratifs (commun) -->
+      <div class="sidebar__section" id="sb-parcours">
+        <div class="sidebar__section-title">Parcours narratifs</div>
+        <div id="parcours-list" class="parcours-list">
+          <!-- Générés par JS -->
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── ZONE PRINCIPALE ─────────────────────────────────── -->
+    <main id="main-zone" role="main">
+
+      <!-- Vue 1 : Atlas (canvas) -->
+      <section id="view-atlas" class="view view--active" aria-label="Vue atlas graphe">
+        <canvas id="cv" role="img" aria-label="Graphe interactif des technologies Web"></canvas>
+
+        <!-- Légende -->
+        <div id="leg" aria-label="Légende du graphe"></div>
+
+        <!-- Notification mode constellation -->
+        <div id="csh" role="status" aria-live="polite">Mode constellation · Échap pour quitter</div>
+
+        <!-- Minimap -->
+        <div id="mm" title="Minimap de navigation">
+          <canvas id="mmc" width="178" height="58"></canvas>
+        </div>
+
+        <!-- Zoom bar -->
+        <div id="zb" role="toolbar" aria-label="Contrôles de zoom">
+          <button class="z-b" id="z-in" aria-label="Zoom avant" title="Zoom avant">+</button>
+          <button class="z-b" id="z-out" aria-label="Zoom arrière" title="Zoom arrière">−</button>
+          <button class="z-b" id="z-fit" aria-label="Ajuster à l'écran" title="Ajuster">⊡</button>
+        </div>
+
+        <!-- Tooltip nœud -->
+        <div id="tt" role="tooltip" aria-hidden="true">
+          <div class="tt__inner">
+            <div class="tt__name" id="tt-n"></div>
+            <div class="tt__meta" id="tt-m"></div>
+            <div class="tt__desc" id="tt-d"></div>
+            <div class="tt__hint">Cliquer pour les détails</div>
+          </div>
+        </div>
+
+        <!-- Bouton parcours (mode atlas) -->
+        <button id="btn-nar" class="parcours-toggle" aria-expanded="false" aria-controls="np">
+          Parcours
+        </button>
+        <!-- Panneau parcours narratifs -->
+        <nav id="np" class="parcours-panel" aria-label="Parcours narratifs" aria-hidden="true">
+          <div class="np__top">
+            <div class="np__label">Parcours narratifs</div>
+            <div class="np__sub">Explorer l'histoire par thème.</div>
+            <button class="close-btn" id="np-x" aria-label="Fermer les parcours">×</button>
+          </div>
+          <div class="np__list" id="np-list"></div>
+          <div id="nsteps" class="nsteps" aria-live="polite">
+            <div class="nsteps__title" id="ns-t"></div>
+            <div id="ns-list" class="nsteps__list"></div>
+            <div class="nsteps__ctrl">
+              <button class="nsteps__btn" id="ns-prev" disabled aria-label="Étape précédente">← Préc.</button>
+              <button class="nsteps__btn" id="ns-next" aria-label="Étape suivante">Suiv. →</button>
+              <button class="nsteps__exit" id="ns-exit" aria-label="Quitter le parcours">×</button>
+            </div>
+          </div>
+        </nav>
+      </section>
+
+      <!-- Vue 2 : Encyclopédie -->
+      <section id="view-encyclopedie" class="view" aria-label="Vue encyclopédie">
+        <div class="encyclo__header">
+          <h1 class="encyclo__title">Encyclopédie du Web</h1>
+          <div class="encyclo__meta" id="encyclo-meta">Chargement…</div>
+        </div>
+        <div id="encyclo-grid" class="encyclo__grid" role="list" aria-label="Grille des entrées encyclopédiques">
+          <!-- Cartes générées par JS (virtual scrolling) -->
+        </div>
+        <!-- Sentinel pour infinite scroll -->
+        <div id="encyclo-sentinel" class="encyclo__sentinel" aria-hidden="true"></div>
+      </section>
+
+      <!-- Vue 3 : Prospectives -->
+      <section id="view-prospectives" class="view" aria-label="Vue prospectives">
+        <div class="prosp__header">
+          <h1 class="prosp__title">Prospectives 2024–2035</h1>
+          <div class="prosp__sub">Signaux faibles et convergences détectées par le graphe de relations.</div>
+        </div>
+        <div id="prosp-timeline" class="prosp__timeline" role="list">
+          <!-- Cartes générées par JS -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ── PANNEAU DÉTAIL (slide-in droit) ────────────────── -->
+    <aside id="dp" class="detail-panel" role="complementary" aria-label="Détail de l'entrée" aria-hidden="true">
+      <div class="detail-panel__header">
+        <button class="close-btn" id="dp-x" aria-label="Fermer le panneau détail">×</button>
+        <div class="detail-panel__year" id="dp-y"></div>
+        <div class="detail-panel__name" id="dp-n"></div>
+        <div class="detail-panel__cat" id="dp-c"></div>
+      </div>
+      <div class="detail-panel__body" id="dp-body"></div>
+      <div class="detail-panel__footer">
+        <button class="detail-panel__action" id="dp-const">◎ Explorer les connexions</button>
+        <button class="detail-panel__action" id="dp-story">▷ Voir dans un parcours</button>
+      </div>
+    </aside>
+
+  </div><!-- /#app-layout -->
 
   <script src="script.js"></script>
 </body>

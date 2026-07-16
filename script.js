@@ -1,18 +1,16 @@
 'use strict';
 
 /* ══════════════════════════════════════════════════════
-   WEBCLAIR — "Et Internet Fût"
-   Atlas interactif du vocabulaire du Web 1970–2030+
-   Schéma v2 — Juin 2026
+   WEBCLAIR v3 — "Et Internet Fût"
+   Atlas Vivant du Vocabulaire du Web 1970–2030+
+   Architecture : AppState + 3 vues + Panneau Détail + Router
    ══════════════════════════════════════════════════════ */
 
-/* ── WORLD ─────────────────────────────────── */
+/* ── CONSTANTES MONDE ────────────────────────────────── */
 const WW = 6000, WH = 1200, YMIN = 1968, YMAX = 2032, MX = 380;
 const xY = y => MX + ((y - YMIN) / (YMAX - YMIN)) * (WW - 2 * MX);
 
-/* ── CATÉGORIES (10) ────────────────────────
-   Chaque catégorie : couleur + position verticale (ly = fraction de WH)
-   ─────────────────────────────────────────── */
+/* ── CATÉGORIES ──────────────────────────────────────── */
 const CATS = {
   "Fondations":    { color: "#1a7acc", ly: .05 },
   "Infrastructure":{ color: "#1aaa8a", ly: .15 },
@@ -26,104 +24,17 @@ const CATS = {
   "DevOps":        { color: "#7a9acc", ly: .92 },
 };
 
-/* ── TYPES DE RELATIONS ─────────────────────── */
+/* ── TYPES DE RELATIONS ──────────────────────────────── */
 const ET = {
-  INFLUENCE:       { color: "#1a7acc", dash: [4, 6],  label: "Influence",    w: .9,  animType: 'particles', speed: 1.2 },
-  DEPENDS_ON:      { color: "#1aaa8a", dash: [],       label: "Dépend de",   w: .7,  animType: 'particles', speed: 1.5 },
-  REPLACED_BY:     { color: "#dd8a3a", dash: [8, 4],  label: "Remplacé par", w: 1.1, animType: 'particles', speed: 0.8 },
-  EVOLVES_INTO:    { color: "#cc6aaa", dash: [6, 4],  label: "Évolue vers",  w: 1,   animType: 'particles', speed: 1.0 },
-  STANDARDISATION: { color: "#8a6add", dash: [],       label: "Standardise",  w: .8,  animType: 'particles', speed: 0.6 },
-  CONCURRENCE:     { color: "#e26a6a", dash: [3, 3],  label: "Concurrence",  w: 1,   animType: 'pingPong',  speed: 2   },
+  INFLUENCE:       { color: "#1a7acc", dash: [4, 6],  label: "Influence",     w: .9,  speed: 1.2 },
+  DEPENDS_ON:      { color: "#1aaa8a", dash: [],       label: "Dépend de",    w: .7,  speed: 1.5 },
+  REPLACED_BY:     { color: "#dd8a3a", dash: [8, 4],  label: "Remplacé par",  w: 1.1, speed: 0.8 },
+  EVOLVES_INTO:    { color: "#cc6aaa", dash: [6, 4],  label: "Évolue vers",   w: 1,   speed: 1.0 },
+  STANDARDISATION: { color: "#8a6add", dash: [],       label: "Standardise",   w: .8,  speed: 0.6 },
+  CONCURRENCE:     { color: "#e26a6a", dash: [3, 3],  label: "Concurrence",   w: 1,   speed: 2   },
 };
 
-// Données dynamiques chargées depuis atlas.json
-let NODES = [];
-let EDGES = [];
-let PROSPECTIVE = [];
-
-const nodeMap = {};
-const ADJ = {};
-
-/* ── CHARGEMENT ASYNCHRONE & FILTRES LOD ──────────────── */
-async function loadAtlasData() {
-  try {
-    const response = await fetch('data/atlas.json');
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const data = await response.json();
-    NODES = data.nodes || [];
-    EDGES = data.edges || [];
-    PROSPECTIVE = data.prospective || [];
-    
-    // Construction des index de graphe
-    NODES.forEach(n => nodeMap[n.id] = n);
-    NODES.forEach(n => ADJ[n.id] = []);
-    EDGES.forEach(e => {
-      const sn = nodeMap[e.s], tn = nodeMap[e.t];
-      if (!sn || !tn) return;
-      ADJ[e.s].push({ node: tn, edge: e, dir: 'out' });
-      ADJ[e.t].push({ node: sn, edge: e, dir: 'in' });
-    });
-    
-    // Champs dérivés sur chaque nœud
-    NODES.forEach(n => {
-      n._relations     = ADJ[n.id];
-      n._parents       = ADJ[n.id].filter(c => c.dir === 'in'  && c.edge.type === 'EVOLVES_INTO').map(c => c.node.id);
-      n._enfants       = ADJ[n.id].filter(c => c.dir === 'out' && c.edge.type === 'EVOLVES_INTO').map(c => c.node.id);
-      n._remplacements = ADJ[n.id].filter(c => c.dir === 'out' && c.edge.type === 'REPLACED_BY').map(c => c.node.id);
-      n._dep_count     = ADJ[n.id].length;
-    });
-
-    // Calcul de la disposition temporelle et catégorielle
-    computeLayout();
-    zoomFit();
-    
-    dirty = true;
-    
-    // Masquage de l'écran d'introduction après initialisation des données
-    setTimeout(() => {
-      const intro = document.getElementById('intro');
-      if (intro) {
-        intro.style.opacity = '0';
-        setTimeout(() => { intro.style.display = 'none'; }, 1200);
-      }
-    }, 1500);
-  } catch (err) {
-    console.error("Failed to load atlas data:", err);
-    const introSub = document.querySelector('.i-s');
-    if (introSub) {
-      introSub.textContent = "Erreur de chargement des données. Veuillez rafraîchir.";
-      introSub.style.color = "#ff6b6b";
-    }
-  }
-}
-
-// Fonction de visibilité sémantique (Level of Detail - LOD)
-function isNodeVisible(n) {
-  const sc = cam.scale;
-  const imp = n.importance || 2;
-  
-  // Toujours montrer les nœuds du parcours actif ou sélectionnés/survolés
-  if (activeNarrative && activeNarrative.steps.some(s => s.id === n.id)) {
-    return true;
-  }
-  if (selectedNode && selectedNode.id === n.id) return true;
-  if (hoveredNode && hoveredNode.id === n.id) return true;
-  
-  // Zoom très éloigné : uniquement l'importance 1 (Fondateur)
-  if (sc < 0.12) {
-    return imp === 1;
-  }
-  // Zoom intermédiaire : importance 1 et 2 (Structurant)
-  if (sc < 0.28) {
-    return imp === 1 || imp === 2;
-  }
-  // Zoom de près : tout est visible
-  return true;
-}
-
-/* ══════════════════════════════════════════════════════
-   PARCOURS NARRATIFS
-   ══════════════════════════════════════════════════════ */
+/* ── PARCOURS NARRATIFS ──────────────────────────────── */
 const NARRATIVES = [
   {
     id: "react-birth", titre: "Comment est né React ?", desc: "Du DOM manipulé à la main au Virtual DOM révolutionnaire.",
@@ -196,75 +107,100 @@ const NARRATIVES = [
   },
 ];
 
-/* ══════════════════════════════════════════════════════
-   MOTEUR DE REQUÊTES — window.WC
-   ══════════════════════════════════════════════════════ */
-const WC = {
-  /* Requête filtrée */
-  query(filters = {}) {
-    return NODES.filter(n => {
-      if (filters.categorie  && n.categorie  !== filters.categorie)  return false;
-      if (filters.importance && n.importance !== filters.importance) return false;
-      if (filters.annee_min  && n.annee < filters.annee_min)         return false;
-      if (filters.annee_max  && n.annee > filters.annee_max)         return false;
-      if (filters.q) {
-        const lq = filters.q.toLowerCase();
-        if (!n.nom.toLowerCase().includes(lq) && !n.description_courte.toLowerCase().includes(lq)) return false;
-      }
-      return true;
-    });
-  },
+/* ── ÉTAT GLOBAL ─────────────────────────────────────── */
+let NODES = [], EDGES = [], PROSPECTIVE = [];
+const nodeMap = {}, ADJ = {};
 
-  /* Chaîne d'influence descendante depuis un nœud (BFS) */
-  influence_chain(id, depth = 4, types = ['EVOLVES_INTO','INFLUENCE']) {
-    const visited = new Set([id]);
-    const queue   = [{ id, d: 0 }];
-    const result  = [];
-    while (queue.length) {
-      const { id: cur, d } = queue.shift();
-      if (d >= depth) continue;
-      (ADJ[cur] || []).forEach(c => {
-        if (c.dir === 'out' && types.includes(c.edge.type) && !visited.has(c.node.id)) {
-          visited.add(c.node.id);
-          result.push({ node: c.node, depth: d + 1, via: c.edge.type });
-          queue.push({ id: c.node.id, d: d + 1 });
-        }
-      });
-    }
-    return result;
-  },
-
-  /* Top N nœuds par degré de connexion */
-  most_connected(n = 10) {
-    return [...NODES].sort((a, b) => b._dep_count - a._dep_count).slice(0, n);
-  },
-
-  /* Signaux prospectifs actifs */
-  prospective(minProba = 0.5) {
-    return PROSPECTIVE.filter(p => p.probabilite >= minProba && p.statut !== 'INFIRMÉ');
-  },
-
-  /* Statistiques générales */
-  stats() {
-    const bycat = {};
-    const byimp = {1:0, 2:0, 3:0};
-    NODES.forEach(n => {
-      bycat[n.categorie] = (bycat[n.categorie] || 0) + 1;
-      byimp[n.importance]++;
-    });
-    return {
-      total_nodes: NODES.length,
-      total_edges: EDGES.length,
-      by_categorie: bycat,
-      by_importance: byimp,
-      categories: Object.keys(CATS).length
-    };
-  }
+/* ── APP STATE ───────────────────────────────────────── */
+const App = {
+  view: 'atlas',            // 'atlas' | 'encyclopedie' | 'prospectives'
+  detailOpen: false,
+  selectedNode: null,
+  hoveredNode: null,
+  showEdges: true,
+  showLabels: true,
+  activeNarrative: null,
+  activeStep: -1,
+  renderMode: 'map',        // 'map' | 'constellation'
+  constAngle: 0,
+  activeEdgeFilters: new Set(['INFLUENCE','DEPENDS_ON','REPLACED_BY','EVOLVES_INTO','STANDARDISATION','CONCURRENCE']),
+  // Filtres Atlas
+  filterCats: new Set(Object.keys(CATS)),
+  filterImp: new Set([1, 2, 3]),
+  filterYearMin: 1970,
+  filterYearMax: 2030,
+  // Filtres Encyclopédie
+  encSort: 'alpha',
+  encFilterCat: 'all',
+  // Filtres Prospectives
+  prospType: 'all',
 };
-window.WC = WC;
 
 /* ══════════════════════════════════════════════════════
-   LAYOUT
+   CHARGEMENT DES DONNÉES
+   ══════════════════════════════════════════════════════ */
+async function loadAtlasData() {
+  try {
+    updateIntroBar(20);
+    const response = await fetch('data/atlas.json');
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    updateIntroBar(50);
+    const data = await response.json();
+    NODES = data.nodes || [];
+    EDGES = data.edges || [];
+    PROSPECTIVE = data.prospective || [];
+
+    updateIntroBar(70);
+
+    // Index graphe
+    NODES.forEach(n => { nodeMap[n.id] = n; ADJ[n.id] = []; });
+    EDGES.forEach(e => {
+      const sn = nodeMap[e.s], tn = nodeMap[e.t];
+      if (!sn || !tn) return;
+      ADJ[e.s].push({ node: tn, edge: e, dir: 'out' });
+      ADJ[e.t].push({ node: sn, edge: e, dir: 'in' });
+    });
+    NODES.forEach(n => {
+      n._relations     = ADJ[n.id];
+      n._dep_count     = ADJ[n.id].length;
+    });
+
+    updateIntroBar(85);
+
+    // Initialisation des filtres avec toutes les catégories
+    App.filterCats = new Set(Object.keys(CATS));
+
+    computeLayout();
+    updateIntroBar(100);
+
+    initAllUI();
+    navigateTo(getHashView());
+
+    setTimeout(() => {
+      const intro = document.getElementById('intro');
+      if (intro) {
+        intro.classList.add('fade-out');
+        setTimeout(() => { intro.style.display = 'none'; }, 600);
+      }
+    }, 800);
+
+  } catch (err) {
+    console.error('Erreur chargement atlas.json:', err);
+    const introSub = document.querySelector('.intro__sub');
+    if (introSub) {
+      introSub.textContent = 'Erreur de chargement. Veuillez rafraîchir.';
+      introSub.style.color = '#e26a6a';
+    }
+  }
+}
+
+function updateIntroBar(pct) {
+  const bar = document.getElementById('intro-bar');
+  if (bar) bar.style.width = pct + '%';
+}
+
+/* ══════════════════════════════════════════════════════
+   LAYOUT SPATIAL
    ══════════════════════════════════════════════════════ */
 function computeLayout() {
   const groups = {};
@@ -285,37 +221,899 @@ function computeLayout() {
 }
 
 /* ══════════════════════════════════════════════════════
-   CAMÉRA
+   HASH ROUTER
    ══════════════════════════════════════════════════════ */
-let W = window.innerWidth, H = window.innerHeight;
+function getHashView() {
+  const h = window.location.hash.replace('#', '').split('?')[0];
+  return ['atlas', 'encyclopedie', 'prospectives'].includes(h) ? h : 'atlas';
+}
+
+function navigateTo(view, pushState = false) {
+  App.view = view;
+  if (pushState) window.location.hash = view;
+
+  // Activer la section
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('view--active'));
+  const activeView = document.getElementById('view-' + view);
+  if (activeView) activeView.classList.add('view--active');
+
+  // Nav boutons
+  document.querySelectorAll('.hd__nav-btn').forEach(btn => {
+    const active = btn.dataset.view === view;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+
+  // Sidebar
+  document.querySelectorAll('.sidebar__section').forEach(s => {
+    if (!s.id.startsWith('sb-')) return;
+    const forView = s.id.replace('sb-', '');
+    // Le panneau parcours est commun à atlas uniquement
+    if (forView === 'parcours') {
+      s.classList.toggle('hidden', view !== 'atlas');
+    } else {
+      s.classList.toggle('hidden', forView !== view);
+    }
+  });
+
+  // Contrôles atlas dans header
+  const atlasCtrl = document.getElementById('hd-atlas-ctrl');
+  if (atlasCtrl) atlasCtrl.classList.toggle('hidden', view !== 'atlas');
+
+  // Actions spécifiques
+  if (view === 'atlas') {
+    setSize();
+    if (NODES.length > 0) { dirty = true; schedRender(); }
+  } else if (view === 'encyclopedie') {
+    renderEncyclo();
+  } else if (view === 'prospectives') {
+    renderProspectives();
+  }
+}
+
+window.addEventListener('hashchange', () => navigateTo(getHashView()));
+
+/* ══════════════════════════════════════════════════════
+   INIT UI — initialisation de tous les éléments
+   ══════════════════════════════════════════════════════ */
+function initAllUI() {
+  initSidebar();
+  initSearch();
+  initDetailPanel();
+  initAtlasControls();
+  initNarratives();
+  initLegend();
+  initCanvasEvents();
+  initZoom();
+  initNavBtns();
+  zoomFit();
+}
+
+/* ══════════════════════════════════════════════════════
+   SIDEBAR
+   ══════════════════════════════════════════════════════ */
+function initSidebar() {
+  // Pills catégories Atlas
+  const catPills = document.getElementById('cat-pills');
+  if (catPills) {
+    catPills.innerHTML = Object.entries(CATS).map(([cat, v]) => `
+      <button class="cat-pill active" data-cat="${cat}" id="pill-atlas-${cat.replace(/[^a-z]/gi,'')}"
+        style="color:${v.color};border-color:${v.color}60">
+        <span class="cat-pill__dot" style="background:${v.color}"></span>${cat}
+      </button>
+    `).join('');
+    catPills.querySelectorAll('.cat-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = btn.dataset.cat;
+        if (App.filterCats.has(cat)) {
+          App.filterCats.delete(cat);
+          btn.classList.remove('active');
+        } else {
+          App.filterCats.add(cat);
+          btn.classList.add('active');
+        }
+        dirty = true; schedRender(); updateAtlasStats();
+      });
+    });
+  }
+
+  // Range années Atlas
+  const rangeMin = document.getElementById('range-min');
+  const rangeMax = document.getElementById('range-max');
+  const fromEl   = document.getElementById('range-from');
+  const toEl     = document.getElementById('range-to');
+
+  function updateRangeUI() {
+    let a = +rangeMin.value, b = +rangeMax.value;
+    if (a > b) [a, b] = [b, a];
+    App.filterYearMin = a; App.filterYearMax = b;
+    if (fromEl) fromEl.textContent = a;
+    if (toEl)   toEl.textContent   = b;
+    const fill = document.getElementById('range-fill');
+    if (fill) {
+      const pct1 = (a - 1970) / 60 * 100;
+      const pct2 = (b - 1970) / 60 * 100;
+      fill.style.left = pct1 + '%';
+      fill.style.width = (pct2 - pct1) + '%';
+    }
+    dirty = true; schedRender(); updateAtlasStats();
+  }
+
+  if (rangeMin) rangeMin.addEventListener('input', updateRangeUI);
+  if (rangeMax) rangeMax.addEventListener('input', updateRangeUI);
+
+  // Importance toggles
+  document.querySelectorAll('.imp-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const imp = +btn.dataset.imp;
+      if (App.filterImp.has(imp)) {
+        App.filterImp.delete(imp);
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      } else {
+        App.filterImp.add(imp);
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+      }
+      dirty = true; schedRender(); updateAtlasStats();
+    });
+  });
+
+  // Relations filter
+  const filterRels = document.getElementById('filter-rels');
+  if (filterRels) {
+    filterRels.innerHTML = Object.entries(ET).map(([type, v]) => `
+      <label class="rel-check">
+        <input type="checkbox" data-rel="${type}" checked>
+        <div class="rel-check__line" style="border-color:${v.color};border-style:${v.dash.length?'dashed':'solid'}"></div>
+        <span class="rel-check__label">${v.label}</span>
+      </label>
+    `).join('');
+    filterRels.querySelectorAll('input[data-rel]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const type = cb.dataset.rel;
+        if (cb.checked) App.activeEdgeFilters.add(type);
+        else App.activeEdgeFilters.delete(type);
+        dirty = true; schedRender();
+      });
+    });
+  }
+
+  // Pills catégories Encyclopédie
+  const encPills = document.getElementById('encyclo-cat-pills');
+  if (encPills) {
+    const allBtn = `<button class="cat-pill active" data-cat="all" id="enc-pill-all">Toutes</button>`;
+    const catBtns = Object.entries(CATS).map(([cat, v]) => `
+      <button class="cat-pill" data-cat="${cat}" id="enc-pill-${cat.replace(/[^a-z]/gi,'')}"
+        style="--cat-c:${v.color}">
+        <span class="cat-pill__dot" style="background:${v.color}"></span>${cat}
+      </button>
+    `).join('');
+    encPills.innerHTML = allBtn + catBtns;
+    encPills.querySelectorAll('.cat-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        encPills.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        App.encFilterCat = btn.dataset.cat;
+        renderEncyclo();
+      });
+    });
+  }
+
+  // Sort buttons
+  document.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      App.encSort = btn.dataset.sort;
+      renderEncyclo();
+    });
+  });
+
+  // Parcours list dans sidebar
+  const parcoursListEl = document.getElementById('parcours-list');
+  if (parcoursListEl) {
+    parcoursListEl.innerHTML = NARRATIVES.map(nar => `
+      <div class="parcours-item" data-nar="${nar.id}" tabindex="0">
+        <div class="parcours-item__title">${nar.titre}</div>
+        <div class="parcours-item__desc">${nar.desc}</div>
+        <div class="parcours-item__count">${nar.steps.length} étapes</div>
+      </div>
+    `).join('');
+    parcoursListEl.querySelectorAll('.parcours-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const nar = NARRATIVES.find(n => n.id === el.dataset.nar);
+        if (nar) {
+          if (App.view !== 'atlas') navigateTo('atlas', true);
+          setTimeout(() => openNarrative(nar), App.view === 'atlas' ? 0 : 300);
+        }
+      });
+    });
+  }
+
+  updateAtlasStats();
+}
+
+function updateAtlasStats() {
+  const filtered = getFilteredNodes();
+  const filteredEdges = getFilteredEdges(filtered);
+  const ns = document.getElementById('stats-nodes');
+  const es = document.getElementById('stats-edges');
+  if (ns) ns.textContent = filtered.length;
+  if (es) es.textContent = filteredEdges.length;
+}
+
+function getFilteredNodes() {
+  return NODES.filter(n =>
+    App.filterCats.has(n.categorie) &&
+    App.filterImp.has(n.importance) &&
+    n.annee >= App.filterYearMin &&
+    n.annee <= App.filterYearMax
+  );
+}
+
+function getFilteredEdges(nodes) {
+  const ids = new Set(nodes.map(n => n.id));
+  return EDGES.filter(e =>
+    App.activeEdgeFilters.has(e.type) &&
+    ids.has(e.s) && ids.has(e.t)
+  );
+}
+
+/* ══════════════════════════════════════════════════════
+   NAVIGATION HEADER
+   ══════════════════════════════════════════════════════ */
+function initNavBtns() {
+  document.querySelectorAll('.hd__nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => navigateTo(btn.dataset.view, true));
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   RECHERCHE UNIVERSELLE
+   ══════════════════════════════════════════════════════ */
+let srResults = [], srIdx = -1;
+
+function initSearch() {
+  const siEl = document.getElementById('si');
+  const srEl = document.getElementById('sr');
+  if (!siEl || !srEl) return;
+
+  siEl.addEventListener('input', e => doSearch(e.target.value, siEl, srEl));
+  siEl.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown')  { srIdx = Math.min(srIdx + 1, srResults.length - 1); renderSR(siEl, srEl); }
+    else if (e.key === 'ArrowUp')   { srIdx = Math.max(srIdx - 1, -1); renderSR(siEl, srEl); }
+    else if (e.key === 'Enter' && srIdx >= 0) { selectSR(srResults[srIdx], siEl, srEl); }
+    else if (e.key === 'Escape') { srEl.classList.remove('open'); siEl.blur(); }
+  });
+  siEl.addEventListener('blur', () => setTimeout(() => srEl.classList.remove('open'), 200));
+
+  window.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== siEl) { e.preventDefault(); siEl.focus(); }
+    if (e.key === 'Escape') {
+      if (App.renderMode === 'constellation') exitConstellation();
+      else closeDetail();
+      srEl.classList.remove('open');
+    }
+    if (e.key === 'ArrowRight' && App.activeNarrative) document.getElementById('ns-next').click();
+    if (e.key === 'ArrowLeft'  && App.activeNarrative) document.getElementById('ns-prev').click();
+  });
+}
+
+function doSearch(q, siEl, srEl) {
+  if (!q || q.length < 2) { srEl.classList.remove('open'); srResults = []; return; }
+  const lq = q.toLowerCase();
+  srResults = NODES.filter(n =>
+    n.nom.toLowerCase().includes(lq) ||
+    n.description_courte.toLowerCase().includes(lq) ||
+    n.categorie.toLowerCase().includes(lq) ||
+    String(n.annee).includes(lq)
+  ).slice(0, 10);
+  srIdx = -1;
+  renderSR(siEl, srEl);
+}
+
+function renderSR(siEl, srEl) {
+  if (!srResults.length) { srEl.classList.remove('open'); return; }
+
+  // Grouper par catégorie pour affichage enrichi
+  const grouped = {};
+  srResults.forEach(n => {
+    if (!grouped[n.categorie]) grouped[n.categorie] = [];
+    grouped[n.categorie].push(n);
+  });
+
+  let html = '', absIdx = 0;
+  Object.entries(grouped).forEach(([cat, nodes]) => {
+    const col = CATS[cat] ? CATS[cat].color : '#8899aa';
+    html += `<div class="search__group-title" style="border-left:2px solid ${col}20;padding-left:10px">${cat}</div>`;
+    nodes.forEach(n => {
+      const focused = absIdx === srIdx;
+      html += `<div class="search__item${focused ? ' focused' : ''}" data-id="${n.id}" role="option" aria-selected="${focused}">
+        <div class="search__dot" style="background:${col}"></div>
+        <span class="search__name">${n.nom}</span>
+        <span class="search__year">${n.annee}</span>
+      </div>`;
+      absIdx++;
+    });
+  });
+
+  srEl.innerHTML = html;
+  srEl.classList.add('open');
+  srEl.querySelectorAll('.search__item').forEach(el => {
+    el.addEventListener('click', () => {
+      const n = nodeMap[el.dataset.id];
+      if (n) selectSR(n, siEl, srEl);
+    });
+  });
+}
+
+function selectSR(n, siEl, srEl) {
+  siEl.value = '';
+  srEl.classList.remove('open');
+  srResults = [];
+
+  if (App.view !== 'atlas') {
+    navigateTo('atlas', true);
+    setTimeout(() => { flyTo(n._wx, n._wy, 1.8); setTimeout(() => openDetail(n), 400); }, 300);
+  } else {
+    flyTo(n._wx, n._wy, 1.8);
+    setTimeout(() => openDetail(n), 400);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   PANNEAU DE DÉTAIL
+   ══════════════════════════════════════════════════════ */
+function initDetailPanel() {
+  document.getElementById('dp-x').addEventListener('click', closeDetail);
+  document.getElementById('dp-const').addEventListener('click', () => {
+    if (App.selectedNode) enterConstellation(App.selectedNode);
+  });
+  document.getElementById('dp-story').addEventListener('click', () => {
+    if (!App.selectedNode) return;
+    const st = NARRATIVES.find(n => n.steps.some(s => s.id === App.selectedNode.id));
+    if (st) openNarrative(st); else openNarrPanel();
+  });
+
+  // Fermer en cliquant à l'extérieur (uniquement en vue atlas)
+  document.getElementById('main-zone').addEventListener('click', e => {
+    if (App.view === 'atlas' && App.detailOpen && e.target === document.getElementById('cv')) {
+      // géré par les events canvas
+    }
+  });
+}
+
+function openDetail(n) {
+  App.selectedNode = n;
+  App.detailOpen = true;
+  const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
+  const impLabels = { 1: '★ Fondamental', 2: '◆ Structurant', 3: '· Notable' };
+
+  document.getElementById('dp-y').textContent = n.annee;
+  document.getElementById('dp-n').textContent = n.nom;
+  document.getElementById('dp-n').style.color  = col;
+
+  const catEl = document.getElementById('dp-c');
+  catEl.textContent = n.categorie;
+  catEl.style.color = col;
+  catEl.style.borderColor = col + '60';
+  catEl.style.background = col + '15';
+
+  const rels = ADJ[n.id] || [];
+
+  const relsHtml = rels.length ? `
+    <div class="dp-section">
+      <div class="dp-section__label">Connexions (${rels.length})</div>
+      <div class="dp-rels">
+        ${rels.map(c => {
+          const et  = ET[c.edge.type];
+          const lbl = c.dir === 'out' ? et.label : '← ' + et.label;
+          const nc  = CATS[c.node.categorie] ? CATS[c.node.categorie].color : '#8899aa';
+          return `<div class="dp-rel" data-id="${c.node.id}" role="button" tabindex="0">
+            <span class="dp-rel__type" style="color:${et.color};border-color:${et.color}50;background:${et.color}12">${lbl}</span>
+            <span class="dp-rel__name" style="color:${nc}">${c.node.nom}</span>
+            <span class="dp-rel__year">${c.node.annee}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  ` : '';
+
+  const sourcesHtml = n.sources && n.sources.length ? `
+    <div class="dp-section">
+      <div class="dp-section__label">Sources</div>
+      <div class="dp-sources">
+        ${n.sources.map(s => `<a class="dp-source" href="${s}" target="_blank" rel="noopener noreferrer">${s.replace(/^https?:\/\//, '').split('/')[0]}</a>`).join('')}
+      </div>
+    </div>
+  ` : '';
+
+  // Prospectives liées à ce nœud
+  const linkedProsp = PROSPECTIVE.filter(p => p.signal_nodes && p.signal_nodes.includes(n.id));
+  const prospHtml = linkedProsp.length ? `
+    <div class="dp-section">
+      <div class="dp-section__label">Prospectives liées</div>
+      ${linkedProsp.map(p => `
+        <div style="padding:8px 10px;background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:8px;cursor:pointer" data-prosp="${p.id}">
+          <div style="font-size:0.62rem;color:var(--accent-pulse);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px">${p.type} · ${p.horizon}</div>
+          <div style="font-size:0.72rem;color:var(--text-1)">${p.titre}</div>
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
+  document.getElementById('dp-body').innerHTML = `
+    <div class="dp-section">
+      <div class="dp-section__label">En bref</div>
+      <div class="dp-section__text dp-section__text--short" style="color:${col}">${n.description_courte}</div>
+    </div>
+    <div class="dp-section">
+      <div class="dp-section__label">Définition</div>
+      <div class="dp-section__text">${n.description_longue}</div>
+    </div>
+    ${relsHtml}
+    ${prospHtml}
+    ${sourcesHtml}
+  `;
+
+  // Events sur les relations
+  document.getElementById('dp-body').querySelectorAll('.dp-rel').forEach(el => {
+    el.addEventListener('click', () => {
+      const nn = nodeMap[el.dataset.id];
+      if (nn) {
+        if (App.view === 'atlas') { flyTo(nn._wx, nn._wy, 1.8); }
+        openDetail(nn);
+      }
+    });
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') el.click();
+    });
+  });
+
+  // Events prospectives liées
+  document.getElementById('dp-body').querySelectorAll('[data-prosp]').forEach(el => {
+    el.addEventListener('click', () => {
+      navigateTo('prospectives', true);
+    });
+  });
+
+  const dpEl = document.getElementById('dp');
+  dpEl.classList.remove('closed');
+  dpEl.removeAttribute('aria-hidden');
+  document.getElementById('app-layout').classList.remove('panel-closed');
+
+  dirty = true; schedRender();
+}
+
+function closeDetail() {
+  App.selectedNode = null;
+  App.detailOpen = false;
+  if (App.renderMode === 'constellation') exitConstellation();
+
+  const dpEl = document.getElementById('dp');
+  dpEl.classList.add('closed');
+  dpEl.setAttribute('aria-hidden', 'true');
+  document.getElementById('app-layout').classList.add('panel-closed');
+
+  dirty = true; schedRender();
+}
+
+/* ══════════════════════════════════════════════════════
+   VUE ENCYCLOPÉDIE
+   ══════════════════════════════════════════════════════ */
+let encRendered = 0;
+const ENC_BATCH = 40;
+
+function getFilteredSortedNodes() {
+  let nodes = [...NODES];
+
+  if (App.encFilterCat !== 'all') {
+    nodes = nodes.filter(n => n.categorie === App.encFilterCat);
+  }
+
+  switch (App.encSort) {
+    case 'alpha':       nodes.sort((a, b) => a.nom.localeCompare(b.nom, 'fr')); break;
+    case 'chrono':      nodes.sort((a, b) => a.annee - b.annee || a.nom.localeCompare(b.nom, 'fr')); break;
+    case 'importance':  nodes.sort((a, b) => a.importance - b.importance || a.nom.localeCompare(b.nom, 'fr')); break;
+    case 'categorie':   nodes.sort((a, b) => a.categorie.localeCompare(b.categorie, 'fr') || a.nom.localeCompare(b.nom, 'fr')); break;
+  }
+  return nodes;
+}
+
+function renderEncyclo() {
+  const grid = document.getElementById('encyclo-grid');
+  if (!grid) return;
+
+  const nodes = getFilteredSortedNodes();
+
+  // Mise à jour méta
+  const meta = document.getElementById('encyclo-meta');
+  if (meta) meta.textContent = `${nodes.length} entrée${nodes.length > 1 ? 's' : ''}`;
+  const count = document.getElementById('encyclo-count');
+  if (count) count.textContent = nodes.length;
+
+  grid.innerHTML = '';
+
+  if (nodes.length === 0) {
+    grid.innerHTML = `<div style="text-align:center;color:var(--text-3);padding:40px;font-size:0.8rem">Aucune entrée ne correspond aux filtres.</div>`;
+    return;
+  }
+
+  // Grouper selon le tri
+  const groups = {};
+  const groupOrder = [];
+
+  nodes.forEach(n => {
+    let key = '';
+    if (App.encSort === 'chrono') {
+      key = String(n.annee || 'Année inconnue');
+    } else if (App.encSort === 'categorie') {
+      key = n.categorie;
+    } else if (App.encSort === 'importance') {
+      const impLabels = { 1: '★ Fondamental', 2: '◆ Structurant', 3: '· Notable' };
+      key = impLabels[n.importance] || 'Autre';
+    } else {
+      // alphabétique
+      key = n.nom ? n.nom.charAt(0).toUpperCase() : '#';
+      if (!/[A-Z]/.test(key)) key = '#';
+    }
+
+    if (!groups[key]) {
+      groups[key] = [];
+      groupOrder.push(key);
+    }
+    groups[key].push(n);
+  });
+
+  // Rendre chaque groupe
+  groupOrder.forEach(key => {
+    const groupNodes = groups[key];
+    
+    const section = document.createElement('section');
+    section.className = 'encyclo__year-section';
+
+    const title = document.createElement('h2');
+    title.className = 'encyclo__year-title';
+    title.innerHTML = `<span>${key}</span> <span class="encyclo__year-count">${groupNodes.length} entrée${groupNodes.length > 1 ? 's' : ''}</span>`;
+    section.appendChild(title);
+
+    const cardsGrid = document.createElement('div');
+    cardsGrid.className = 'encyclo__year-grid';
+
+    groupNodes.forEach(n => {
+      cardsGrid.appendChild(makeEncCard(n));
+    });
+
+    section.appendChild(cardsGrid);
+    grid.appendChild(section);
+  });
+}
+
+function makeEncCard(n) {
+  const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
+  const impIcons = { 1: '★★★', 2: '★★☆', 3: '★☆☆' };
+  const rels = ADJ[n.id] || [];
+
+  const div = document.createElement('article');
+  div.className = 'enc-card';
+  div.setAttribute('role', 'listitem');
+  div.setAttribute('tabindex', '0');
+  div.setAttribute('aria-label', `${n.nom}, ${n.categorie}, ${n.annee}`);
+  div.style.setProperty('--cat-col', col);
+  div.style.borderColor = col + '25';
+
+  // Hover glow
+  div.addEventListener('mouseenter', () => {
+    div.style.boxShadow = `0 12px 40px rgba(0,0,0,.4), 0 0 30px ${col}25`;
+    div.style.borderColor = col + '60';
+  });
+  div.addEventListener('mouseleave', () => {
+    div.style.boxShadow = '';
+    div.style.borderColor = col + '25';
+  });
+
+  div.innerHTML = `
+    <div class="enc-card__top">
+      <span class="enc-card__year">${n.annee}</span>
+      <span class="enc-card__badge" style="color:${col};border-color:${col}50;background:${col}12">
+        <span class="enc-card__dot" style="background:${col}"></span>${n.categorie}
+      </span>
+    </div>
+    <div class="enc-card__name">${n.nom}</div>
+    <div class="enc-card__desc">${n.description_courte}</div>
+    <div class="enc-card__footer">
+      <span class="enc-card__footer-item">${rels.length} connexion${rels.length !== 1 ? 's' : ''}</span>
+      ${n.sources && n.sources.length ? `<span class="enc-card__footer-item">◉ ${n.sources.length} source${n.sources.length > 1 ? 's' : ''}</span>` : ''}
+      <span class="enc-card__imp" style="color:${col}88" title="Importance">${impIcons[n.importance] || ''}</span>
+    </div>
+  `;
+
+  div.addEventListener('click', () => openDetail(n));
+  div.addEventListener('keydown', e => { if (e.key === 'Enter') div.click(); });
+
+  return div;
+}
+
+/* ══════════════════════════════════════════════════════
+   VUE PROSPECTIVES
+   ══════════════════════════════════════════════════════ */
+function renderProspectives() {
+  const timeline = document.getElementById('prosp-timeline');
+  if (!timeline) return;
+
+  let prosps = [...PROSPECTIVE];
+  if (App.prospType !== 'all') prosps = prosps.filter(p => p.type === App.prospType);
+  prosps.sort((a, b) => a.horizon - b.horizon);
+
+  if (!prosps.length) {
+    timeline.innerHTML = `<div style="text-align:center;color:var(--text-3);padding:40px;font-size:0.8rem">Aucune prospective disponible pour ce filtre.</div>`;
+    return;
+  }
+
+  timeline.innerHTML = prosps.map((p, i) => {
+    const pct = Math.round(p.probabilite * 100);
+    const signals = (p.signal_nodes || []).map(id => {
+      const n = nodeMap[id];
+      return n ? `<button class="prosp-card__signal" data-id="${id}">${n.nom}</button>` : '';
+    }).join('');
+
+    return `
+      <article class="prosp-card prosp-card--${p.type}" role="listitem"
+        style="animation-delay:${i * 0.08}s">
+        <div class="prosp-card__top">
+          <span class="prosp-card__type prosp-card__type--${p.type}">${p.type}</span>
+          <span class="prosp-card__horizon">Horizon : ${p.horizon}</span>
+        </div>
+        <div class="prosp-card__title">${p.titre}</div>
+        <div class="prosp-card__prob">
+          <div class="prosp-card__prob-label">
+            <span>Probabilité</span>
+            <span class="prosp-card__prob-val">${pct}%</span>
+          </div>
+          <div class="prosp-card__prob-track">
+            <div class="prosp-card__prob-fill" style="--prob:${p.probabilite}"></div>
+          </div>
+        </div>
+        <div class="prosp-card__desc">${p.description}</div>
+        ${signals ? `<div class="prosp-card__signals">${signals}</div>` : ''}
+      </article>
+    `;
+  }).join('');
+
+  // Animer les barres avec IntersectionObserver
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const card = entry.target;
+        const fill = card.querySelector('.prosp-card__prob-fill');
+        const prob = parseFloat(card.querySelector('.prosp-card__prob-fill')?.style?.getPropertyValue('--prob') || '0.5');
+        if (fill) fill.style.width = (prob * 100) + '%';
+        card.classList.add('animated');
+        observer.unobserve(card);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  timeline.querySelectorAll('.prosp-card').forEach(card => observer.observe(card));
+
+  // Clic sur signaux → ouvre le détail du nœud
+  timeline.querySelectorAll('.prosp-card__signal').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const n = nodeMap[btn.dataset.id];
+      if (n) openDetail(n);
+    });
+  });
+
+  // Filtres types prospectives
+  document.querySelectorAll('#prosp-type-pills .cat-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#prosp-type-pills .cat-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      App.prospType = btn.dataset.type || btn.dataset.cat || 'all';
+      renderProspectives();
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   LÉGENDE ATLAS
+   ══════════════════════════════════════════════════════ */
+function initLegend() {
+  const legEl = document.getElementById('leg');
+  if (!legEl) return;
+
+  legEl.innerHTML = `
+    <div class="leg__group">
+      <div class="leg__group-title">Catégories</div>
+      ${Object.entries(CATS).map(([k, v]) => `
+        <div class="leg__item">
+          <div class="leg__dot" style="background:${v.color}"></div>${k}
+        </div>
+      `).join('')}
+    </div>
+    <div class="leg__group">
+      <div class="leg__group-title">Relations</div>
+      ${Object.entries(ET).map(([k, v]) => `
+        <div class="leg__item">
+          <div class="leg__line" style="border-color:${v.color};border-style:${v.dash.length?'dashed':'solid'}"></div>
+          ${v.label}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* ══════════════════════════════════════════════════════
+   CONTRÔLES ATLAS (header)
+   ══════════════════════════════════════════════════════ */
+function initAtlasControls() {
+  document.getElementById('btn-edges').addEventListener('click', function() {
+    App.showEdges = !App.showEdges;
+    this.classList.toggle('active', App.showEdges);
+    this.setAttribute('aria-pressed', App.showEdges ? 'true' : 'false');
+    dirty = true; schedRender();
+  });
+  document.getElementById('btn-labels').addEventListener('click', function() {
+    App.showLabels = !App.showLabels;
+    this.classList.toggle('active', App.showLabels);
+    this.setAttribute('aria-pressed', App.showLabels ? 'true' : 'false');
+    dirty = true; schedRender();
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   PARCOURS NARRATIFS (Atlas)
+   ══════════════════════════════════════════════════════ */
+function initNarratives() {
+  const btnNar = document.getElementById('btn-nar');
+  const npEl   = document.getElementById('np');
+
+  if (btnNar) btnNar.addEventListener('click', openNarrPanel);
+  const npX = document.getElementById('np-x');
+  if (npX) npX.addEventListener('click', closeNarrPanel);
+
+  // Peupler la liste parcours dans le panneau narratifs du canvas
+  const npList = document.getElementById('np-list');
+  if (npList) {
+    npList.innerHTML = NARRATIVES.map(nar => `
+      <div class="np__item" data-nar="${nar.id}" tabindex="0">
+        <div class="np__item-title">${nar.titre}</div>
+        <div class="np__item-desc">${nar.desc}</div>
+        <div class="np__item-count">${nar.steps.length} étapes</div>
+      </div>
+    `).join('');
+    npList.querySelectorAll('.np__item').forEach(el => {
+      el.addEventListener('click', () => {
+        const nar = NARRATIVES.find(n => n.id === el.dataset.nar);
+        if (nar) openNarrative(nar);
+      });
+    });
+  }
+
+  // Navigation étapes
+  document.getElementById('ns-prev').addEventListener('click', () => {
+    if (App.activeStep > 0) { App.activeStep--; updateNarrNav(); flyToStep(App.activeStep); dirty = true; schedRender(); }
+  });
+  document.getElementById('ns-next').addEventListener('click', () => {
+    if (App.activeStep < App.activeNarrative.steps.length - 1) { App.activeStep++; updateNarrNav(); flyToStep(App.activeStep); dirty = true; schedRender(); }
+  });
+  document.getElementById('ns-exit').addEventListener('click', () => {
+    App.activeNarrative = null; App.activeStep = -1;
+    document.getElementById('nsteps').classList.remove('open');
+    if (npList) npList.querySelectorAll('.np__item').forEach(el => el.classList.remove('active'));
+    dirty = true; schedRender();
+  });
+}
+
+function openNarrPanel() {
+  const npEl = document.getElementById('np');
+  const btnNar = document.getElementById('btn-nar');
+  if (npEl) { npEl.classList.add('open'); npEl.setAttribute('aria-hidden', 'false'); }
+  if (btnNar) { btnNar.classList.add('hidden'); btnNar.setAttribute('aria-expanded', 'true'); }
+}
+
+function closeNarrPanel() {
+  const npEl = document.getElementById('np');
+  const btnNar = document.getElementById('btn-nar');
+  if (npEl) { npEl.classList.remove('open'); npEl.setAttribute('aria-hidden', 'true'); }
+  if (btnNar) { btnNar.classList.remove('hidden'); btnNar.setAttribute('aria-expanded', 'false'); }
+}
+
+function openNarrative(nar) {
+  App.activeNarrative = nar; App.activeStep = 0;
+
+  const npList = document.getElementById('np-list');
+  if (npList) {
+    npList.querySelectorAll('.np__item').forEach(el => {
+      el.classList.toggle('active', el.dataset.nar === nar.id);
+    });
+  }
+
+  const stepsEl = document.getElementById('nsteps');
+  const nsTEl   = document.getElementById('ns-t');
+  const nsList  = document.getElementById('ns-list');
+  if (nsTEl) nsTEl.textContent = nar.titre;
+
+  if (nsList) {
+    nsList.innerHTML = nar.steps.map((s, i) => {
+      const n = nodeMap[s.id]; if (!n) return '';
+      const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
+      return `<div class="nstep${i === 0 ? ' active' : ''}" data-idx="${i}">
+        <span class="nstep__num">${i + 1}</span>
+        <div>
+          <div class="nstep__name" style="color:${col}">${n.nom}</div>
+          <div class="nstep__note">${s.note}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    nsList.querySelectorAll('.nstep').forEach(el => {
+      el.addEventListener('click', () => {
+        App.activeStep = +el.dataset.idx;
+        nsList.querySelectorAll('.nstep').forEach((e, j) => e.classList.toggle('active', j === App.activeStep));
+        updateNarrNav(); flyToStep(App.activeStep); dirty = true; schedRender();
+      });
+    });
+  }
+
+  if (stepsEl) stepsEl.classList.add('open');
+  openNarrPanel();
+  updateNarrNav();
+  flyToStep(0);
+  dirty = true; schedRender();
+}
+
+function flyToStep(i) {
+  const s = App.activeNarrative.steps[i]; if (!s) return;
+  const n = nodeMap[s.id]; if (!n) return;
+  flyTo(n._wx, n._wy, Math.max(cam.scale, 1.4));
+}
+
+function updateNarrNav() {
+  const prev = document.getElementById('ns-prev');
+  const next = document.getElementById('ns-next');
+  if (prev) prev.disabled = App.activeStep <= 0;
+  if (next) next.disabled = App.activeStep >= App.activeNarrative.steps.length - 1;
+
+  // Mettre à jour la step active dans la liste
+  const nsList = document.getElementById('ns-list');
+  if (nsList) {
+    nsList.querySelectorAll('.nstep').forEach((e, j) => e.classList.toggle('active', j === App.activeStep));
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   CAMÉRA & CANVAS ENGINE
+   ══════════════════════════════════════════════════════ */
+let W = 800, H = 600;
 const cam = { cx: WW / 2, cy: WH / 2, scale: .15 };
+let dirty = true;
+let camAnim = null;
 
-/* ── UTILITAIRE : alpha hex ──────────────────────────────
-   Convertit un float 0–1 en suffixe hexadécimal 2 chiffres
-   Utilisé partout pour composer des couleurs canvas
-   ─────────────────────────────────────────────────────── */
-function hexA(a) {
-  const v = Math.max(0, Math.min(1, a));
-  return Math.round(v * 255).toString(16).padStart(2, '0');
+const canvas = document.getElementById('cv');
+const ctx    = canvas ? canvas.getContext('2d') : null;
+const mmc    = document.getElementById('mmc');
+const mmctx  = mmc ? mmc.getContext('2d') : null;
+
+function setSize() {
+  const main = document.getElementById('main-zone');
+  if (main && canvas) {
+    const r = main.getBoundingClientRect();
+    W = r.width || window.innerWidth - 270;
+    H = r.height || window.innerHeight - 64;
+    canvas.width = W;
+    canvas.height = H;
+  } else {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    if (canvas) { canvas.width = W; canvas.height = H; }
+  }
+  dirty = true;
 }
 
-/* ── MODE CONSTELLATION ─────────────────────────────────── */
-function enterConstellation(n) {
-  renderMode = 'constellation';
-  selectedNode = n;
-  constAngle = 0;
-  const csh = document.getElementById('csh');
-  if (csh) csh.classList.add('on');
-  dirty = true; schedRender();
-}
-function exitConstellation() {
-  renderMode = 'map';
-  const csh = document.getElementById('csh');
-  if (csh) csh.classList.remove('on');
-  dirty = true; schedRender();
-}
-
-
+function schedRender() { dirty = true; }
 
 function w2s(wx, wy) {
   return { sx: (wx - cam.cx) * cam.scale + W / 2, sy: (wy - cam.cy) * cam.scale + H / 2 };
@@ -324,7 +1122,10 @@ function s2w(sx, sy) {
   return { wx: (sx - W / 2) / cam.scale + cam.cx, wy: (sy - H / 2) / cam.scale + cam.cy };
 }
 
-let camAnim = null;
+function hexA(a) {
+  return Math.round(Math.max(0, Math.min(1, a)) * 255).toString(16).padStart(2, '0');
+}
+
 function flyTo(wx, wy, sc, dur = 650) {
   const sx0 = cam.cx, sy0 = cam.cy, ss0 = cam.scale;
   const sc1 = sc || Math.max(cam.scale, 1.2);
@@ -343,392 +1144,297 @@ function flyTo(wx, wy, sc, dur = 650) {
   }
   camAnim = requestAnimationFrame(step);
 }
+
 function zoomFit() {
-  if (NODES.length === 0) return;
+  const nodes = getFilteredNodes();
+  if (!nodes.length) return;
   let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
-  NODES.forEach(n => { x0 = Math.min(x0, n._wx); x1 = Math.max(x1, n._wx); y0 = Math.min(y0, n._wy); y1 = Math.max(y1, n._wy); });
+  nodes.forEach(n => { x0 = Math.min(x0, n._wx); x1 = Math.max(x1, n._wx); y0 = Math.min(y0, n._wy); y1 = Math.max(y1, n._wy); });
   const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
   const sc = Math.min((W - 140) / (x1 - x0 + 300), (H - 100) / (y1 - y0 + 200), .4);
   flyTo(cx, cy, sc, 700);
 }
+
 function zoomAt(sx, sy, factor) {
   const { wx, wy } = s2w(sx, sy);
-  cam.scale = Math.max(.06, Math.min(5, cam.scale * factor));
+  cam.scale = Math.max(.04, Math.min(5, cam.scale * factor));
   cam.cx = wx - (sx - W / 2) / cam.scale;
   cam.cy = wy - (sy - H / 2) / cam.scale;
   dirty = true;
 }
 
+/* ── Visibilité LOD ──────────────────────────────────── */
+function isNodeVisible(n) {
+  const sc = cam.scale;
+  const imp = n.importance || 2;
+
+  // Filtres sidebar
+  if (!App.filterCats.has(n.categorie)) return false;
+  if (!App.filterImp.has(n.importance)) return false;
+  if (n.annee < App.filterYearMin || n.annee > App.filterYearMax) return false;
+
+  // Toujours montrer les nœuds du parcours actif ou sélectionnés
+  if (App.activeNarrative && App.activeNarrative.steps.some(s => s.id === n.id)) return true;
+  if (App.selectedNode && App.selectedNode.id === n.id) return true;
+  if (App.hoveredNode && App.hoveredNode.id === n.id) return true;
+
+  // LOD selon zoom
+  if (sc < 0.12) return imp === 1;
+  if (sc < 0.28) return imp === 1 || imp === 2;
+  return true;
+}
+
+/* ── MODE CONSTELLATION ──────────────────────────────── */
+let constAngle = 0;
+function enterConstellation(n) {
+  App.renderMode = 'constellation';
+  App.selectedNode = n;
+  constAngle = 0;
+  const csh = document.getElementById('csh');
+  if (csh) csh.classList.add('visible');
+  dirty = true; schedRender();
+}
+function exitConstellation() {
+  App.renderMode = 'map';
+  const csh = document.getElementById('csh');
+  if (csh) csh.classList.remove('visible');
+  dirty = true; schedRender();
+}
+
 /* ══════════════════════════════════════════════════════
-   ÉTAT DU RENDU
+   RENDU CANVAS
    ══════════════════════════════════════════════════════ */
-let dirty = true, renderMode = 'map', selectedNode = null;
-let hoveredNode = null, showEdges = true, showLabels = true;
-let activeNarrative = null, activeStep = -1;
-let activeEdgeFilters = new Set(['INFLUENCE','DEPENDS_ON','REPLACED_BY','EVOLVES_INTO','STANDARDISATION','CONCURRENCE']);
-
-const canvas = document.getElementById('cv');
-const ctx    = canvas.getContext('2d');
-const mmc    = document.getElementById('mmc');
-const mmctx  = mmc.getContext('2d');
-
-function setSize() { W = window.innerWidth; H = window.innerHeight; canvas.width = W; canvas.height = H; dirty = true; }
-setSize();
-
-function schedRender() { dirty = true; }
-function setDirty() { dirty = true; }
+let yearHitAreas = [];
 
 function renderMap() {
   drawGrid();
   drawLanes();
-  if (showEdges && cam.scale > .12) drawEdges();
-  if (activeNarrative && activeStep >= 0) drawNarrPath();
+  if (App.showEdges && cam.scale > .12) drawEdges();
+  if (App.activeNarrative && App.activeStep >= 0) drawNarrPath();
   drawNodes();
-  if (showLabels || cam.scale > .28) drawLabels();
+  if (App.showLabels || cam.scale > .28) drawLabels();
 }
 
-/* ── TIMELINE CANVAS ──────────────────────────────────── */
-let yearHitAreas = [];
-
+/* ── Grille temporelle ───────────────────────────────── */
 function drawGrid() {
   yearHitAreas = [];
   const sc = cam.scale;
 
-  // Grille verticale (décennies + quinquennies)
   for (let yr = 1970; yr <= 2032; yr += 5) {
     const { sx } = w2s(xY(yr), 0);
     if (sx < -10 || sx > W + 10) continue;
-    ctx.beginPath();
-    ctx.moveTo(sx, 56);
-    ctx.lineTo(sx, H - 38);
-    ctx.strokeStyle = yr % 10 === 0 ? 'rgba(26,74,106,.14)' : 'rgba(14,42,70,.08)';
-    ctx.lineWidth   = yr % 10 === 0 ? 1 : .5;
-    ctx.setLineDash([]); ctx.stroke();
-  }
+    const isDecade = yr % 10 === 0;
+    ctx.strokeStyle = isDecade ? '#1a7acc18' : '#1a7acc08';
+    ctx.lineWidth = isDecade ? 1 : .5;
+    ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, H); ctx.stroke();
 
-  // Labels d'années — espace monde, texte vertical, profondeur de champ
-  const step = sc > .5 ? 1 : sc > .28 ? 5 : 10;
-  const labelZone = H - 36;
-
-  for (let yr = YMIN + 2; yr <= YMAX - 2; yr++) {
-    if (yr % step !== 0) continue;
-    const { sx } = w2s(xY(yr), 0);
-    if (sx < -30 || sx > W + 30) continue;
-
-    const distRatio = Math.abs(sx - W / 2) / (W * 0.52);
-    const focus     = Math.max(0, 1 - distRatio);
-    const alpha     = 0.08 + focus * 0.82;
-    const blurPx    = (1 - focus) * 4.5;
-    const isMajor   = yr % 10 === 0;
-
-    ctx.save();
-    if (blurPx > 0.3) ctx.filter = `blur(${blurPx.toFixed(1)}px)`;
-    ctx.globalAlpha = alpha;
-
-    const fs = isMajor ? 11 : 9;
-    ctx.font      = (isMajor ? '500' : '400') + ` ${fs}px IBM Plex Mono`;
-    ctx.fillStyle = isMajor ? '#3a9acc' : 'rgba(26,74,106,0.9)';
-    ctx.textAlign    = 'center';
-    ctx.textBaseline = 'bottom';
-
-    ctx.translate(sx, labelZone);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillText(yr, 0, 0);
-    ctx.restore();
-
-    if (alpha > 0.35 && isMajor) {
-      yearHitAreas.push({ yr, sx, syMin: H - 60, syMax: H - 14 });
+    if (sc > .1) {
+      ctx.font = `${isDecade ? '500' : '400'} ${isDecade ? 10 : 8}px IBM Plex Mono`;
+      ctx.fillStyle = isDecade ? '#4f87aa' : '#2d5a7a';
+      ctx.textAlign = 'center';
+      ctx.fillText(yr, sx, H - 8);
+      yearHitAreas.push({ yr, sx });
     }
   }
 }
 
+/* ── Couloirs catégories ─────────────────────────────── */
 function drawLanes() {
-  Object.entries(CATS).forEach(([cat, def]) => {
-    const cy = def.ly * WH, bh = 80;
-    const { sy: y0 } = w2s(0, cy - bh / 2);
-    const { sy: y1 } = w2s(0, cy + bh / 2);
-    ctx.fillStyle = def.color + '09';
-    ctx.fillRect(0, y0, W, y1 - y0);
-    if (cam.scale > .22 && y0 > 56 && y1 < H - 38) {
-      const ly = (y0 + y1) / 2;
-      ctx.font      = '8px IBM Plex Mono';
-      ctx.fillStyle = def.color + '50';
-      ctx.textAlign    = 'right';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(cat, 72, ly);
+  if (cam.scale < 0.18) return;
+  Object.entries(CATS).forEach(([cat, v]) => {
+    const y = v.ly * WH;
+    const { sy } = w2s(0, y);
+    if (sy < -20 || sy > H + 20) return;
+    ctx.fillStyle = v.color + '08';
+    ctx.fillRect(0, sy - 35, W, 70);
+    if (cam.scale > .22) {
+      ctx.font = '7px IBM Plex Mono';
+      ctx.fillStyle = v.color + '50';
+      ctx.textAlign = 'left';
+      ctx.fillText(cat.toUpperCase(), 8, sy - 20);
     }
   });
 }
 
-/* ── EDGES ──────────────────────────────────────────── */
-function getQBPoint(t, x1, y1, cx, cy, x2, y2) {
-  const mt = 1 - t;
-  return { x: mt*mt*x1 + 2*mt*t*cx + t*t*x2, y: mt*mt*y1 + 2*mt*t*cy + t*t*y2 };
-}
-
+/* ── Arêtes ──────────────────────────────────────────── */
+const time_ref = performance.now();
 function drawEdges() {
-  const time = performance.now();
-  const sc   = cam.scale;
+  const time = performance.now() - time_ref;
+  const visNodes = new Set(NODES.filter(isNodeVisible).map(n => n.id));
 
   EDGES.forEach(e => {
-    if (!activeEdgeFilters.has(e.type)) return;
+    if (!App.activeEdgeFilters.has(e.type)) return;
+    if (!visNodes.has(e.s) || !visNodes.has(e.t)) return;
     const sn = nodeMap[e.s], tn = nodeMap[e.t];
     if (!sn || !tn) return;
-
-    // Zoom Sémantique (LOD) : n'affiche la liaison que si les deux nœuds connectés sont visibles
-    if (!isNodeVisible(sn) || !isNodeVisible(tn)) return;
-
-    const { sx: x1, sy: y1 } = w2s(sn._wx, sn._wy);
-    const { sx: x2, sy: y2 } = w2s(tn._wx, tn._wy);
-    if ((x1 < -40 && x2 < -40) || (x1 > W + 40 && x2 > W + 40)) return;
-
-    const et = ET[e.type]; if (!et) return;
-    const isHov = (hoveredNode && (hoveredNode.id === e.s || hoveredNode.id === e.t)) ||
-                  (selectedNode && (selectedNode.id === e.s || selectedNode.id === e.t));
-    const isNar = activeNarrative && activeNarrative.steps.some((s, idx) => {
-      if (s.id !== e.s) return false;
-      const next = activeNarrative.steps[idx + 1];
-      return next && next.id === e.t;
-    });
-
-    let a = isHov ? .72 : isNar ? .55 : activeNarrative ? .04 : .18;
-    if (sc < .24 && !isHov && !isNar) a *= (sc - .12) / .12;
-    if (a <= 0.01) return;
-
-    const mx = (x1 + x2) / 2;
-    const my = (y1 + y2) / 2 + (x2 - x1) * .12;
+    const et = ET[e.type];
+    const p1 = w2s(sn._wx, sn._wy);
+    const p2 = w2s(tn._wx, tn._wy);
+    if (p1.sx < -50 && p2.sx < -50) return;
+    if (p1.sx > W + 50 && p2.sx > W + 50) return;
 
     ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.quadraticCurveTo(mx, my, x2, y2);
-    ctx.strokeStyle = et.color + hexA(a);
-    ctx.lineWidth   = isHov ? et.w * 1.5 : isNar ? et.w * 1.2 : et.w;
-    ctx.setLineDash(et.dash); ctx.stroke(); ctx.setLineDash([]);
+    ctx.setLineDash(et.dash);
+    ctx.strokeStyle = et.color + '35';
+    ctx.lineWidth = et.w;
+    ctx.moveTo(p1.sx, p1.sy); ctx.lineTo(p2.sx, p2.sy); ctx.stroke();
+    ctx.setLineDash([]);
 
-    if (et.animType === 'particles' && (isHov || isNar || (!activeNarrative && sc > .25))) {
-      const tBase = ((time * et.speed) / 2000) % 1;
-      ctx.fillStyle = et.color + hexA(a * 1.3);
-      const points = [tBase];
-      if (isHov || isNar) points.push((tBase + .5) % 1);
-      points.forEach(t => {
-        const pt = getQBPoint(t, x1, y1, mx, my, x2, y2);
-        ctx.beginPath(); ctx.arc(pt.x, pt.y, isHov ? 2.5 : 1.6, 0, Math.PI * 2); ctx.fill();
-      });
-    } else if (et.animType === 'pingPong' && (isHov || isNar || (!activeNarrative && sc > .25))) {
-      const tBase = (time / 1600) % 1;
-      ctx.fillStyle = et.color + hexA(a * 1.3);
-      const p1 = getQBPoint(tBase, x1, y1, mx, my, x2, y2);
-      const p2 = getQBPoint(1 - tBase, x1, y1, mx, my, x2, y2);
+    // Particule animée
+    if (cam.scale > .2) {
+      const spd = et.speed || 1;
+      const t = ((time / 2200 * spd) % 1);
       ctx.beginPath();
-      ctx.arc(p1.x, p1.y, isHov ? 3.5 : 2.2, 0, Math.PI * 2);
-      ctx.arc(p2.x, p2.y, isHov ? 3.5 : 2.2, 0, Math.PI * 2);
+      ctx.arc(p1.sx + (p2.sx - p1.sx) * t, p1.sy + (p2.sy - p1.sy) * t, 2, 0, Math.PI * 2);
+      ctx.fillStyle = et.color + 'bb';
       ctx.fill();
-    }
-
-    if ((e.type === 'REPLACED_BY' || e.type === 'EVOLVES_INTO') && isHov) {
-      drawArrow(x1, y1, x2, y2, et.color + hexA(a), 6);
     }
   });
 }
 
-function drawArrow(x1, y1, x2, y2, col, sz) {
-  const dx = x2 - x1, dy = y2 - y1, len = Math.sqrt(dx*dx + dy*dy);
-  if (len < 1) return;
-  const nx = dx/len, ny = dy/len;
-  ctx.beginPath();
-  ctx.moveTo(x2, y2);
-  ctx.lineTo(x2 - sz*nx + sz*.45*ny, y2 - sz*ny - sz*.45*nx);
-  ctx.lineTo(x2 - sz*nx - sz*.45*ny, y2 - sz*ny + sz*.45*nx);
-  ctx.closePath(); ctx.fillStyle = col; ctx.fill();
-}
-
+/* ── Chemin narratif ─────────────────────────────────── */
 function drawNarrPath() {
-  if (!activeNarrative) return;
-  const ids = activeNarrative.steps.map(s => s.id);
-  for (let i = 0; i < ids.length - 1; i++) {
-    const a = nodeMap[ids[i]], b = nodeMap[ids[i+1]];
+  const steps = App.activeNarrative.steps;
+  for (let i = 0; i < steps.length - 1; i++) {
+    const a = nodeMap[steps[i].id], b = nodeMap[steps[i + 1].id];
     if (!a || !b) continue;
-    const { sx: x1, sy: y1 } = w2s(a._wx, a._wy);
-    const { sx: x2, sy: y2 } = w2s(b._wx, b._wy);
-    const active = i === activeStep || i === activeStep - 1;
-    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
-    ctx.strokeStyle = active ? 'rgba(26,122,204,.7)' : 'rgba(26,74,106,.3)';
-    ctx.lineWidth = active ? 2 : 1;
-    ctx.setLineDash(active ? [] : [4,6]); ctx.stroke(); ctx.setLineDash([]);
+    const p1 = w2s(a._wx, a._wy), p2 = w2s(b._wx, b._wy);
+    ctx.beginPath();
+    ctx.strokeStyle = '#00d4aa60';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.moveTo(p1.sx, p1.sy); ctx.lineTo(p2.sx, p2.sy); ctx.stroke();
+    ctx.setLineDash([]);
   }
 }
 
-/* ── NODES ──────────────────────────────────────────── */
-function nodeRadius(n) {
-  const imp = n.importance || 2;
-  const base = imp === 1 ? 4.5 : imp === 2 ? 3.5 : 2.5;
-  return Math.max(base, base * Math.min(cam.scale / .3, 1.4));
-}
-
+/* ── Nœuds ───────────────────────────────────────────── */
 function drawNodes() {
-  const sc = cam.scale;
   NODES.forEach(n => {
-    // Zoom Sémantique (LOD) : filtre les nœuds non-visibles
     if (!isNodeVisible(n)) return;
-
     const { sx, sy } = w2s(n._wx, n._wy);
-    if (sx < -30 || sx > W + 30 || sy < 30 || sy > H - 30) return;
-    const col     = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
-    const isHov   = hoveredNode && hoveredNode.id === n.id;
-    const isSel   = selectedNode && selectedNode.id === n.id;
-    const isNar   = activeNarrative && activeNarrative.steps.some(s => s.id === n.id);
-    const isNarAct= activeNarrative && activeNarrative.steps[activeStep] && activeNarrative.steps[activeStep].id === n.id;
-    const r = isNarAct ? 8 : (isHov || isSel) ? 6 : nodeRadius(n);
+    if (sx < -30 || sx > W + 30 || sy < -30 || sy > H + 30) return;
 
-    // Glow
-    if (isHov || isSel || isNarAct) {
-      [r + 7, r + 14, r + 22].forEach((gr, gi) => {
+    const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
+    const isSelected = App.selectedNode && App.selectedNode.id === n.id;
+    const isHovered  = App.hoveredNode  && App.hoveredNode.id  === n.id;
+    const isInNarr   = App.activeNarrative && App.activeNarrative.steps.some(s => s.id === n.id);
+    const isActiveStep = App.activeNarrative && App.activeStep >= 0 &&
+                         App.activeNarrative.steps[App.activeStep]?.id === n.id;
+
+    const baseR = n.importance === 1 ? 7 : n.importance === 2 ? 5 : 3.5;
+    const r = isSelected || isActiveStep ? baseR * 1.8 : isHovered ? baseR * 1.5 : baseR;
+
+    // Halos
+    if (isSelected || isHovered || isActiveStep) {
+      [r + 7, r + 14].forEach((gr, gi) => {
         ctx.beginPath(); ctx.arc(sx, sy, gr, 0, Math.PI * 2);
-        ctx.strokeStyle = col + ['33','22','11'][gi]; ctx.lineWidth = 1; ctx.stroke();
+        ctx.strokeStyle = col + ['40', '18'][gi]; ctx.lineWidth = 1; ctx.stroke();
       });
     }
+    if (isInNarr && !isActiveStep) {
+      ctx.beginPath(); ctx.arc(sx, sy, r + 5, 0, Math.PI * 2);
+      ctx.strokeStyle = '#00d4aa35'; ctx.lineWidth = 1.5; ctx.stroke();
+    }
 
-    // Node fill
+    // Nœud
     ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI * 2);
-    if (isHov || isSel || isNarAct) {
-      ctx.fillStyle = col;
-    } else if (isNar) {
-      ctx.fillStyle = col + 'cc';
+    if (isSelected || isActiveStep) {
+      const g = ctx.createRadialGradient(sx - r * .3, sy - r * .3, 0, sx, sy, r);
+      g.addColorStop(0, col + 'ff'); g.addColorStop(1, col + 'aa');
+      ctx.fillStyle = g;
     } else {
-      ctx.fillStyle = col + (activeNarrative ? '44' : '99');
+      ctx.fillStyle = isHovered ? col : col + 'cc';
     }
     ctx.fill();
-
-    // Inner dot (importance marker)
-    if (r > 3.5) {
-      ctx.beginPath(); ctx.arc(sx, sy, r * .35, 0, Math.PI * 2);
-      ctx.fillStyle = n.importance === 1 ? 'rgba(255,255,255,.35)' : 'rgba(3,6,10,.55)';
-      ctx.fill();
-    }
   });
 }
 
+/* ── Labels ──────────────────────────────────────────── */
 function drawLabels() {
-  const sc = cam.scale;
-  if (sc < .13) return;
-  ctx.save();
+  ctx.textAlign = 'center';
   NODES.forEach(n => {
-    // Zoom Sémantique (LOD) : filtre les étiquettes non-visibles
     if (!isNodeVisible(n)) return;
-
     const { sx, sy } = w2s(n._wx, n._wy);
-    if (sx < -80 || sx > W + 80 || sy < 30 || sy > H - 30) return;
-    const col     = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
-    const isHov   = hoveredNode && hoveredNode.id === n.id;
-    const isSel   = selectedNode && selectedNode.id === n.id;
-    const isNar   = activeNarrative && activeNarrative.steps.some(s => s.id === n.id);
-    const isNarAct= activeNarrative && activeNarrative.steps[activeStep] && activeNarrative.steps[activeStep].id === n.id;
-    const r = (isHov || isSel) ? 6 : nodeRadius(n);
-    const lx = sx + (sx > W / 2 ? -(r + 8) : (r + 8));
-    const align = sx > W / 2 ? 'right' : 'left';
-    const fs = Math.min(13, Math.max(8.5, 11 * sc));
-    if (sc < .22 && !isHov && !isSel && !isNar) return;
-    let alpha = 1;
-    if (activeNarrative && !isNar && !isHov && !isSel) alpha = .18;
-    ctx.textAlign = align; ctx.textBaseline = 'middle';
-    ctx.font = ((isHov || isSel || isNarAct) ? '500' : '400') + ` ${isHov || isSel ? fs + 1 : fs}px IBM Plex Mono`;
-    ctx.fillStyle = col + hexA(alpha * ((isHov || isSel || isNarAct) ? 1 : .72));
-    ctx.fillText(n.nom, lx, sy);
-    if (sc > .55 && (isHov || isSel)) {
-      ctx.font = `300 ${Math.max(7.5, fs - 3)}px IBM Plex Mono`;
-      ctx.fillStyle = col + '66';
-      ctx.fillText(n.annee + ' · ' + n.categorie, lx, sy + fs + 2);
-    }
+    if (sx < -60 || sx > W + 60 || sy < -60 || sy > H + 60) return;
+
+    const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
+    const isHov = App.hoveredNode && App.hoveredNode.id === n.id;
+    const isAct = App.selectedNode && App.selectedNode.id === n.id;
+    const baseR = n.importance === 1 ? 7 : n.importance === 2 ? 5 : 3.5;
+    const r = isAct ? baseR * 1.8 : isHov ? baseR * 1.5 : baseR;
+
+    // Visibilité basée sur importance + zoom
+    const imp = n.importance;
+    if (cam.scale < .15 && imp > 1) return;
+    if (cam.scale < .25 && imp > 2) return;
+
+    ctx.font = `${isHov || isAct ? '500' : '400'} ${isHov || isAct ? 11 : 9}px IBM Plex Mono`;
+    ctx.fillStyle = col + (isHov || isAct ? 'ff' : '99');
+    ctx.fillText(n.nom, sx, sy + r + 10);
   });
-  ctx.restore();
 }
 
-/* ══════════════════════════════════════════════════════
-   MODE CONSTELLATION
-   ══════════════════════════════════════════════════════ */
-let constAngle = 0;
+/* ── Mode Constellation ──────────────────────────────── */
 function renderConstellation() {
-  constAngle += .004;
-  dirty = true;
+  if (!App.selectedNode) return;
+  constAngle += 0.003;
+
+  const col  = CATS[App.selectedNode.categorie]?.color || '#8899aa';
   const cx = W / 2, cy = H / 2;
-  const conns = ADJ[selectedNode.id] || [];
-  const col   = CATS[selectedNode.categorie] ? CATS[selectedNode.categorie].color : '#8899aa';
-  const time  = performance.now();
+  const conns = ADJ[App.selectedNode.id] || [];
 
-  ctx.fillStyle = 'rgba(3,6,10,.08)';
-  ctx.fillRect(0, 0, W, H);
-  [160, 260, 360].forEach((r, i) => {
-    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(26,74,106,' + ['.08','.05','.03'][i] + ')';
-    ctx.lineWidth = 1; ctx.setLineDash([3,8]); ctx.stroke(); ctx.setLineDash([]);
-  });
+  // Fond radial
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 400);
+  grad.addColorStop(0, col + '06'); grad.addColorStop(1, 'transparent');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
 
+  // Organiser par type
   const byType = {};
   conns.forEach(c => { const t = c.edge.type; if (!byType[t]) byType[t] = []; byType[t].push(c); });
-  const positions = [];
   const typeOrder = ['EVOLVES_INTO','INFLUENCE','DEPENDS_ON','REPLACED_BY','STANDARDISATION','CONCURRENCE'];
   const radii = [180, 260, 340];
   let orbit = 0;
+
   typeOrder.forEach(type => {
     const cs = byType[type] || []; if (!cs.length) return;
+    const et = ET[type];
     const r = radii[Math.min(orbit, radii.length - 1)];
     const dir = orbit % 2 === 0 ? 1 : -1;
+
+    // Anneau orbital
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = col + '12'; ctx.lineWidth = 1; ctx.stroke();
+
     cs.forEach((c, i) => {
       const baseAngle = (i / cs.length) * Math.PI * 2 + (orbit * Math.PI * .6);
       const a = baseAngle + constAngle * dir * .5;
-      positions.push({ sx: cx + Math.cos(a) * r, sy: cy + Math.sin(a) * r, conn: c, type });
+      const nx = cx + Math.cos(a) * r, ny = cy + Math.sin(a) * r;
+      const nc = CATS[c.node.categorie]?.color || '#8899aa';
+
+      // Lien
+      ctx.beginPath();
+      ctx.moveTo(cx, cy); ctx.lineTo(nx, ny);
+      ctx.strokeStyle = et.color + '30'; ctx.lineWidth = 1;
+      ctx.setLineDash(et.dash); ctx.stroke(); ctx.setLineDash([]);
+
+      // Nœud satellite
+      const isHov = App.hoveredNode && App.hoveredNode.id === c.node.id;
+      const nr = isHov ? 8 : 5;
+      ctx.beginPath(); ctx.arc(nx, ny, nr, 0, Math.PI * 2);
+      ctx.fillStyle = isHov ? nc : nc + 'cc'; ctx.fill();
+
+      // Label
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.font = `${isHov ? '500' : '400'} ${isHov ? 10 : 9}px IBM Plex Mono`;
+      ctx.fillStyle = nc + (isHov ? 'ff' : 'cc');
+      ctx.fillText(c.node.nom, nx, ny + nr + 5);
     });
     orbit++;
   });
 
-  positions.forEach(p => {
-    if (!activeEdgeFilters.has(p.type)) return;
-    const et = ET[p.type]; if (!et) return;
-    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(p.sx, p.sy);
-    ctx.strokeStyle = et.color + hexA(.33); ctx.lineWidth = 1;
-    ctx.setLineDash(et.dash); ctx.stroke(); ctx.setLineDash([]);
-
-    if (et.animType === 'particles') {
-      const tBase = (time / 1500) % 1;
-      ctx.fillStyle = et.color + 'aa';
-      [0, .5].forEach(off => {
-        const t = (tBase + off) % 1;
-        ctx.beginPath();
-        ctx.arc(cx + (p.sx - cx) * t, cy + (p.sy - cy) * t, 2, 0, Math.PI * 2); ctx.fill();
-      });
-    } else if (et.animType === 'pingPong') {
-      const tBase = (time / 2000) % 1;
-      ctx.fillStyle = et.color + 'aa';
-      ctx.beginPath();
-      ctx.arc(cx + (p.sx - cx) * tBase,       cy + (p.sy - cy) * tBase,       2.2, 0, Math.PI * 2);
-      ctx.arc(cx + (p.sx - cx) * (1 - tBase), cy + (p.sy - cy) * (1 - tBase), 2.2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  });
-
-  positions.forEach(p => {
-    const nc   = CATS[p.conn.node.categorie] ? CATS[p.conn.node.categorie].color : '#8899aa';
-    const et   = ET[p.type];
-    const isHov = hoveredNode && hoveredNode.id === p.conn.node.id;
-    const r    = isHov ? 8 : 5;
-    if (isHov) {
-      [r+6, r+12].forEach((gr, gi) => {
-        ctx.beginPath(); ctx.arc(p.sx, p.sy, gr, 0, Math.PI * 2);
-        ctx.strokeStyle = nc + ['33','18'][gi]; ctx.lineWidth = 1; ctx.stroke();
-      });
-    }
-    ctx.beginPath(); ctx.arc(p.sx, p.sy, r, 0, Math.PI * 2);
-    ctx.fillStyle = isHov ? nc : nc + 'cc'; ctx.fill();
-    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.font = `${isHov ? '500' : '400'} 10px IBM Plex Mono`;
-    ctx.fillStyle = nc + (isHov ? 'ff' : 'cc');
-    ctx.fillText(p.conn.node.nom, p.sx, p.sy + r + 5);
-    ctx.font = '7.5px IBM Plex Mono';
-    ctx.fillStyle = et.color + '88';
-    ctx.fillText(p.dir === 'out' ? et.label : '← ' + et.label, p.sx, p.sy + r + 17);
-  });
-
-  [22,32,44,60].forEach((r, i) => {
+  // Nœud central
+  [22, 32, 44, 60].forEach((r, i) => {
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.strokeStyle = col + ['33','28','18','0c'][i]; ctx.lineWidth = 1; ctx.stroke();
   });
@@ -736,39 +1442,36 @@ function renderConstellation() {
   ctx.beginPath(); ctx.arc(cx, cy, 12, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill();
   ctx.textAlign = 'center'; ctx.textBaseline = 'top';
   ctx.font = '500 15px IBM Plex Mono'; ctx.fillStyle = col;
-  ctx.fillText(selectedNode.nom, cx, cy + 22);
+  ctx.fillText(App.selectedNode.nom, cx, cy + 22);
   ctx.font = '9px IBM Plex Mono'; ctx.fillStyle = col + 'aa';
-  ctx.fillText(selectedNode.annee + ' · ' + selectedNode.categorie, cx, cy + 39);
+  ctx.fillText(App.selectedNode.annee + ' · ' + App.selectedNode.categorie, cx, cy + 40);
 }
 
-/* ══════════════════════════════════════════════════════
-   MINIMAP
-   ══════════════════════════════════════════════════════ */
+/* ── Minimap ─────────────────────────────────────────── */
 const MMW = 178, MMH = 58, MMPad = 8;
 function renderMinimap() {
+  if (!mmctx) return;
   mmctx.clearRect(0, 0, MMW, MMH);
-  mmctx.fillStyle = 'rgba(3,6,10,.5)'; mmctx.fillRect(0, 0, MMW, MMH);
+  mmctx.fillStyle = 'rgba(10,14,23,.7)'; mmctx.fillRect(0, 0, MMW, MMH);
   const sx = wx => MMPad + (wx / WW) * (MMW - MMPad * 2);
   const sy = wy => MMPad + (wy / WH) * (MMH - MMPad * 2);
-  NODES.forEach(n => {
-    const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
+  NODES.filter(isNodeVisible).forEach(n => {
+    const col = CATS[n.categorie]?.color || '#8899aa';
     mmctx.beginPath(); mmctx.arc(sx(n._wx), sy(n._wy), 1.5, 0, Math.PI * 2);
     mmctx.fillStyle = col + 'cc'; mmctx.fill();
   });
-  const { wx: vx0, wy: vy0 } = s2w(0, 56);
-  const { wx: vx1, wy: vy1 } = s2w(W, H - 38);
+  const { wx: vx0, wy: vy0 } = s2w(0, 0);
+  const { wx: vx1, wy: vy1 } = s2w(W, H);
   const rx = sx(vx0), ry = sy(vy0), rw = sx(vx1) - rx, rh = sy(vy1) - ry;
-  mmctx.strokeStyle = 'rgba(26,122,204,.7)'; mmctx.lineWidth = 1;
-  mmctx.strokeRect(Math.max(0,rx), Math.max(0,ry), Math.min(rw,MMW-rx), Math.min(rh,MMH-ry));
+  mmctx.strokeStyle = 'rgba(0,212,170,.7)'; mmctx.lineWidth = 1;
+  mmctx.strokeRect(Math.max(0, rx), Math.max(0, ry), Math.min(rw, MMW - rx), Math.min(rh, MMH - ry));
 }
 
-/* ══════════════════════════════════════════════════════
-   HIT TEST
-   ══════════════════════════════════════════════════════ */
+/* ── Hit Test ────────────────────────────────────────── */
 function hitNode(mx, my) {
-  if (renderMode === 'constellation') {
+  if (App.renderMode === 'constellation') {
     const cx = W / 2, cy = H / 2;
-    const conns = ADJ[selectedNode.id] || [];
+    const conns = ADJ[App.selectedNode.id] || [];
     const byType = {};
     conns.forEach(c => { const t = c.edge.type; if (!byType[t]) byType[t] = []; byType[t].push(c); });
     const typeOrder = ['EVOLVES_INTO','INFLUENCE','DEPENDS_ON','REPLACED_BY','STANDARDISATION','CONCURRENCE'];
@@ -789,7 +1492,6 @@ function hitNode(mx, my) {
   }
   let closest = null, minD = 450;
   NODES.forEach(n => {
-    // Ne permet de survoler que les nœuds sémantiquement visibles
     if (!isNodeVisible(n)) return;
     const { sx, sy } = w2s(n._wx, n._wy);
     const d = (mx - sx)**2 + (my - sy)**2;
@@ -799,339 +1501,186 @@ function hitNode(mx, my) {
 }
 
 /* ══════════════════════════════════════════════════════
-   RECHERCHE
-   ══════════════════════════════════════════════════════ */
-const siEl = document.getElementById('si');
-const srEl = document.getElementById('sr');
-let srIdx = -1, srResults = [];
-
-function doSearch(q) {
-  if (!q || q.length < 2) { srEl.classList.remove('on'); srResults = []; return; }
-  const lq = q.toLowerCase();
-  srResults = NODES.filter(n =>
-    n.nom.toLowerCase().includes(lq) ||
-    n.description_courte.toLowerCase().includes(lq) ||
-    n.categorie.toLowerCase().includes(lq) ||
-    String(n.annee).includes(lq)
-  ).slice(0, 8);
-  srIdx = -1; renderSR();
-}
-function renderSR() {
-  if (!srResults.length) { srEl.classList.remove('on'); return; }
-  srEl.innerHTML = srResults.map((n, i) => {
-    const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
-    return `<div class="sri${i === srIdx ? ' ak' : ''}" data-id="${n.id}" role="option">
-      <div class="sri-dot" style="background:${col}"></div>
-      <span class="sri-n">${n.nom}</span>
-      <span class="sri-y">${n.annee}</span>
-      <span class="sri-c" style="color:${col}88">${n.categorie}</span>
-    </div>`;
-  }).join('');
-  srEl.classList.add('on');
-  srEl.querySelectorAll('.sri').forEach(el => {
-    el.addEventListener('click', () => { const n = nodeMap[el.dataset.id]; if (n) selectSR(n); });
-  });
-}
-function selectSR(n) {
-  siEl.value = ''; srEl.classList.remove('on'); srResults = [];
-  flyTo(n._wx, n._wy, 1.8);
-  setTimeout(() => openDetail(n), 400);
-}
-siEl.addEventListener('input', e => doSearch(e.target.value));
-siEl.addEventListener('keydown', e => {
-  if (e.key === 'ArrowDown')  { srIdx = Math.min(srIdx + 1, srResults.length - 1); renderSR(); }
-  else if (e.key === 'ArrowUp')   { srIdx = Math.max(srIdx - 1, -1); renderSR(); }
-  else if (e.key === 'Enter' && srIdx >= 0) { selectSR(srResults[srIdx]); }
-  else if (e.key === 'Escape') { srEl.classList.remove('on'); siEl.blur(); }
-});
-siEl.addEventListener('blur', () => setTimeout(() => srEl.classList.remove('on'), 200));
-
-/* ══════════════════════════════════════════════════════
    TOOLTIP
    ══════════════════════════════════════════════════════ */
-const ttEl = document.getElementById('tt');
 function showTT(n, mx, my) {
-  const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
+  const ttEl = document.getElementById('tt');
+  if (!ttEl) return;
+  const col = CATS[n.categorie]?.color || '#8899aa';
   document.getElementById('tt-n').textContent = n.nom;
   document.getElementById('tt-n').style.color  = col;
   document.getElementById('tt-m').textContent = n.annee + ' · ' + n.categorie;
   document.getElementById('tt-d').textContent = n.description_courte;
   let tx = mx + 14, ty = my - 12;
-  if (tx + 240 > W) tx = mx - 246;
-  if (ty + 130 > H - 52) ty = my - 130;
+  if (tx + 250 > W) tx = mx - 256;
+  if (ty + 140 > H - 52) ty = my - 140;
   ttEl.style.left = tx + 'px'; ttEl.style.top = ty + 'px';
-  ttEl.style.opacity = '1';
+  ttEl.classList.add('visible');
+  ttEl.removeAttribute('aria-hidden');
 }
-function hideTT() { ttEl.style.opacity = '0'; }
+
+function hideTT() {
+  const ttEl = document.getElementById('tt');
+  if (ttEl) { ttEl.classList.remove('visible'); ttEl.setAttribute('aria-hidden', 'true'); }
+}
 
 /* ══════════════════════════════════════════════════════
-   PANNEAU DE DÉTAIL
+   ÉVÉNEMENTS CANVAS
    ══════════════════════════════════════════════════════ */
-const dpEl = document.getElementById('dp');
-function openDetail(n) {
-  selectedNode = n;
-  const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
-  const impLabels = { 1: '★ Fondamental', 2: '◆ Structurant', 3: '· Notable' };
+function initCanvasEvents() {
+  if (!canvas) return;
 
-  document.getElementById('dp-y').textContent = n.annee;
-  document.getElementById('dp-n').textContent = n.nom;
-  document.getElementById('dp-n').style.color  = col;
-  document.getElementById('dp-c').textContent = n.categorie;
-  document.getElementById('dp-c').style.color  = col + 'bb';
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (App.renderMode === 'constellation') return;
+    zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.12 : .89);
+    schedRender();
+  }, { passive: false });
 
-  const rels = ADJ[n.id] || [];
-  const sourcesHtml = n.sources && n.sources.length
-    ? `<div class="dp-lbl">Sources</div>
-       <div class="dp-sources">${n.sources.map(s =>
-         `<a class="dp-src" href="${s}" target="_blank" rel="noopener">${s.replace(/^https?:\/\//, '').split('/')[0]}</a>`
-       ).join('')}</div>`
-    : '';
-
-  document.getElementById('dp-body').innerHTML = `
-    <div class="dp-imp" style="color:${col}88">${impLabels[n.importance] || ''}</div>
-    <div class="dp-lbl">En bref</div>
-    <div class="dp-sm">${n.description_courte}</div>
-    <div class="dp-pr">${n.description_longue}</div>
-    ${sourcesHtml}
-    <div class="dp-lbl">Connexions (${rels.length})</div>
-    <div class="dp-rels">${rels.map(c => {
-      const et  = ET[c.edge.type];
-      const lbl = c.dir === 'out' ? et.label : '← ' + et.label;
-      return `<div class="dp-rel" data-id="${c.node.id}">
-        <span class="dp-rb" style="color:${et.color};border-color:${et.color}44;background:${et.color}11">${lbl}</span>
-        <span class="dp-rn">${c.node.nom}</span>
-        <span class="dp-rel-arrow" style="color:${CATS[c.node.categorie] ? CATS[c.node.categorie].color : '#8899aa'}88">· ${c.node.annee}</span>
-      </div>`;
-    }).join('')}</div>`;
-
-  document.getElementById('dp-body').querySelectorAll('.dp-rel').forEach(el => {
-    el.addEventListener('click', () => {
-      const nn = nodeMap[el.dataset.id];
-      if (nn) { flyTo(nn._wx, nn._wy, 1.8); openDetail(nn); }
-    });
+  let isDrag = false, dragSX = 0, dragSY = 0, dragCX = 0, dragCY = 0;
+  canvas.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    isDrag = true; dragSX = e.clientX; dragSY = e.clientY; dragCX = cam.cx; dragCY = cam.cy;
+    canvas.classList.add('drag');
   });
-  dpEl.classList.add('on');
-  dirty = true; schedRender();
-}
-function closeDetail() {
-  dpEl.classList.remove('on'); selectedNode = null;
-  if (renderMode === 'constellation') exitConstellation();
-  dirty = true; schedRender();
-}
-document.getElementById('dp-x').addEventListener('click', closeDetail);
-document.getElementById('dp-const').addEventListener('click', () => { if (selectedNode) enterConstellation(selectedNode); });
-document.getElementById('dp-story').addEventListener('click', () => {
-  if (!selectedNode) return;
-  const st = NARRATIVES.find(n => n.steps.some(s => s.id === selectedNode.id));
-  if (st) openNarrative(st); else openNarrPanel();
-});
-
-/* ══════════════════════════════════════════════════════
-   PARCOURS NARRATIFS (Contrôles UI)
-   ══════════════════════════════════════════════════════ */
-const npEl   = document.getElementById('np');
-const btnNar = document.getElementById('btn-nar');
-function openNarrPanel() { npEl.classList.add('on'); btnNar.classList.add('hide'); btnNar.setAttribute('aria-expanded','true'); }
-function closeNarrPanel() { npEl.classList.remove('on'); btnNar.classList.remove('hide'); btnNar.setAttribute('aria-expanded','false'); }
-btnNar.addEventListener('click', openNarrPanel);
-document.getElementById('np-x').addEventListener('click', closeNarrPanel);
-
-const npList = document.getElementById('np-list');
-NARRATIVES.forEach(nar => {
-  const div = document.createElement('div');
-  div.className = 'np-st';
-  div.innerHTML = `<div class="np-st-t">${nar.titre}</div><div class="np-st-d">${nar.desc}</div><div class="np-st-c">${nar.steps.length} étapes</div>`;
-  div.addEventListener('click', () => openNarrative(nar));
-  npList.appendChild(div);
-});
-
-function openNarrative(nar) {
-  activeNarrative = nar; activeStep = 0;
-  npList.querySelectorAll('.np-st').forEach((el, i) => el.classList.toggle('ak', NARRATIVES[i].id === nar.id));
-  const stepsEl = document.getElementById('nsteps');
-  document.getElementById('ns-t').textContent = nar.titre;
-  const nsList = document.getElementById('ns-list');
-  nsList.innerHTML = nar.steps.map((s, i) => {
-    const n = nodeMap[s.id]; if (!n) return '';
-    const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
-    return `<div class="ns-s${i === 0 ? ' ak' : ''}" data-idx="${i}">
-      <span class="ns-n">${i + 1}</span>
-      <div><div class="ns-nm" style="color:${col}">${n.nom}</div><div class="ns-nt">${s.note}</div></div>
-    </div>`;
-  }).join('');
-  stepsEl.classList.add('on'); openNarrPanel(); updateNarrNav(); flyToStep(0);
-  nsList.querySelectorAll('.ns-s').forEach(el => {
-    el.addEventListener('click', () => {
-      const i = +el.dataset.idx; activeStep = i;
-      nsList.querySelectorAll('.ns-s').forEach((e, j) => e.classList.toggle('ak', j === i));
-      updateNarrNav(); flyToStep(i); dirty = true; schedRender();
-    });
+  window.addEventListener('mouseup', () => { isDrag = false; canvas.classList.remove('drag'); });
+  window.addEventListener('mousemove', e => {
+    if (App.view !== 'atlas') return;
+    if (isDrag) {
+      if (App.renderMode === 'map') { cam.cx = dragCX - (e.clientX - dragSX) / cam.scale; cam.cy = dragCY - (e.clientY - dragSY) / cam.scale; dirty = true; }
+      return;
+    }
+    const n = hitNode(e.clientX, e.clientY);
+    if (n) {
+      if (!App.hoveredNode || App.hoveredNode.id !== n.id) { App.hoveredNode = n; dirty = true; }
+      showTT(n, e.clientX, e.clientY); canvas.classList.add('hover');
+    } else {
+      if (App.hoveredNode) { App.hoveredNode = null; dirty = true; }
+      hideTT(); canvas.classList.remove('hover');
+    }
+    const onYear = e.clientY > H - 24 && yearHitAreas.some(ya => Math.abs(e.clientX - ya.sx) < 18);
+    canvas.style.cursor = onYear ? 'pointer' : '';
   });
-  dirty = true; schedRender();
-}
-function flyToStep(i) {
-  const s = activeNarrative.steps[i]; if (!s) return;
-  const n = nodeMap[s.id]; if (!n) return;
-  flyTo(n._wx, n._wy, Math.max(cam.scale, 1.4));
-}
-function updateNarrNav() {
-  document.getElementById('ns-prev').disabled = activeStep <= 0;
-  document.getElementById('ns-next').disabled = activeStep >= activeNarrative.steps.length - 1;
-}
-document.getElementById('ns-prev').addEventListener('click', () => {
-  if (activeStep > 0) { activeStep--; const els = document.getElementById('ns-list').querySelectorAll('.ns-s'); els.forEach((e,j) => e.classList.toggle('ak', j === activeStep)); updateNarrNav(); flyToStep(activeStep); dirty = true; schedRender(); }
-});
-document.getElementById('ns-next').addEventListener('click', () => {
-  if (activeStep < activeNarrative.steps.length - 1) { activeStep++; const els = document.getElementById('ns-list').querySelectorAll('.ns-s'); els.forEach((e,j) => e.classList.toggle('ak', j === activeStep)); updateNarrNav(); flyToStep(activeStep); dirty = true; schedRender(); }
-});
-document.getElementById('ns-exit').addEventListener('click', () => {
-  activeNarrative = null; activeStep = -1;
-  document.getElementById('nsteps').classList.remove('on');
-  npList.querySelectorAll('.np-st').forEach(el => el.classList.remove('ak'));
-  dirty = true; schedRender();
-});
+  canvas.addEventListener('mouseleave', () => { App.hoveredNode = null; hideTT(); dirty = true; });
 
-/* ══════════════════════════════════════════════════════
-   LÉGENDE
-   ══════════════════════════════════════════════════════ */
-const legEl = document.getElementById('leg');
-legEl.innerHTML = `
-<div class="leg-g">
-  <div class="leg-gt">Catégories</div>
-  ${Object.entries(CATS).map(([k,v]) => `
-    <div class="leg-i"><div class="leg-dot" style="background:${v.color}"></div>${k}</div>`).join('')}
-</div>
-<div class="leg-g">
-  <div class="leg-gt">Relations</div>
-  ${Object.entries(ET).map(([k,v]) => `
-    <div class="leg-i leg-rel on" data-type="${k}" style="cursor:pointer" title="Filtrer ${v.label}">
-      <div class="leg-ln" style="border-color:${v.color};border-style:${v.dash.length ? 'dashed' : 'solid'}"></div>
-      <span>${v.label}</span>
-    </div>`).join('')}
-</div>`;
+  canvas.addEventListener('click', e => {
+    if (App.view !== 'atlas') return;
+    const dx = Math.abs(e.clientX - dragSX), dy = Math.abs(e.clientY - dragSY);
+    if (dx > 4 || dy > 4) return;
 
-legEl.querySelectorAll('.leg-rel').forEach(el => {
-  el.addEventListener('click', () => {
-    const type = el.dataset.type;
-    if (activeEdgeFilters.has(type)) { activeEdgeFilters.delete(type); el.classList.remove('on'); el.style.opacity = '0.3'; }
-    else { activeEdgeFilters.add(type); el.classList.add('on'); el.style.opacity = '1'; }
-    dirty = true; schedRender();
-  });
-});
-
-/* ══════════════════════════════════════════════════════
-   ÉVÉNEMENTS
-   ══════════════════════════════════════════════════════ */
-canvas.addEventListener('wheel', e => {
-  e.preventDefault();
-  if (renderMode === 'constellation') return;
-  zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.12 : .89);
-  schedRender();
-}, { passive: false });
-
-let isDrag = false, dragSX = 0, dragSY = 0, dragCX = 0, dragCY = 0;
-canvas.addEventListener('mousedown', e => {
-  if (e.button !== 0) return;
-  isDrag = true; dragSX = e.clientX; dragSY = e.clientY; dragCX = cam.cx; dragCY = cam.cy;
-  canvas.classList.add('drag');
-});
-window.addEventListener('mouseup', () => { isDrag = false; canvas.classList.remove('drag'); });
-window.addEventListener('mousemove', e => {
-  if (isDrag) {
-    if (renderMode === 'map') { cam.cx = dragCX - (e.clientX - dragSX) / cam.scale; cam.cy = dragCY - (e.clientY - dragSY) / cam.scale; dirty = true; schedRender(); }
-    return;
-  }
-  const n = hitNode(e.clientX, e.clientY);
-  if (n) {
-    if (!hoveredNode || hoveredNode.id !== n.id) { hoveredNode = n; dirty = true; schedRender(); }
-    showTT(n, e.clientX, e.clientY); canvas.classList.add('hover');
-  } else {
-    if (hoveredNode) { hoveredNode = null; dirty = true; schedRender(); }
-    hideTT(); canvas.classList.remove('hover');
-  }
-  const onYear = e.clientY > H - 62 && yearHitAreas.some(ya => Math.abs(e.clientX - ya.sx) < 18);
-  canvas.style.cursor = onYear ? 'pointer' : '';
-});
-canvas.addEventListener('mouseleave', () => { hoveredNode = null; hideTT(); dirty = true; schedRender(); });
-
-canvas.addEventListener('click', e => {
-  const dx = Math.abs(e.clientX - dragSX), dy = Math.abs(e.clientY - dragSY);
-  if (dx > 4 || dy > 4) return;
-
-  if (e.clientY > H - 64) {
-    for (const ya of yearHitAreas) {
-      if (Math.abs(e.clientX - ya.sx) < 18) {
-        flyTo(xY(ya.yr), cam.cy, Math.max(cam.scale, .35));
-        return;
+    // Click sur zone années
+    if (e.clientY > H - 20) {
+      for (const ya of yearHitAreas) {
+        if (Math.abs(e.clientX - ya.sx) < 18) {
+          flyTo(xY(ya.yr), cam.cy, Math.max(cam.scale, .35));
+          return;
+        }
       }
     }
-  }
 
-  const n = hitNode(e.clientX, e.clientY);
-  if (n) {
-    if (renderMode === 'constellation') {
-      exitConstellation(); flyTo(n._wx, n._wy, 1.8);
-      setTimeout(() => openDetail(n), 400);
-    } else {
-      flyTo(n._wx, n._wy, Math.max(cam.scale, 1.4)); openDetail(n);
+    const n = hitNode(e.clientX, e.clientY);
+    if (n) {
+      if (App.renderMode === 'constellation') {
+        exitConstellation(); flyTo(n._wx, n._wy, 1.8);
+        setTimeout(() => openDetail(n), 400);
+      } else {
+        flyTo(n._wx, n._wy, Math.max(cam.scale, 1.4)); openDetail(n);
+      }
+    } else if (App.renderMode === 'map') {
+      closeDetail();
     }
-  } else if (renderMode === 'map') {
-    closeDetail();
-  }
-});
+  });
 
-let tch = { x:0, y:0, cx:0, cy:0, dist:0, sc:0 };
-canvas.addEventListener('touchstart', e => {
-  e.preventDefault();
-  if (e.touches.length === 1) { tch.x = e.touches[0].clientX; tch.y = e.touches[0].clientY; tch.cx = cam.cx; tch.cy = cam.cy; }
-  else if (e.touches.length === 2) { tch.dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); tch.sc = cam.scale; }
-}, { passive: false });
-canvas.addEventListener('touchmove', e => {
-  e.preventDefault();
-  if (e.touches.length === 1 && renderMode === 'map') { cam.cx = tch.cx - (e.touches[0].clientX - tch.x) / cam.scale; cam.cy = tch.cy - (e.touches[0].clientY - tch.y) / cam.scale; dirty = true; schedRender(); }
-  else if (e.touches.length === 2) { const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); cam.scale = Math.max(.06, Math.min(5, tch.sc * (d / tch.dist))); dirty = true; schedRender(); }
-}, { passive: false });
+  canvas.addEventListener('dblclick', e => {
+    const n = hitNode(e.clientX, e.clientY);
+    if (n) enterConstellation(n);
+  });
 
-window.addEventListener('keydown', e => {
-  if (e.key === '/' && document.activeElement !== siEl) { e.preventDefault(); siEl.focus(); }
-  if (e.key === 'Escape') {
-    if (renderMode === 'constellation') exitConstellation();
-    else closeDetail();
-    srEl.classList.remove('on');
-  }
-  if (e.key === 'ArrowRight' && activeNarrative) document.getElementById('ns-next').click();
-  if (e.key === 'ArrowLeft'  && activeNarrative) document.getElementById('ns-prev').click();
-});
-
-document.getElementById('btn-edges').addEventListener('click', function() { showEdges = !showEdges; this.classList.toggle('on', showEdges); dirty = true; schedRender(); });
-document.getElementById('btn-labels').addEventListener('click', function() { showLabels = !showLabels; this.classList.toggle('on', showLabels); dirty = true; schedRender(); });
-document.getElementById('z-in').addEventListener('click',  () => zoomAt(W/2, H/2, 1.35));
-document.getElementById('z-out').addEventListener('click', () => zoomAt(W/2, H/2, .75));
-document.getElementById('z-fit').addEventListener('click', zoomFit);
-document.getElementById('mm').addEventListener('click', e => {
-  const r = e.currentTarget.getBoundingClientRect();
-  cam.cx = (e.clientX - r.left) / MMW * WW;
-  cam.cy = (e.clientY - r.top)  / MMH * WH;
-  dirty = true; schedRender();
-});
-window.addEventListener('resize', () => { setSize(); schedRender(); });
+  // Touch
+  let tch = { x:0, y:0, cx:0, cy:0, dist:0, sc:0 };
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    if (e.touches.length === 1) { tch.x = e.touches[0].clientX; tch.y = e.touches[0].clientY; tch.cx = cam.cx; tch.cy = cam.cy; }
+    else if (e.touches.length === 2) { tch.dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); tch.sc = cam.scale; }
+  }, { passive: false });
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (e.touches.length === 1 && App.renderMode === 'map') { cam.cx = tch.cx - (e.touches[0].clientX - tch.x) / cam.scale; cam.cy = tch.cy - (e.touches[0].clientY - tch.y) / cam.scale; dirty = true; }
+    else if (e.touches.length === 2) { const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); cam.scale = Math.max(.04, Math.min(5, tch.sc * (d / tch.dist))); dirty = true; }
+  }, { passive: false });
+}
 
 /* ══════════════════════════════════════════════════════
-   INITIALISATION
+   CONTRÔLES ZOOM
    ══════════════════════════════════════════════════════ */
-loadAtlasData();
+function initZoom() {
+  document.getElementById('z-in')?.addEventListener('click',  () => { zoomAt(W/2, H/2, 1.35); schedRender(); });
+  document.getElementById('z-out')?.addEventListener('click', () => { zoomAt(W/2, H/2, .75); schedRender(); });
+  document.getElementById('z-fit')?.addEventListener('click', zoomFit);
+  document.getElementById('mm')?.addEventListener('click', e => {
+    const r = e.currentTarget.getBoundingClientRect();
+    cam.cx = (e.clientX - r.left) / MMW * WW;
+    cam.cy = (e.clientY - r.top)  / MMH * WH;
+    dirty = true;
+  });
+  window.addEventListener('resize', () => { setSize(); schedRender(); });
+}
 
+/* ══════════════════════════════════════════════════════
+   API CONSOLE (debug)
+   ══════════════════════════════════════════════════════ */
+window.WC = {
+  query(filters = {}) {
+    return NODES.filter(n => {
+      if (filters.categorie  && n.categorie  !== filters.categorie)  return false;
+      if (filters.importance && n.importance !== filters.importance) return false;
+      if (filters.annee_min  && n.annee < filters.annee_min)         return false;
+      if (filters.annee_max  && n.annee > filters.annee_max)         return false;
+      if (filters.q) { const lq = filters.q.toLowerCase(); if (!n.nom.toLowerCase().includes(lq) && !n.description_courte.toLowerCase().includes(lq)) return false; }
+      return true;
+    });
+  },
+  influence_chain(id, depth = 4, types = ['EVOLVES_INTO','INFLUENCE']) {
+    const visited = new Set([id]), queue = [{ id, d: 0 }], result = [];
+    while (queue.length) {
+      const { id: cur, d } = queue.shift(); if (d >= depth) continue;
+      (ADJ[cur] || []).forEach(c => { if (c.dir === 'out' && types.includes(c.edge.type) && !visited.has(c.node.id)) { visited.add(c.node.id); result.push({ node: c.node, depth: d+1, via: c.edge.type }); queue.push({ id: c.node.id, d: d+1 }); } });
+    }
+    return result;
+  },
+  most_connected: (n=10) => [...NODES].sort((a,b) => b._dep_count - a._dep_count).slice(0,n),
+  prospective:    (minP=.5) => PROSPECTIVE.filter(p => p.probabilite >= minP),
+  stats:          () => ({ total_nodes: NODES.length, total_edges: EDGES.length }),
+  navigate:       (v) => navigateTo(v, true),
+  open:           (id) => { const n = nodeMap[id]; if (n) openDetail(n); },
+};
+
+/* ══════════════════════════════════════════════════════
+   BOUCLE D'ANIMATION
+   ══════════════════════════════════════════════════════ */
 function animationLoop() {
-  // Les particules et la constellation nécessitent une animation continue
-  const hasAnim = (showEdges && cam.scale > .12) || renderMode === 'constellation';
-  if (hasAnim) dirty = true;
-  if (dirty) {
-    dirty = false;
-    ctx.clearRect(0, 0, W, H);
-    if (renderMode === 'constellation' && selectedNode) renderConstellation();
-    else renderMap();
-    renderMinimap();
+  if (App.view === 'atlas') {
+    const hasAnim = (App.showEdges && cam.scale > .12) || App.renderMode === 'constellation';
+    if (hasAnim) dirty = true;
+    if (dirty && ctx) {
+      dirty = false;
+      ctx.clearRect(0, 0, W, H);
+      if (App.renderMode === 'constellation' && App.selectedNode) renderConstellation();
+      else renderMap();
+      renderMinimap();
+    }
   }
   requestAnimationFrame(animationLoop);
 }
-requestAnimationFrame(animationLoop);
+
+/* ══════════════════════════════════════════════════════
+   DÉMARRAGE
+   ══════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Marquer le panneau comme fermé initialement
+  document.getElementById('dp')?.classList.add('closed');
+  document.getElementById('app-layout')?.classList.add('panel-closed');
+  setSize();
+  requestAnimationFrame(animationLoop);
+  loadAtlasData();
+});
