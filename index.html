@@ -35,6 +35,11 @@
 
   <!-- ══ HEADER FIXE ═══════════════════════════════════════ -->
   <header id="hd" role="banner">
+    <!-- Bouton Toggle Sidebar (Mobile) -->
+    <button class="hd__menu-btn" id="btn-toggle-sidebar" aria-label="Ouvrir les filtres et menus" aria-expanded="false">
+      <span class="hd__menu-ico">☰</span>
+    </button>
+
     <!-- Branding -->
     <div class="hd__brand">
       <div class="hd__logo" aria-hidden="true">
@@ -49,13 +54,13 @@
     <!-- Navigation principale vues -->
     <nav class="hd__nav" role="navigation" aria-label="Vues principales">
       <button class="hd__nav-btn active" id="btn-view-atlas" data-view="atlas" aria-pressed="true">
-        <span class="hd__nav-ico">◉</span>Atlas
+        <span class="hd__nav-ico">◉</span><span>Atlas</span>
       </button>
       <button class="hd__nav-btn" id="btn-view-encyclo" data-view="encyclopedie" aria-pressed="false">
-        <span class="hd__nav-ico">▦</span>Encyclopédie
+        <span class="hd__nav-ico">▦</span><span>Encyclopédie</span>
       </button>
       <button class="hd__nav-btn" id="btn-view-prosp" data-view="prospectives" aria-pressed="false">
-        <span class="hd__nav-ico">◈</span>Prospectives
+        <span class="hd__nav-ico">◈</span><span>Prospectives</span>
       </button>
     </nav>
 
@@ -93,6 +98,8 @@
 
     <!-- ── SIDEBAR GAUCHE ──────────────────────────────────── -->
     <aside id="sidebar" class="sidebar" aria-label="Filtres et navigation">
+      <!-- Bouton fermer mobile -->
+      <button class="close-btn" id="sb-x" aria-label="Fermer les filtres">×</button>
 
       <!-- Sidebar Atlas -->
       <div class="sidebar__section" id="sb-atlas">
@@ -200,7 +207,10 @@
         <div id="leg" aria-label="Légende du graphe"></div>
 
         <!-- Notification mode constellation -->
-        <div id="csh" role="status" aria-live="polite">Mode constellation · Échap pour quitter</div>
+        <div id="csh" role="status" aria-live="polite">
+          <span>Mode constellation · Échap pour quitter</span>
+          <button class="csh-close" id="csh-x" aria-label="Quitter le mode constellation">×</button>
+        </div>
 
         <!-- Minimap -->
         <div id="mm" title="Minimap de navigation">

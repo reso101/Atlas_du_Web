@@ -426,10 +426,71 @@ function initSidebar() {
         if (nar) {
           if (App.view !== 'atlas') navigateTo('atlas', true);
           setTimeout(() => openNarrative(nar), App.view === 'atlas' ? 0 : 300);
+          closeMobileSidebar();
         }
       });
     });
   }
+
+  // Sidebar Mobile Toggle
+  const toggleBtn = document.getElementById('btn-toggle-sidebar');
+  const sidebar = document.getElementById('sidebar');
+  const closeBtn = document.getElementById('sb-x');
+
+  if (toggleBtn && sidebar) {
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = sidebar.classList.contains('open');
+      sidebar.classList.toggle('open', !isOpen);
+      toggleBtn.setAttribute('aria-expanded', !isOpen ? 'true' : 'false');
+    });
+  }
+
+  if (closeBtn && sidebar) {
+    closeBtn.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  // Fermer la sidebar mobile quand on clique ailleurs
+  document.addEventListener('click', (e) => {
+    if (sidebar && sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== toggleBtn && !toggleBtn.contains(e.target)) {
+      sidebar.classList.remove('open');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Fermer la sidebar mobile lors du choix d'une catégorie, d'une année ou d'un tri
+  function closeMobileSidebar() {
+    if (window.innerWidth <= 900 && sidebar && sidebar.classList.contains('open')) {
+      sidebar.classList.remove('open');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  // Assigner closeMobileSidebar aux filtres
+  if (catPills) {
+    catPills.querySelectorAll('.cat-pill').forEach(btn => {
+      btn.addEventListener('click', closeMobileSidebar);
+    });
+  }
+  if (rangeMin) rangeMin.addEventListener('change', closeMobileSidebar);
+  if (rangeMax) rangeMax.addEventListener('change', closeMobileSidebar);
+  document.querySelectorAll('.imp-btn').forEach(btn => {
+    btn.addEventListener('click', closeMobileSidebar);
+  });
+  document.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.addEventListener('click', closeMobileSidebar);
+  });
+  if (encPills) {
+    encPills.querySelectorAll('.cat-pill').forEach(btn => {
+      btn.addEventListener('click', closeMobileSidebar);
+    });
+  }
+  document.querySelectorAll('#prosp-type-pills .cat-pill').forEach(btn => {
+    btn.addEventListener('click', closeMobileSidebar);
+  });
 
   updateAtlasStats();
 }
@@ -1524,6 +1585,33 @@ function hideTT() {
   if (ttEl) { ttEl.classList.remove('visible'); ttEl.setAttribute('aria-hidden', 'true'); }
 }
 
+/* ── Gestion unifiée Clic / Tap Tactile ───────────────── */
+function handleCanvasClickOrTap(clientX, clientY) {
+  if (App.view !== 'atlas') return;
+
+  // Click sur zone années
+  if (clientY > H - 20) {
+    for (const ya of yearHitAreas) {
+      if (Math.abs(clientX - ya.sx) < 18) {
+        flyTo(xY(ya.yr), cam.cy, Math.max(cam.scale, .35));
+        return;
+      }
+    }
+  }
+
+  const n = hitNode(clientX, clientY);
+  if (n) {
+    if (App.renderMode === 'constellation') {
+      exitConstellation(); flyTo(n._wx, n._wy, 1.8);
+      setTimeout(() => openDetail(n), 400);
+    } else {
+      flyTo(n._wx, n._wy, Math.max(cam.scale, 1.4)); openDetail(n);
+    }
+  } else if (App.renderMode === 'map') {
+    closeDetail();
+  }
+}
+
 /* ══════════════════════════════════════════════════════
    ÉVÉNEMENTS CANVAS
    ══════════════════════════════════════════════════════ */
@@ -1567,28 +1655,7 @@ function initCanvasEvents() {
     if (App.view !== 'atlas') return;
     const dx = Math.abs(e.clientX - dragSX), dy = Math.abs(e.clientY - dragSY);
     if (dx > 4 || dy > 4) return;
-
-    // Click sur zone années
-    if (e.clientY > H - 20) {
-      for (const ya of yearHitAreas) {
-        if (Math.abs(e.clientX - ya.sx) < 18) {
-          flyTo(xY(ya.yr), cam.cy, Math.max(cam.scale, .35));
-          return;
-        }
-      }
-    }
-
-    const n = hitNode(e.clientX, e.clientY);
-    if (n) {
-      if (App.renderMode === 'constellation') {
-        exitConstellation(); flyTo(n._wx, n._wy, 1.8);
-        setTimeout(() => openDetail(n), 400);
-      } else {
-        flyTo(n._wx, n._wy, Math.max(cam.scale, 1.4)); openDetail(n);
-      }
-    } else if (App.renderMode === 'map') {
-      closeDetail();
-    }
+    handleCanvasClickOrTap(e.clientX, e.clientY);
   });
 
   canvas.addEventListener('dblclick', e => {
@@ -1597,16 +1664,51 @@ function initCanvasEvents() {
   });
 
   // Touch
-  let tch = { x:0, y:0, cx:0, cy:0, dist:0, sc:0 };
+  let tch = { x: 0, y: 0, cx: 0, cy: 0, dist: 0, sc: 0, startX: 0, startY: 0, tStart: 0, moved: false };
   canvas.addEventListener('touchstart', e => {
     e.preventDefault();
-    if (e.touches.length === 1) { tch.x = e.touches[0].clientX; tch.y = e.touches[0].clientY; tch.cx = cam.cx; tch.cy = cam.cy; }
-    else if (e.touches.length === 2) { tch.dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); tch.sc = cam.scale; }
+    if (e.touches.length === 1) {
+      tch.startX = e.touches[0].clientX;
+      tch.startY = e.touches[0].clientY;
+      tch.x = e.touches[0].clientX;
+      tch.y = e.touches[0].clientY;
+      tch.cx = cam.cx;
+      tch.cy = cam.cy;
+      tch.tStart = performance.now();
+      tch.moved = false;
+    } else if (e.touches.length === 2) {
+      tch.dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      tch.sc = cam.scale;
+      tch.moved = true;
+    }
   }, { passive: false });
+
   canvas.addEventListener('touchmove', e => {
     e.preventDefault();
-    if (e.touches.length === 1 && App.renderMode === 'map') { cam.cx = tch.cx - (e.touches[0].clientX - tch.x) / cam.scale; cam.cy = tch.cy - (e.touches[0].clientY - tch.y) / cam.scale; dirty = true; }
-    else if (e.touches.length === 2) { const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); cam.scale = Math.max(.04, Math.min(5, tch.sc * (d / tch.dist))); dirty = true; }
+    if (e.touches.length === 1 && App.renderMode === 'map') {
+      const dx = e.touches[0].clientX - tch.startX;
+      const dy = e.touches[0].clientY - tch.startY;
+      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+        tch.moved = true;
+      }
+      cam.cx = tch.cx - dx / cam.scale;
+      cam.cy = tch.cy - dy / cam.scale;
+      dirty = true;
+    } else if (e.touches.length === 2) {
+      const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      cam.scale = Math.max(.04, Math.min(5, tch.sc * (d / tch.dist)));
+      dirty = true;
+    }
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', e => {
+    e.preventDefault();
+    if (!tch.moved) {
+      const duration = performance.now() - tch.tStart;
+      if (duration < 250) {
+        handleCanvasClickOrTap(tch.startX, tch.startY);
+      }
+    }
   }, { passive: false });
 }
 
