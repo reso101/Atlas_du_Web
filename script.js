@@ -124,6 +124,9 @@ const App = {
   renderMode: 'map',        // 'map' | 'constellation'
   constAngle: 0,
   activeEdgeFilters: new Set(['INFLUENCE','DEPENDS_ON','REPLACED_BY','EVOLVES_INTO','STANDARDISATION','CONCURRENCE']),
+  // Retour après constellation
+  returnToViewAfterConstellation: null,
+  returnToNodeAfterConstellation: null,
   // Filtres Atlas
   filterCats: new Set(Object.keys(CATS)),
   filterImp: new Set([1, 2, 3]),
@@ -629,7 +632,19 @@ function selectSR(n, siEl, srEl) {
 function initDetailPanel() {
   document.getElementById('dp-x').addEventListener('click', closeDetail);
   document.getElementById('dp-const').addEventListener('click', () => {
-    if (App.selectedNode) enterConstellation(App.selectedNode);
+    if (App.selectedNode) {
+      if (App.view !== 'atlas') {
+        App.returnToViewAfterConstellation = App.view;
+        App.returnToNodeAfterConstellation = App.selectedNode;
+        closeDetail();
+        navigateTo('atlas', true);
+        setTimeout(() => {
+          enterConstellation(App.returnToNodeAfterConstellation);
+        }, 300);
+      } else {
+        enterConstellation(App.selectedNode);
+      }
+    }
   });
   document.getElementById('dp-story').addEventListener('click', () => {
     if (!App.selectedNode) return;
@@ -1260,6 +1275,17 @@ function exitConstellation() {
   const csh = document.getElementById('csh');
   if (csh) csh.classList.remove('visible');
   dirty = true; schedRender();
+
+  if (App.returnToViewAfterConstellation) {
+    const returnView = App.returnToViewAfterConstellation;
+    const returnNode = App.returnToNodeAfterConstellation;
+    App.returnToViewAfterConstellation = null;
+    App.returnToNodeAfterConstellation = null;
+    navigateTo(returnView, true);
+    if (returnNode) {
+      setTimeout(() => openDetail(returnNode), 300);
+    }
+  }
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1710,6 +1736,15 @@ function initCanvasEvents() {
       }
     }
   }, { passive: false });
+
+  // Bouton fermeture constellation
+  const cshX = document.getElementById('csh-x');
+  if (cshX) {
+    cshX.addEventListener('click', e => {
+      e.stopPropagation();
+      exitConstellation();
+    });
+  }
 }
 
 /* ══════════════════════════════════════════════════════
