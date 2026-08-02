@@ -247,6 +247,17 @@ function navigateTo(view, pushState = false) {
     btn.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
 
+  // Masquer/Afficher sidebar et bouton de toggle mobile
+  const appLayout = document.getElementById('app-layout');
+  const toggleBtn = document.getElementById('btn-toggle-sidebar');
+  const isSidebarView = (view === 'atlas');
+  if (appLayout) {
+    appLayout.classList.toggle('sidebar-hidden', !isSidebarView);
+  }
+  if (toggleBtn) {
+    toggleBtn.classList.toggle('hidden', !isSidebarView);
+  }
+
   // Sidebar
   document.querySelectorAll('.sidebar__section').forEach(s => {
     if (!s.id.startsWith('sb-')) return;

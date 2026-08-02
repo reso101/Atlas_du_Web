@@ -524,6 +524,18 @@ a:hover {
   grid-template-columns: var(--sidebar-w) 1fr 0px;
 }
 
+#app-layout.sidebar-hidden {
+  grid-template-columns: 0px 1fr var(--panel-w);
+}
+
+#app-layout.sidebar-hidden.panel-closed {
+  grid-template-columns: 0px 1fr 0px;
+}
+
+#app-layout.sidebar-hidden #sidebar {
+  border-right: none !important;
+}
+
 /* ── 6. SIDEBAR ───────────────────────────────────────── */
 #sidebar {
   grid-column: 1;
@@ -1311,6 +1323,40 @@ input[type="range"]::-moz-range-thumb {
   letter-spacing: 0.08em;
 }
 
+.encyclo__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-8);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-deep);
+}
+
+.encyclo__controls .control-group {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  width: 100%;
+}
+
+.encyclo__controls .control-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.encyclo__controls .sort-btns {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.encyclo__controls .sort-btn {
+  padding: 0 var(--sp-3);
+  white-space: nowrap;
+}
+
 .encyclo__grid {
   flex: 1;
   overflow-y: auto;
@@ -1484,6 +1530,41 @@ input[type="range"]::-moz-range-thumb {
   font-size: 0.78rem;
   color: var(--text-3);
   line-height: 1.6;
+}
+
+.prosp__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-8);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-deep);
+}
+
+.prosp__controls .control-group {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.prosp__controls .control-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.prosp-horizon-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  background: var(--accent-dim);
+  border: 1px solid var(--border-focus);
+  padding: 4px var(--sp-3);
+  border-radius: var(--r-sm);
 }
 
 .prosp__timeline {
@@ -1971,6 +2052,32 @@ input[type="range"]::-moz-range-thumb {
   #mm { display: none !important; }   /* Masquer minimap */
   #zb { display: none !important; }   /* Masquer zoom bar */
   #leg { display: none !important; }  /* Masquer la légende */
+
+  .encyclo__controls {
+    padding: var(--sp-4) var(--sp-5);
+  }
+  
+  .encyclo__controls .control-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-2);
+  }
+
+  .encyclo__controls .control-group .sidebar__stats {
+    margin-left: 0 !important;
+    margin-top: var(--sp-2) !important;
+  }
+  
+  .prosp__controls {
+    padding: var(--sp-4) var(--sp-5);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-3);
+  }
+
+  .prosp__controls .control-group:last-child {
+    margin-left: 0 !important;
+  }
 }
 
 @media (max-width: 600px) {
