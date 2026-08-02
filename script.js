@@ -1188,14 +1188,30 @@ function setSize() {
   const main = document.getElementById('main-zone');
   if (main && canvas) {
     const r = main.getBoundingClientRect();
-    W = r.width || window.innerWidth - 270;
-    H = r.height || window.innerHeight - 64;
-    canvas.width = W;
-    canvas.height = H;
+    W = r.width || window.innerWidth;
+    H = r.height || window.innerHeight;
+    
+    // Gestion des écrans Retina et haute définition (DPR)
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    
+    if (ctx) {
+      ctx.resetTransform ? ctx.resetTransform() : ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+    }
   } else {
     W = window.innerWidth;
     H = window.innerHeight;
-    if (canvas) { canvas.width = W; canvas.height = H; }
+    if (canvas) {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      if (ctx) {
+        ctx.resetTransform ? ctx.resetTransform() : ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+      }
+    }
   }
   dirty = true;
 }
@@ -1474,6 +1490,17 @@ function drawLabels() {
 }
 
 /* ── Mode Constellation ──────────────────────────────── */
+function getConstellationRadii() {
+  // Radii adaptatifs selon la taille de l'écran (mobile-first)
+  const minDim = Math.min(W, H);
+  const base = minDim * 0.28;
+  return [
+    Math.round(base),
+    Math.round(base * 1.45),
+    Math.round(base * 1.9)
+  ];
+}
+
 function renderConstellation() {
   if (!App.selectedNode) return;
   constAngle += 0.003;
@@ -1481,9 +1508,18 @@ function renderConstellation() {
   const col  = CATS[App.selectedNode.categorie]?.color || '#8899aa';
   const cx = W / 2, cy = H / 2;
   const conns = ADJ[App.selectedNode.id] || [];
+  const radii = getConstellationRadii();
+
+  // Taille de police adaptative selon la largeur de l'écran
+  const isMobile = W < 500;
+  const labelSize   = isMobile ? 9  : 10;
+  const labelHovSz  = isMobile ? 10 : 11;
+  const centralSize = isMobile ? 13 : 15;
+  const subSize     = isMobile ? 8  : 9;
 
   // Fond radial
-  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 400);
+  const glowR = Math.min(W, H) * 0.5;
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowR);
   grad.addColorStop(0, col + '06'); grad.addColorStop(1, 'transparent');
   ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
 
@@ -1491,7 +1527,6 @@ function renderConstellation() {
   const byType = {};
   conns.forEach(c => { const t = c.edge.type; if (!byType[t]) byType[t] = []; byType[t].push(c); });
   const typeOrder = ['EVOLVES_INTO','INFLUENCE','DEPENDS_ON','REPLACED_BY','STANDARDISATION','CONCURRENCE'];
-  const radii = [180, 260, 340];
   let orbit = 0;
 
   typeOrder.forEach(type => {
@@ -1524,25 +1559,28 @@ function renderConstellation() {
 
       // Label
       ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-      ctx.font = `${isHov ? '500' : '400'} ${isHov ? 10 : 9}px IBM Plex Mono`;
+      ctx.font = `${isHov ? '500' : '400'} ${isHov ? labelHovSz : labelSize}px IBM Plex Mono`;
       ctx.fillStyle = nc + (isHov ? 'ff' : 'cc');
-      ctx.fillText(c.node.nom, nx, ny + nr + 5);
+      ctx.fillText(c.node.nom, nx, ny + nr + 4);
     });
     orbit++;
   });
 
-  // Nœud central
-  [22, 32, 44, 60].forEach((r, i) => {
+  // Nœud central - taille adaptative
+  const centralR = isMobile ? [16, 24, 32, 44] : [22, 32, 44, 60];
+  const innerR1  = isMobile ? 13 : 18;
+  const innerR2  = isMobile ? 9  : 12;
+  centralR.forEach((r, i) => {
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.strokeStyle = col + ['33','28','18','0c'][i]; ctx.lineWidth = 1; ctx.stroke();
   });
-  ctx.beginPath(); ctx.arc(cx, cy, 18, 0, Math.PI * 2); ctx.fillStyle = col + '22'; ctx.fill();
-  ctx.beginPath(); ctx.arc(cx, cy, 12, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx, cy, innerR1, 0, Math.PI * 2); ctx.fillStyle = col + '22'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx, cy, innerR2, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill();
   ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  ctx.font = '500 15px IBM Plex Mono'; ctx.fillStyle = col;
-  ctx.fillText(App.selectedNode.nom, cx, cy + 22);
-  ctx.font = '9px IBM Plex Mono'; ctx.fillStyle = col + 'aa';
-  ctx.fillText(App.selectedNode.annee + ' · ' + App.selectedNode.categorie, cx, cy + 40);
+  ctx.font = `500 ${centralSize}px IBM Plex Mono`; ctx.fillStyle = col;
+  ctx.fillText(App.selectedNode.nom, cx, cy + innerR1 + 5);
+  ctx.font = `${subSize}px IBM Plex Mono`; ctx.fillStyle = col + 'aa';
+  ctx.fillText(App.selectedNode.annee + ' · ' + App.selectedNode.categorie, cx, cy + innerR1 + centralSize + 8);
 }
 
 /* ── Minimap ─────────────────────────────────────────── */
@@ -1573,7 +1611,7 @@ function hitNode(mx, my) {
     const byType = {};
     conns.forEach(c => { const t = c.edge.type; if (!byType[t]) byType[t] = []; byType[t].push(c); });
     const typeOrder = ['EVOLVES_INTO','INFLUENCE','DEPENDS_ON','REPLACED_BY','STANDARDISATION','CONCURRENCE'];
-    const radii = [180, 260, 340]; let orbit = 0;
+    const radii = getConstellationRadii(); let orbit = 0;
     for (const type of typeOrder) {
       const cs = byType[type] || []; if (!cs.length) continue;
       const r = radii[Math.min(orbit, radii.length - 1)];
@@ -1582,7 +1620,7 @@ function hitNode(mx, my) {
         const baseAngle = (i / cs.length) * Math.PI * 2 + (orbit * Math.PI * .6);
         const a = baseAngle + constAngle * dir * .5;
         const nx = W/2 + Math.cos(a)*r, ny = H/2 + Math.sin(a)*r;
-        if ((mx-nx)**2 + (my-ny)**2 < 400) return cs[i].node;
+        if ((mx-nx)**2 + (my-ny)**2 < 600) return cs[i].node;
       }
       orbit++;
     }
@@ -1771,7 +1809,19 @@ function initZoom() {
     cam.cy = (e.clientY - r.top)  / MMH * WH;
     dirty = true;
   });
-  window.addEventListener('resize', () => { setSize(); schedRender(); });
+  // Événements de redimensionnement et de changement d'orientation avec délai pour stabilisation
+  window.addEventListener('resize', () => {
+    setTimeout(() => {
+      setSize();
+      schedRender();
+    }, 100);
+  });
+  window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+      setSize();
+      schedRender();
+    }, 200);
+  });
 }
 
 /* ══════════════════════════════════════════════════════
