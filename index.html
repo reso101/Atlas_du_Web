@@ -90,7 +90,13 @@
       <button class="hd__ctrl-btn active" id="btn-labels" aria-pressed="true" title="Afficher/masquer les étiquettes">
         Étiquettes
       </button>
+      <button id="btn-timemachine" aria-pressed="false" title="Mode Time Machine — rejouer l'histoire du Web [T]">
+        ⏱ Time Machine
+      </button>
+      <span id="tm-year-badge" aria-live="polite"></span>
     </div>
+    <!-- Bouton mute son -->
+    <button id="btn-mute" aria-label="Activer/désactiver le son" title="Son [M]">🔊</button>
   </header>
 
   <!-- ══ LAYOUT PRINCIPAL ═══════════════════════════════════ -->
@@ -312,6 +318,78 @@
     </aside>
 
   </div><!-- /#app-layout -->
+
+  <!-- ══ CURSEUR CUSTOM ══════════════════════════════════ -->
+  <div id="cursor" aria-hidden="true"></div>
+
+  <!-- ══ OVERLAY RACCOURCIS CLAVIER ══════════════════════ -->
+  <div id="shortcuts-overlay" role="dialog" aria-modal="true" aria-label="Raccourcis clavier" aria-hidden="true">
+    <div class="shortcuts-panel">
+      <div class="shortcuts-panel__title">Raccourcis clavier</div>
+
+      <div class="shortcuts-group">
+        <div class="shortcuts-group__title">Navigation</div>
+        <div class="shortcut-row">
+          <div class="shortcut-key"><kbd>/</kbd></div>
+          <div class="shortcut-desc">Ouvrir la recherche</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-key"><kbd>Échap</kbd></div>
+          <div class="shortcut-desc">Fermer / Quitter</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-key"><kbd>←</kbd><kbd>→</kbd></div>
+          <div class="shortcut-desc">Décennie précédente / suivante</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-key"><kbd>F</kbd></div>
+          <div class="shortcut-desc">Zoom ajusté (fit)</div>
+        </div>
+      </div>
+
+      <div class="shortcuts-group">
+        <div class="shortcuts-group__title">Affichage</div>
+        <div class="shortcut-row">
+          <div class="shortcut-key"><kbd>L</kbd></div>
+          <div class="shortcut-desc">Afficher / masquer les étiquettes</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-key"><kbd>E</kbd></div>
+          <div class="shortcut-desc">Afficher / masquer les connexions</div>
+        </div>
+      </div>
+
+      <div class="shortcuts-group">
+        <div class="shortcuts-group__title">Time Machine</div>
+        <div class="shortcut-row">
+          <div class="shortcut-key"><kbd>T</kbd></div>
+          <div class="shortcut-desc">Activer / arrêter la Time Machine</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-key"><kbd>Espace</kbd></div>
+          <div class="shortcut-desc">Play / Pause la Time Machine</div>
+        </div>
+      </div>
+
+      <div class="shortcuts-group">
+        <div class="shortcuts-group__title">Son & Parcours</div>
+        <div class="shortcut-row">
+          <div class="shortcut-key"><kbd>M</kbd></div>
+          <div class="shortcut-desc">Activer / désactiver le son</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-key"><kbd>←</kbd><kbd>→</kbd></div>
+          <div class="shortcut-desc">Étape précédente / suivante (parcours actif)</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-key"><kbd>?</kbd></div>
+          <div class="shortcut-desc">Afficher / masquer cet écran</div>
+        </div>
+      </div>
+
+      <button class="shortcuts-close" id="shortcuts-close">Fermer</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

@@ -232,13 +232,25 @@ function getHashView() {
 }
 
 function navigateTo(view, pushState = false) {
+  const prevView = App.view;
   App.view = view;
   if (pushState) window.location.hash = view;
 
-  // Activer la section
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('view--active'));
-  const activeView = document.getElementById('view-' + view);
-  if (activeView) activeView.classList.add('view--active');
+  // Transition de vue fluide (avec son)
+  if (prevView !== view) SoundSystem.play('view_switch');
+
+  // Activer la section avec animation
+  animateViewTransition(prevView, view, () => {
+    // Actions spécifiques
+    if (view === 'atlas') {
+      setSize();
+      if (NODES.length > 0) { dirty = true; schedRender(); }
+    } else if (view === 'encyclopedie') {
+      renderEncyclo();
+    } else if (view === 'prospectives') {
+      renderProspectives();
+    }
+  });
 
   // Nav boutons
   document.querySelectorAll('.hd__nav-btn').forEach(btn => {
@@ -262,7 +274,6 @@ function navigateTo(view, pushState = false) {
   document.querySelectorAll('.sidebar__section').forEach(s => {
     if (!s.id.startsWith('sb-')) return;
     const forView = s.id.replace('sb-', '');
-    // Le panneau parcours est commun à atlas uniquement
     if (forView === 'parcours') {
       s.classList.toggle('hidden', view !== 'atlas');
     } else {
@@ -273,16 +284,6 @@ function navigateTo(view, pushState = false) {
   // Contrôles atlas dans header
   const atlasCtrl = document.getElementById('hd-atlas-ctrl');
   if (atlasCtrl) atlasCtrl.classList.toggle('hidden', view !== 'atlas');
-
-  // Actions spécifiques
-  if (view === 'atlas') {
-    setSize();
-    if (NODES.length > 0) { dirty = true; schedRender(); }
-  } else if (view === 'encyclopedie') {
-    renderEncyclo();
-  } else if (view === 'prospectives') {
-    renderProspectives();
-  }
 }
 
 window.addEventListener('hashchange', () => navigateTo(getHashView()));
@@ -300,6 +301,10 @@ function initAllUI() {
   initCanvasEvents();
   initZoom();
   initNavBtns();
+  initCustomCursor();
+  initShortcutsOverlay();
+  initTimeMachineBtn();
+  initMuteBtn();
   zoomFit();
 }
 
@@ -564,14 +569,85 @@ function initSearch() {
   siEl.addEventListener('blur', () => setTimeout(() => srEl.classList.remove('open'), 200));
 
   window.addEventListener('keydown', e => {
-    if (e.key === '/' && document.activeElement !== siEl) { e.preventDefault(); siEl.focus(); }
+    const tag = document.activeElement?.tagName;
+    const inInput = tag === 'INPUT' || tag === 'TEXTAREA';
+
+    // Overlay raccourcis ouvert → Échap pour fermer
+    if (window._shortcutsOpen && window._shortcutsOpen()) {
+      if (e.key === 'Escape') { window._closeShortcuts(); }
+      return;
+    }
+
+    if (e.key === '/' && !inInput) { e.preventDefault(); siEl.focus(); }
     if (e.key === 'Escape') {
       if (App.renderMode === 'constellation') exitConstellation();
       else closeDetail();
       srEl.classList.remove('open');
     }
-    if (e.key === 'ArrowRight' && App.activeNarrative) document.getElementById('ns-next').click();
-    if (e.key === 'ArrowLeft'  && App.activeNarrative) document.getElementById('ns-prev').click();
+
+    // Raccourcis actifs hors champ de saisie
+    if (!inInput) {
+      // Parcours narratifs : ←/→
+      if (e.key === 'ArrowRight' && App.activeNarrative) { document.getElementById('ns-next').click(); return; }
+      if (e.key === 'ArrowLeft'  && App.activeNarrative) { document.getElementById('ns-prev').click(); return; }
+
+      // Navigation décennie ←/→ (sans parcours actif)
+      if (e.key === 'ArrowRight' && !App.activeNarrative && App.view === 'atlas') {
+        e.preventDefault();
+        const targetY = Math.ceil((App.filterYearMin + 1) / 10) * 10;
+        const yr = Math.min(targetY, 2030);
+        flyTo(xY(yr), cam.cy, Math.max(cam.scale, 0.35));
+        return;
+      }
+      if (e.key === 'ArrowLeft' && !App.activeNarrative && App.view === 'atlas') {
+        e.preventDefault();
+        const targetY = Math.floor((App.filterYearMax - 1) / 10) * 10;
+        const yr = Math.max(targetY, 1970);
+        flyTo(xY(yr), cam.cy, Math.max(cam.scale, 0.35));
+        return;
+      }
+
+      // Time Machine : T = toggle, Espace = pause/play
+      if (e.key === 't' || e.key === 'T') {
+        SoundSystem.unlock();
+        if (App.view === 'atlas') TimeMachine.toggle();
+        return;
+      }
+      if (e.key === ' ' && App.view === 'atlas') {
+        e.preventDefault();
+        if (TimeMachine.isActive()) TimeMachine.pause();
+        return;
+      }
+
+      // Son : M
+      if (e.key === 'm' || e.key === 'M') {
+        SoundSystem.unlock();
+        SoundSystem.toggleMute();
+        return;
+      }
+
+      // Affichage : L = labels, E = edges
+      if (e.key === 'l' || e.key === 'L') {
+        document.getElementById('btn-labels')?.click();
+        return;
+      }
+      if (e.key === 'e' || e.key === 'E') {
+        document.getElementById('btn-edges')?.click();
+        return;
+      }
+
+      // Zoom fit : F
+      if (e.key === 'f' || e.key === 'F') {
+        if (App.view === 'atlas') zoomFit();
+        return;
+      }
+
+      // Overlay raccourcis : ?
+      if (e.key === '?') {
+        if (window._openShortcuts) window._openShortcuts();
+        return;
+      }
+    }
   });
 }
 
@@ -674,6 +750,7 @@ function initDetailPanel() {
 function openDetail(n) {
   App.selectedNode = n;
   App.detailOpen = true;
+  SoundSystem.play('open_detail');
   const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
   const impLabels = { 1: '★ Fondamental', 2: '◆ Structurant', 3: '· Notable' };
 
@@ -1081,10 +1158,10 @@ function initNarratives() {
 
   // Navigation étapes
   document.getElementById('ns-prev').addEventListener('click', () => {
-    if (App.activeStep > 0) { App.activeStep--; updateNarrNav(); flyToStep(App.activeStep); dirty = true; schedRender(); }
+    if (App.activeStep > 0) { App.activeStep--; updateNarrNav(); flyToStep(App.activeStep); dirty = true; schedRender(); SoundSystem.play('narr_step'); }
   });
   document.getElementById('ns-next').addEventListener('click', () => {
-    if (App.activeStep < App.activeNarrative.steps.length - 1) { App.activeStep++; updateNarrNav(); flyToStep(App.activeStep); dirty = true; schedRender(); }
+    if (App.activeStep < App.activeNarrative.steps.length - 1) { App.activeStep++; updateNarrNav(); flyToStep(App.activeStep); dirty = true; schedRender(); SoundSystem.play('narr_step'); }
   });
   document.getElementById('ns-exit').addEventListener('click', () => {
     App.activeNarrative = null; App.activeStep = -1;
@@ -1375,6 +1452,14 @@ const time_ref = performance.now();
 function drawEdges() {
   const time = performance.now() - time_ref;
   const visNodes = new Set(NODES.filter(isNodeVisible).map(n => n.id));
+  const hovered  = App.hoveredNode;
+
+  // Précalcul des IDs voisins du nœud survolé
+  const neighborIds = new Set();
+  if (hovered) {
+    (ADJ[hovered.id] || []).forEach(c => neighborIds.add(c.node.id));
+    neighborIds.add(hovered.id);
+  }
 
   EDGES.forEach(e => {
     if (!App.activeEdgeFilters.has(e.type)) return;
@@ -1387,10 +1472,31 @@ function drawEdges() {
     if (p1.sx < -50 && p2.sx < -50) return;
     if (p1.sx > W + 50 && p2.sx > W + 50) return;
 
+    // Halo de voisinage : arête liée → brillante, non-liée → estompée
+    let edgeAlpha = '35';
+    let edgeWidth = et.w;
+    if (hovered) {
+      const isLinked = neighborIds.has(e.s) && neighborIds.has(e.t);
+      if (isLinked) {
+        edgeAlpha = 'cc';
+        edgeWidth = et.w * 2.5;
+        // Glow sur l'arête liée
+        ctx.beginPath();
+        ctx.setLineDash(et.dash);
+        ctx.strokeStyle = et.color + '18';
+        ctx.lineWidth = edgeWidth + 6;
+        ctx.moveTo(p1.sx, p1.sy); ctx.lineTo(p2.sx, p2.sy); ctx.stroke();
+        ctx.setLineDash([]);
+      } else {
+        edgeAlpha = '08';
+        edgeWidth = et.w * 0.5;
+      }
+    }
+
     ctx.beginPath();
     ctx.setLineDash(et.dash);
-    ctx.strokeStyle = et.color + '35';
-    ctx.lineWidth = et.w;
+    ctx.strokeStyle = et.color + edgeAlpha;
+    ctx.lineWidth = edgeWidth;
     ctx.moveTo(p1.sx, p1.sy); ctx.lineTo(p2.sx, p2.sy); ctx.stroke();
     ctx.setLineDash([]);
 
@@ -1424,20 +1530,33 @@ function drawNarrPath() {
 
 /* ── Nœuds ───────────────────────────────────────────── */
 function drawNodes() {
+  const hovered     = App.hoveredNode;
+  const neighborIds = new Set();
+  if (hovered) {
+    (ADJ[hovered.id] || []).forEach(c => neighborIds.add(c.node.id));
+    neighborIds.add(hovered.id);
+  }
+
   NODES.forEach(n => {
     if (!isNodeVisible(n)) return;
     const { sx, sy } = w2s(n._wx, n._wy);
     if (sx < -30 || sx > W + 30 || sy < -30 || sy > H + 30) return;
 
     const col = CATS[n.categorie] ? CATS[n.categorie].color : '#8899aa';
-    const isSelected = App.selectedNode && App.selectedNode.id === n.id;
-    const isHovered  = App.hoveredNode  && App.hoveredNode.id  === n.id;
-    const isInNarr   = App.activeNarrative && App.activeNarrative.steps.some(s => s.id === n.id);
+    const isSelected  = App.selectedNode && App.selectedNode.id === n.id;
+    const isHovered   = hovered && hovered.id === n.id;
+    const isNeighbor  = hovered && neighborIds.has(n.id) && !isHovered;
+    const isDimmed    = hovered && !neighborIds.has(n.id);
+    const isInNarr    = App.activeNarrative && App.activeNarrative.steps.some(s => s.id === n.id);
     const isActiveStep = App.activeNarrative && App.activeStep >= 0 &&
                          App.activeNarrative.steps[App.activeStep]?.id === n.id;
 
     const baseR = n.importance === 1 ? 7 : n.importance === 2 ? 5 : 3.5;
-    const r = isSelected || isActiveStep ? baseR * 1.8 : isHovered ? baseR * 1.5 : baseR;
+    const r = isSelected || isActiveStep ? baseR * 1.8 : isHovered ? baseR * 1.6 : isNeighbor ? baseR * 1.25 : baseR;
+
+    // Opacité selon halo voisinage
+    const alpha = isDimmed ? 0.2 : 1.0;
+    ctx.globalAlpha = alpha;
 
     // Halos
     if (isSelected || isHovered || isActiveStep) {
@@ -1446,6 +1565,13 @@ function drawNodes() {
         ctx.strokeStyle = col + ['40', '18'][gi]; ctx.lineWidth = 1; ctx.stroke();
       });
     }
+
+    // Halo voisin lumineux
+    if (isNeighbor) {
+      ctx.beginPath(); ctx.arc(sx, sy, r + 8, 0, Math.PI * 2);
+      ctx.strokeStyle = col + '30'; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+
     if (isInNarr && !isActiveStep) {
       ctx.beginPath(); ctx.arc(sx, sy, r + 5, 0, Math.PI * 2);
       ctx.strokeStyle = '#00d4aa35'; ctx.lineWidth = 1.5; ctx.stroke();
@@ -1457,10 +1583,15 @@ function drawNodes() {
       const g = ctx.createRadialGradient(sx - r * .3, sy - r * .3, 0, sx, sy, r);
       g.addColorStop(0, col + 'ff'); g.addColorStop(1, col + 'aa');
       ctx.fillStyle = g;
+    } else if (isNeighbor) {
+      const g = ctx.createRadialGradient(sx - r * .3, sy - r * .3, 0, sx, sy, r);
+      g.addColorStop(0, col + 'ff'); g.addColorStop(1, col + 'dd');
+      ctx.fillStyle = g;
     } else {
       ctx.fillStyle = isHovered ? col : col + 'cc';
     }
     ctx.fill();
+    ctx.globalAlpha = 1.0;
   });
 }
 
@@ -1854,15 +1985,417 @@ window.WC = {
 };
 
 /* ══════════════════════════════════════════════════════
+   STARFIELD — FOND ÉTOILÉ COSMIQUE
+   ══════════════════════════════════════════════════════ */
+const StarField = (() => {
+  const STAR_COUNT = 180;
+  let stars = [];
+  let initialized = false;
+
+  function init() {
+    stars = [];
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.2 + 0.2,
+        alpha: Math.random() * 0.5 + 0.1,
+        speed: Math.random() * 0.008 + 0.002, // vitesse de scintillement
+        phase: Math.random() * Math.PI * 2,   // phase aléatoire
+        parallax: Math.random() * 0.03 + 0.005, // profondeur parallaxe
+      });
+    }
+    initialized = true;
+  }
+
+  function draw(time) {
+    if (!initialized) init();
+    const t = time * 0.001;
+
+    stars.forEach(s => {
+      // Scintillement individuel
+      const twinkle = Math.sin(t * s.speed * 6 + s.phase) * 0.3 + 0.7;
+      const a = s.alpha * twinkle;
+
+      // Position avec légère parallaxe caméra
+      const px = (s.x - cam.cx * s.parallax * cam.scale * 10 + W * 10) % W;
+      const py = (s.y - cam.cy * s.parallax * cam.scale * 10 + H * 10) % H;
+
+      ctx.beginPath();
+      ctx.arc(px, py, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200, 220, 255, ${a})`;
+      ctx.fill();
+    });
+  }
+
+  function reinit() { initialized = false; }
+  return { draw, reinit };
+})();
+
+/* ══════════════════════════════════════════════════════
+   SOUND SYSTEM — WEB AUDIO API
+   ══════════════════════════════════════════════════════ */
+const SoundSystem = (() => {
+  let audioCtx = null;
+  let muted = false;
+  let unlocked = false;
+
+  function unlock() {
+    if (unlocked) return;
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      unlocked = true;
+    } catch(e) { /* pas de Web Audio */ }
+  }
+
+  function play(type) {
+    if (muted || !unlocked || !audioCtx) return;
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const now = audioCtx.currentTime;
+    const gain = audioCtx.createGain();
+    gain.connect(audioCtx.destination);
+
+    switch(type) {
+      case 'click_node': {
+        const osc = audioCtx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(660, now + 0.08);
+        gain.gain.setValueAtTime(0.04, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.connect(gain); osc.start(now); osc.stop(now + 0.12);
+        break;
+      }
+      case 'open_detail': {
+        [220, 330, 440].forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.05);
+          const g2 = audioCtx.createGain();
+          g2.gain.setValueAtTime(0.025, now + i * 0.05);
+          g2.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.25);
+          osc.connect(g2); g2.connect(audioCtx.destination);
+          osc.start(now + i * 0.05); osc.stop(now + i * 0.05 + 0.25);
+        });
+        return;
+      }
+      case 'narr_step': {
+        const osc = audioCtx.createOscillator();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(330, now);
+        osc.frequency.exponentialRampToValueAtTime(495, now + 0.15);
+        gain.gain.setValueAtTime(0.05, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.connect(gain); osc.start(now); osc.stop(now + 0.3);
+        break;
+      }
+      case 'view_switch': {
+        const osc = audioCtx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(200, now);
+        osc.frequency.exponentialRampToValueAtTime(380, now + 0.18);
+        gain.gain.setValueAtTime(0.02, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        osc.connect(gain); osc.start(now); osc.stop(now + 0.2);
+        break;
+      }
+      case 'time_machine_tick': {
+        const osc = audioCtx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, now);
+        gain.gain.setValueAtTime(0.015, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+        osc.connect(gain); osc.start(now); osc.stop(now + 0.06);
+        break;
+      }
+    }
+  }
+
+  function toggleMute() {
+    muted = !muted;
+    const btn = document.getElementById('btn-mute');
+    if (btn) {
+      btn.textContent = muted ? '🔇' : '🔊';
+      btn.classList.toggle('muted', muted);
+      btn.setAttribute('aria-label', muted ? 'Son désactivé' : 'Son activé');
+    }
+    return muted;
+  }
+
+  function isMuted() { return muted; }
+
+  return { unlock, play, toggleMute, isMuted };
+})();
+
+/* ══════════════════════════════════════════════════════
+   TIME MACHINE
+   ══════════════════════════════════════════════════════ */
+const TimeMachine = (() => {
+  let active = false;
+  let paused = false;
+  let currentYear = 1970;
+  let animId = null;
+  let lastTick = 0;
+  const SPEED_MS = 120; // ms par année
+  const END_YEAR = new Date().getFullYear();
+
+  // Nœuds apparus pendant cette session (pour animation birth)
+  const appearedNodes = new Set();
+
+  function updateBadge(yr) {
+    const badge = document.getElementById('tm-year-badge');
+    if (!badge) return;
+    if (active) {
+      badge.textContent = yr;
+      badge.classList.add('visible');
+      // re-trigger animation
+      badge.style.animation = 'none';
+      badge.offsetHeight; // reflow
+      badge.style.animation = '';
+    } else {
+      badge.classList.remove('visible');
+    }
+  }
+
+  function applyYear(yr) {
+    currentYear = yr;
+    App.filterYearMin = 1970;
+    App.filterYearMax = yr;
+    // Mettre à jour les sliders
+    const rangeMax = document.getElementById('range-max');
+    const toEl = document.getElementById('range-to');
+    const fill  = document.getElementById('range-fill');
+    if (rangeMax) rangeMax.value = yr;
+    if (toEl) toEl.textContent = yr;
+    if (fill) {
+      const pct = (yr - 1970) / 60 * 100;
+      fill.style.left = '0%';
+      fill.style.width = pct + '%';
+    }
+    updateBadge(yr);
+    updateAtlasStats();
+    dirty = true;
+    schedRender();
+  }
+
+  function tick(now) {
+    if (!active || paused) return;
+    if (now - lastTick >= SPEED_MS) {
+      lastTick = now;
+      currentYear++;
+
+      // Son discret à chaque décennie
+      if (currentYear % 10 === 0) SoundSystem.play('time_machine_tick');
+
+      applyYear(currentYear);
+
+      if (currentYear >= END_YEAR) {
+        stop();
+        return;
+      }
+    }
+    animId = requestAnimationFrame(tick);
+  }
+
+  function start() {
+    if (!active) {
+      active = true;
+      paused = false;
+      currentYear = 1970;
+      appearedNodes.clear();
+      applyYear(1970);
+    } else if (paused) {
+      paused = false;
+    }
+    const btn = document.getElementById('btn-timemachine');
+    if (btn) { btn.classList.add('active'); btn.textContent = '⏹ Stop'; }
+    lastTick = performance.now();
+    animId = requestAnimationFrame(tick);
+  }
+
+  function pause() {
+    paused = !paused;
+    if (!paused) {
+      lastTick = performance.now();
+      animId = requestAnimationFrame(tick);
+    }
+  }
+
+  function stop() {
+    active = false;
+    paused = false;
+    if (animId) cancelAnimationFrame(animId);
+    animId = null;
+    // Restaurer le filtre complet
+    App.filterYearMin = 1970;
+    App.filterYearMax = 2030;
+    const rangeMin = document.getElementById('range-min');
+    const rangeMax = document.getElementById('range-max');
+    const fromEl = document.getElementById('range-from');
+    const toEl   = document.getElementById('range-to');
+    const fill   = document.getElementById('range-fill');
+    if (rangeMin) rangeMin.value = 1970;
+    if (rangeMax) rangeMax.value = 2030;
+    if (fromEl) fromEl.textContent = 1970;
+    if (toEl) toEl.textContent = 2030;
+    if (fill) { fill.style.left = '0%'; fill.style.width = '100%'; }
+    const btn = document.getElementById('btn-timemachine');
+    if (btn) { btn.classList.remove('active'); btn.textContent = '⏱ Time Machine'; }
+    updateBadge(null);
+    updateAtlasStats();
+    dirty = true; schedRender();
+  }
+
+  function toggle() {
+    if (!active) start();
+    else stop();
+  }
+
+  function isActive() { return active; }
+  function isPaused() { return paused; }
+
+  return { start, stop, pause, toggle, isActive, isPaused };
+})();
+
+/* ══════════════════════════════════════════════════════
+   CURSEUR CUSTOM LUMINEUX
+   ══════════════════════════════════════════════════════ */
+function initCustomCursor() {
+  const cursorEl = document.getElementById('cursor');
+  const cvEl = document.getElementById('cv');
+  if (!cursorEl || !cvEl) return;
+
+  // Désactiver sur tactile
+  if (!window.matchMedia('(hover: hover)').matches) return;
+
+  let cursorVisible = false;
+
+  function moveCursor(x, y) {
+    cursorEl.style.left = x + 'px';
+    cursorEl.style.top  = y + 'px';
+  }
+
+  cvEl.addEventListener('mouseenter', (e) => {
+    cursorEl.classList.add('visible');
+    cursorVisible = true;
+    // Masquer le curseur natif sur le canvas
+    cvEl.style.cursor = 'none';
+    moveCursor(e.clientX, e.clientY);
+  });
+
+  cvEl.addEventListener('mouseleave', () => {
+    cursorEl.classList.remove('visible', 'cursor--hover');
+    cursorVisible = false;
+    cvEl.style.cursor = '';
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!cursorVisible) return;
+    moveCursor(e.clientX, e.clientY);
+
+    // Adapter couleur et taille selon le nœud survolé
+    if (App.hoveredNode) {
+      const col = CATS[App.hoveredNode.categorie]?.color || '#00d4aa';
+      // Convertir hex en rgba pour la CSS variable
+      const r = parseInt(col.slice(1,3), 16);
+      const g = parseInt(col.slice(3,5), 16);
+      const b = parseInt(col.slice(5,7), 16);
+      cursorEl.style.setProperty('--cursor-color', `rgba(${r},${g},${b},0.7)`);
+      cursorEl.style.borderColor = col;
+      cursorEl.classList.add('cursor--hover');
+    } else {
+      cursorEl.style.borderColor = '';
+      cursorEl.style.removeProperty('--cursor-color');
+      cursorEl.classList.remove('cursor--hover');
+    }
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   TRANSITIONS DE VUE FLUIDES
+   ══════════════════════════════════════════════════════ */
+function animateViewTransition(fromId, toId, callback) {
+  const fromEl = fromId ? document.getElementById('view-' + fromId) : null;
+  const toEl   = document.getElementById('view-' + toId);
+  if (!toEl) { if (callback) callback(); return; }
+
+  // Sortie de la vue actuelle
+  if (fromEl && fromEl !== toEl) {
+    fromEl.classList.add('view--exit');
+    setTimeout(() => {
+      fromEl.classList.remove('view--active', 'view--exit');
+    }, 300);
+  }
+
+  // Entrée de la nouvelle vue
+  setTimeout(() => {
+    toEl.classList.add('view--active', 'view--enter');
+    setTimeout(() => toEl.classList.remove('view--enter'), 350);
+    if (callback) callback();
+  }, fromEl && fromEl !== toEl ? 150 : 0);
+}
+
+/* ══════════════════════════════════════════════════════
+   RACCOURCIS CLAVIER ÉTENDUS + OVERLAY AIDE
+   ══════════════════════════════════════════════════════ */
+function initShortcutsOverlay() {
+  const overlay = document.getElementById('shortcuts-overlay');
+  const closeBtn = document.getElementById('shortcuts-close');
+  if (!overlay || !closeBtn) return;
+
+  function openOverlay() {
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    closeBtn.focus();
+  }
+  function closeOverlay() {
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+  }
+
+  closeBtn.addEventListener('click', closeOverlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeOverlay(); });
+
+  // Exposer pour les raccourcis
+  window._openShortcuts  = openOverlay;
+  window._closeShortcuts = closeOverlay;
+  window._shortcutsOpen  = () => overlay.classList.contains('open');
+}
+
+function initTimeMachineBtn() {
+  const btn = document.getElementById('btn-timemachine');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    SoundSystem.unlock();
+    TimeMachine.toggle();
+  });
+}
+
+function initMuteBtn() {
+  const btn = document.getElementById('btn-mute');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    SoundSystem.unlock();
+    SoundSystem.toggleMute();
+  });
+}
+
+/* ══════════════════════════════════════════════════════
    BOUCLE D'ANIMATION
    ══════════════════════════════════════════════════════ */
+const anim_time_ref = performance.now();
+
 function animationLoop() {
+  const now = performance.now();
   if (App.view === 'atlas') {
     const hasAnim = (App.showEdges && cam.scale > .12) || App.renderMode === 'constellation';
     if (hasAnim) dirty = true;
     if (dirty && ctx) {
       dirty = false;
       ctx.clearRect(0, 0, W, H);
+      // Fond étoilé
+      StarField.draw(now - anim_time_ref);
       if (App.renderMode === 'constellation' && App.selectedNode) renderConstellation();
       else renderMap();
       renderMinimap();
@@ -1870,6 +2403,8 @@ function animationLoop() {
   }
   requestAnimationFrame(animationLoop);
 }
+
+
 
 /* ══════════════════════════════════════════════════════
    DÉMARRAGE

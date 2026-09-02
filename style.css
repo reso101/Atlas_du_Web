@@ -2124,3 +2124,314 @@ input[type="range"]::-moz-range-thumb {
   outline-offset: 2px;
   border-radius: var(--r-sm);
 }
+
+/* ══════════════════════════════════════════════════════
+   15. AMÉLIORATIONS SUBLIMATION v3.1
+   ══════════════════════════════════════════════════════ */
+
+/* ── 15a. TRANSITIONS DE VUE FLUIDES ─────────────────── */
+.view {
+  transition: opacity var(--t-med) var(--ease-out),
+              transform var(--t-med) var(--ease-out);
+}
+
+.view--exit {
+  opacity: 0 !important;
+  transform: translateX(-18px) scale(0.99) !important;
+  pointer-events: none !important;
+}
+
+.view--enter {
+  animation: view-enter var(--t-med) var(--ease-out) forwards;
+}
+
+@keyframes view-enter {
+  from {
+    opacity: 0;
+    transform: translateX(18px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* ── 15b. CURSEUR CUSTOM LUMINEUX ────────────────────── */
+#cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width var(--t-fast) var(--ease-spring),
+              height var(--t-fast) var(--ease-spring),
+              border-color var(--t-fast) var(--ease-out),
+              box-shadow var(--t-fast) var(--ease-out),
+              opacity var(--t-fast) var(--ease-out);
+  box-shadow: 0 0 8px rgba(0, 212, 170, 0.4);
+  mix-blend-mode: screen;
+  opacity: 0;
+  will-change: transform;
+}
+
+#cursor.visible {
+  opacity: 1;
+}
+
+#cursor.cursor--hover {
+  width: 28px;
+  height: 28px;
+  box-shadow: 0 0 20px var(--cursor-color, rgba(0, 212, 170, 0.7)), 0 0 40px var(--cursor-color, rgba(0, 212, 170, 0.3));
+  animation: cursor-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes cursor-pulse {
+  0%, 100% { box-shadow: 0 0 20px var(--cursor-color, rgba(0, 212, 170, 0.7)), 0 0 40px var(--cursor-color, rgba(0, 212, 170, 0.3)); }
+  50% { box-shadow: 0 0 30px var(--cursor-color, rgba(0, 212, 170, 0.9)), 0 0 60px var(--cursor-color, rgba(0, 212, 170, 0.5)); }
+}
+
+/* Masquer le curseur custom sur appareils tactiles */
+@media (hover: none) {
+  #cursor { display: none !important; }
+}
+
+/* ── 15c. BOUTON TIME MACHINE ────────────────────────── */
+#btn-timemachine {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  height: 32px;
+  padding: 0 var(--sp-3);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  transition: all var(--t-fast) var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+#btn-timemachine:hover {
+  color: var(--text-2);
+  border-color: var(--border-hover);
+}
+
+#btn-timemachine.active {
+  color: var(--accent-warn);
+  border-color: rgba(245, 158, 11, 0.45);
+  background: rgba(245, 158, 11, 0.08);
+  animation: tm-glow 2s ease-in-out infinite;
+}
+
+@keyframes tm-glow {
+  0%, 100% { box-shadow: 0 0 0 rgba(245, 158, 11, 0); }
+  50%       { box-shadow: 0 0 12px rgba(245, 158, 11, 0.25); }
+}
+
+#tm-year-badge {
+  display: none;
+  font-size: 0.65rem;
+  color: var(--accent-warn);
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--r-sm);
+  padding: 1px var(--sp-2);
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  min-width: 38px;
+  text-align: center;
+  animation: badge-tick 0.3s var(--ease-spring);
+}
+
+#tm-year-badge.visible {
+  display: inline-block;
+}
+
+@keyframes badge-tick {
+  from { transform: scale(1.2); opacity: 0.6; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* ── 15d. BOUTON MUTE ────────────────────────────────── */
+#btn-mute {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 0.85rem;
+  color: var(--text-3);
+  transition: all var(--t-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+
+#btn-mute:hover {
+  color: var(--text-2);
+  border-color: var(--border-hover);
+}
+
+#btn-mute.muted {
+  color: var(--text-4);
+  opacity: 0.5;
+}
+
+/* ── 15e. OVERLAY RACCOURCIS CLAVIER ─────────────────── */
+#shortcuts-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  background: rgba(6, 8, 16, 0.85);
+  backdrop-filter: blur(20px) saturate(1.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-med) var(--ease-out);
+}
+
+#shortcuts-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.shortcuts-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--r-xl);
+  padding: var(--sp-8);
+  max-width: 560px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.7), 0 0 60px rgba(0, 212, 170, 0.05);
+  animation: shortcuts-in var(--t-med) var(--ease-spring);
+}
+
+@keyframes shortcuts-in {
+  from { transform: scale(0.94) translateY(12px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.shortcuts-panel__title {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--sp-6);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.shortcuts-panel__title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.shortcuts-group {
+  margin-bottom: var(--sp-6);
+}
+
+.shortcuts-group__title {
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: var(--sp-3);
+}
+
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--border-soft);
+  gap: var(--sp-4);
+}
+
+.shortcut-row:last-child { border-bottom: none; }
+
+.shortcut-key {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  flex-shrink: 0;
+}
+
+.shortcut-key kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 22px;
+  padding: 0 var(--sp-2);
+  background: var(--bg-raised);
+  border: 1px solid var(--border-hover);
+  border-bottom-width: 2px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-1);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.4);
+}
+
+.shortcut-desc {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--text-2);
+  text-align: right;
+}
+
+.shortcuts-close {
+  display: block;
+  width: 100%;
+  margin-top: var(--sp-6);
+  height: 36px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--r-md);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+
+.shortcuts-close:hover {
+  color: var(--text-1);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+/* ── 15f. ANIMATION NAISSANCE DES NŒUDS (Time Machine) ── */
+@keyframes node-birth {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ── 15g. RESPONSIVE NOUVEAUX ÉLÉMENTS ───────────────── */
+@media (max-width: 768px) {
+  #btn-timemachine { display: none; }
+  #btn-mute { display: none; }
+}
+
+@media (max-width: 600px) {
+  #tm-year-badge { display: none !important; }
+}
