@@ -145,7 +145,7 @@ const App = {
 async function loadAtlasData() {
   try {
     updateIntroBar(20);
-    const response = await fetch('data/atlas.json');
+    const response = await fetch(`data/atlas.json?v=${Date.now()}`);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     updateIntroBar(50);
     const data = await response.json();
